@@ -59,9 +59,14 @@
 			overflow: hidden;
 			position: fixed;
 			overscroll-behavior: none;
-			touch-action: manipulation;
+			touch-action: none;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
+		}
+		
+		#chat-container {
+			touch-action: pan-y; 
+			-webkit-overflow-scrolling: touch;
 		}
 		
 		button,
@@ -287,6 +292,25 @@
 		</div>
 	</div>
 	<script>
+		document.addEventListener('gesturestart', function(e) {
+			e.preventDefault();
+		});
+		
+		let lastTouchEnd = 0;
+		document.addEventListener('touchend', function(event) {
+			const now = (new Date()).getTime();
+			if (now - lastTouchEnd <= 300) {
+				event.preventDefault();
+			}
+			lastTouchEnd = now;
+		}, { passive: false });
+
+		document.body.addEventListener('touchmove', function(e) {
+			if (!e.target.closest('#chat-container')) {
+				e.preventDefault();
+			}
+		}, { passive: false });
+		
 		let isMarkedAvailable = false;
 		try {
 			if (typeof marked !== 'undefined') {
