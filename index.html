@@ -59,6 +59,7 @@
 			overflow: hidden;
 			position: fixed;
 			overscroll-behavior: none;
+			touch-action: manipulation;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 		}
@@ -370,6 +371,20 @@
 				}
 			} else {
 				userInput.placeholder = "Tempel API Key Google Gemini Anda di sini...";
+			}
+			if (window.visualViewport) {
+				let lastHeight = window.visualViewport.height;
+				window.visualViewport.addEventListener('resize', () => {
+					// Jika tinggi viewport bertambah (artinya keyboard turun/tutup)
+					if (window.visualViewport.height > lastHeight) {
+						setTimeout(() => {
+							window.scrollTo(0, 0);
+							// Scroll chat ke paling bawah
+							chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+						}, 50);
+					}
+					lastHeight = window.visualViewport.height;
+				});
 			}
 		});
 		
