@@ -6,13 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
 	<title>AI ASISTEN</title>
 	
-	<!-- Tailwind CSS -->
 	<script src="https://cdn.tailwindcss.com"></script>
-	
-	<!-- FontAwesome Icons -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 	<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 	
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -21,30 +19,23 @@
 	<link rel="apple-touch-icon" href="icon/icon-512.png">
 	<link rel="icon" type="image/png" href="icon/icon-512.png">
 	
-	<!-- Marked.js (VERSI 4.3.0 - STABIL) -->
 	<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-	
-	<!-- Highlight.js (StackOverflow Light) -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 	
 	<style>
 		::-webkit-scrollbar {
-			width: 8px;
-			height: 8px;
+			width: 6px;
+			height: 6px;
 		}
 		
 		::-webkit-scrollbar-track {
-			background: #ffffff;
+			background: transparent;
 		}
 		
 		::-webkit-scrollbar-thumb {
 			background: #cbd5e1;
-			border-radius: 4px;
-		}
-		
-		::-webkit-scrollbar-thumb:hover {
-			background: #94a3b8;
+			border-radius: 3px;
 		}
 		
 		html {
@@ -61,7 +52,6 @@
 			overscroll-behavior: none;
 			touch-action: none;
 			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
 		}
 		
 		#chat-container {
@@ -69,170 +59,159 @@
 			-webkit-overflow-scrolling: touch;
 		}
 		
-		button,
-		input,
-		textarea {
+		button, input, textarea {
 			touch-action: manipulation;
 			-webkit-text-size-adjust: 100%;
 		}
 		
-		.prose p {
-			margin-bottom: 0.6em;
-			line-height: 1.6;
+		.prose > * {
+			font-size: 16px !important;
+			line-height: 1.5 !important;
+			color: #000000 !important;
+			margin-top: 0 !important;
+			margin-bottom: 0.6em !important;
+		}
+
+		.prose h1, .prose h2, .prose h3, .prose h4 {
 			font-weight: 400 !important;
-			color: #374151 !important;
+			font-size: 16px !important;
+			margin-top: 1.0em !important;
+			margin-bottom: 0.4em !important;
+			text-transform: none !important;
+			letter-spacing: normal !important;
 		}
-		
-		.prose p:last-child {
-			margin-bottom: 0;
-		}
-		
-		.prose strong,
-		.prose b {
-			font-weight: 600;
-			color: #111827;
-		}
-		
-		.prose pre {
-			margin: 0;
-			padding: 0;
-			background-color: transparent;
-			border: none;
-			overflow: visible;
-		}
-		
-		.prose p code,
-		.prose li code,
-		.prose td code {
-			background-color: rgba(0, 0, 0, 0.06);
-			padding: 0.15em 0.4em;
-			border-radius: 0.25em;
-			font-size: 0.9em;
-			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-			color: #be185d;
-		}
-		
-		.prose pre code {
-			display: block;
-			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-			font-size: 14px;
-			line-height: 1.6;
-		}
-		
-		.prose ul,
-		.prose ol {
-			padding-left: 1em;
-			margin-left: 0.5em;
-			margin-bottom: 0.8em;
-			color: #374151;
-		}
-		
+
 		.prose ul {
-			list-style-type: disc;
+			list-style-type: disc !important;
+			padding-left: 1.2em;
+			margin-bottom: 0.6em !important;
 		}
-		
+
 		.prose ol {
-			list-style-type: decimal;
+			list-style-type: decimal !important;
+			padding-left: 1.5em;
+			margin-bottom: 0.6em !important;
 		}
-		
+
 		.prose li {
-			margin-bottom: 0.25em;
+			margin-bottom: 0.2em !important;
+			line-height: 1.5 !important;
 		}
-		
-		.prose h1,
-		.prose h2,
-		.prose h3 {
-			font-weight: 700;
-			margin-top: 1em;
-			margin-bottom: 0.5em;
-			color: #111827;
+
+		.prose li p {
+			margin-bottom: 0 !important;
+			display: inline;
 		}
-		
-		.prose h1 {
-			font-size: 1.5em;
-		}
-		
-		.prose h2 {
-			font-size: 1.25em;
-		}
-		
-		.prose h3 {
-			font-size: 1.1em;
-		}
-		
+
 		.prose table {
 			width: 100%;
 			border-collapse: collapse;
-			margin: 0;
-			font-size: 0.9em;
-			border: 1px solid #d1d5db;
+			margin: 0.5em 0 !important;
+			font-size: 15px !important;
+			border: 1px solid #9ca3af;
 		}
-		
-		.prose thead {
+
+		.prose th, .prose td {
+			padding: 6px 10px !important;
+			border: 1px solid #d1d5db;
+			line-height: 1.4 !important;
+		}
+
+		.prose th {
 			background-color: #e5e7eb;
+			font-weight: 600;
+			color: #000000;
+		}
+
+		.prose pre {
+			margin: 0.5em 0 !important;
+			padding: 0;
+			background: transparent;
+			border: none;
+		}
+
+		.prose pre code {
+			font-family: ui-monospace, SFMono-Regular, monospace !important;
+			font-size: 14px !important;
+			line-height: 1.4 !important;
+		}
+
+		.prose code:not(pre code) {
+			background-color: #e5e7eb !important;
+			color: #000000 !important;
+			padding: 0.1em 0.3em;
+			border-radius: 4px;
+			font-size: 0.9em !important;
+			font-weight: 600;
 		}
 		
-		.prose th,
-		.prose td {
-			border: 1px solid #d1d5db;
-			padding: 0.75rem;
-			text-align: left;
-			vertical-align: top;
+		.prose strong, .prose b {
+			font-weight: 600 !important;
+			color: #000000 !important;
+		}
+
+		.prose em {
+			font-style: italic;
 			color: #374151;
 		}
-		
-		.prose th {
-			font-weight: 600;
-			color: #1f2937;
+
+		.prose i {
+			font-style: normal !important;
+			color: inherit !important;
+		}
+
+		.prose hr {
+			margin: 0.8em 0 !important;
+			border-top: 1px solid #e5e7eb;
 		}
 		
 		.typing-dot {
 			animation: typing 1.4s infinite ease-in-out both;
 		}
-		
+
 		.typing-dot:nth-child(1) {
 			animation-delay: -0.32s;
 		}
-		
+
 		.typing-dot:nth-child(2) {
 			animation-delay: -0.16s;
 		}
-		
+
 		@keyframes typing {
-			0%,
-			80%,
-			100% {
-				transform: scale(0);
-			}
-			40% {
-				transform: scale(1);
-			}
+			0%, 80%, 100% { transform: scale(0); }
+			40% { transform: scale(1); }
 		}
-		/* Animasi Alert iOS */
+		
 		@keyframes alert-pop {
 			0% { transform: scale(1.1); opacity: 0; }
 			100% { transform: scale(1); opacity: 1; }
 		}
+
 		.animate-alert {
 			animation: alert-pop 0.2s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+		}
+		
+		#chat-container {
+		    opacity: 0;
+		    transition: opacity 0.2s ease-in-out;
+		}
+		.loaded {
+		    opacity: 1 !important;
 		}
 	</style>
 </head>
 
 <body class="bg-white w-full font-sans text-gray-800">
 	
-	<!-- Header -->
 	<header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-sm shadow-sm p-4 flex justify-between items-center z-50 h-20">
 		<div class="w-full flex justify-between items-center">
 			<div class="flex items-center gap-0">
 				<img src="icon/icon.png" alt="icon" class="w-16 h-16 rounded-full object-cover -mt-1">
-				
 				<div class="flex flex-col justify-center h-16">
 					<h1 class="font-semibold text-xl leading-none bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">AI ASISTEN</h1>
-					<p class="text-[10px] font-bold tracking-wider text-gray-400 mt-1">ARTIFICIAL INTELLIGENCE</p>
+					<p class="text-[12px] font-medium tracking-wider text-gray-400 mt-0">ARTIFICIAL INTELLIGENCE</p>
 				</div>
 			</div>
-			
 			<button onclick="resetKey()" id="reset-btn" class="hidden text-gray-400 transition p-2" title="Mulai Ulang (Reset)">
 				<svg class="w-7 h-7 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 					<path d="M12 16c1.671 0 3-1.331 3-3s-1.329-3-3-3-3 1.331-3 3 1.329 3 3 3z"></path>
@@ -242,80 +221,71 @@
 		</div>
 	</header>
 	
-	<!-- Chat Area -->
 	<main id="chat-container" class="fixed top-20 bottom-0 left-0 w-full overflow-y-auto pt-4 pb-32 px-4 space-y-6 bg-white">
-		<!-- Chat items will be injected here -->
 	</main>
 	
-	<!-- Input Area -->
 	<footer class="fixed bottom-0 left-0 w-full bg-white z-50">
 		<div class="w-full px-4 py-6 bg-white">
 			<div class="max-w-3xl mx-auto flex flex-col">
-				
 				<div id="file-preview-container" class="hidden w-full mb-2">
 					<div id="file-list" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
 				</div>
-
 				<div class="flex items-center gap-0 bg-gray-100 pr-2 pl-2 rounded-full h-[58px] w-full z-20">
-					<input type="file" id="file-upload" class="hidden" accept=".html,.css,.js,.txt,.swift,.pdf,.docx,.xlsx,.xls,image/*" multiple onchange="handleFileSelect(event)">
+					<input type="file" id="file-upload" class="hidden" accept=".html,.css,.js,.txt,.swift,.pdf,.docx,.xlsx,.xls,.ppt,.pptx,image/*" multiple onchange="handleFileSelect(event)">
 					
-					<button onclick="document.getElementById('file-upload').click()" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gray-400 transition" title="Upload File">
-						<i class="fa-solid fa-plus text-xl"></i>
+					<button onclick="document.getElementById('file-upload').click()" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gray-400 transition hover:text-gray-600" title="Upload File">
+						<svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g stroke-width="0"></g>
+							<g stroke-linecap="round" stroke-linejoin="round"></g>
+							<g> 
+								<path d="M16 12L12 8M12 8L8 12M12 8V17.2C12 18.5907 12 19.2861 12.5505 20.0646C12.9163 20.5819 13.9694 21.2203 14.5972 21.3054C15.5421 21.4334 15.9009 21.2462 16.6186 20.8719C19.8167 19.2036 22 15.8568 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 15.7014 4.01099 18.9331 7 20.6622" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> 
+							</g>
+						</svg>
 					</button>
 					
-					<input type="text" id="user-input" placeholder="Ketik pesan..." class="w-full bg-transparent text-gray-800 focus:outline-none text-base h-full pl-1" autocomplete="off" onkeydown="handleEnter(event)">
+					<input type="text" id="user-input" placeholder="Ketik pesan..." class="w-full bg-transparent text-gray-800 focus:outline-none text-base h-full pl-2" autocomplete="off" onkeydown="handleEnter(event)">
 					
 					<button onclick="handleInput()" id="action-btn" class="flex-shrink-0 bg-black hover:bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center transition disabled:opacity-50 disabled:cursor-not-allowed">
-						<i id="action-icon" class="fa-solid fa-arrow-right text-xl"></i>
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1">
+							<path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z" fill="white"></path>
+						</svg>
 					</button>
 				</div>
-				
 			</div>
 		</div>
 	</footer>
+
 	<div id="custom-alert" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity duration-200">
 		<div class="bg-white/95 w-[270px] rounded-2xl text-center shadow-2xl animate-alert backdrop-blur-xl overflow-hidden transform scale-100">
 			<div class="pt-5 pb-2 px-4">
 				<h3 class="text-base font-bold text-gray-900 leading-snug mb-1">Reset Asisten?</h3>
-				<p class="text-sm text-gray-600 leading-relaxed">
-					Semua riwayat percakapan dan API Key akan dihapus dari perangkat ini.
-				</p>
+				<p class="text-sm text-gray-600 leading-relaxed">Semua riwayat percakapan dan API Key akan dihapus dari perangkat ini.</p>
 			</div>
 			<div class="flex border-t border-gray-300/70">
-				<button onclick="closeCustomAlert()" class="w-1/2 py-3 text-base text-blue-500 hover:bg-gray-100 active:bg-gray-200 transition font-normal border-r border-gray-300/70">
-					BATAL
-				</button>
-				<button onclick="confirmReset()" class="w-1/2 py-3 text-base text-red-500 font-normal hover:bg-gray-100 active:bg-gray-200 transition">
-					HAPUS
-				</button>
+				<button onclick="closeCustomAlert()" class="w-1/2 py-3 text-base text-blue-500 hover:bg-gray-100 active:bg-gray-200 transition font-normal border-r border-gray-300/70">BATAL</button>
+				<button onclick="confirmReset()" class="w-1/2 py-3 text-base text-red-500 font-normal hover:bg-gray-100 active:bg-gray-200 transition">HAPUS</button>
 			</div>
 		</div>
 	</div>
+
 	<script>
-		document.addEventListener('gesturestart', function(e) {
-			e.preventDefault();
-		});
+		document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
 		
 		let lastTouchEnd = 0;
 		document.addEventListener('touchend', function(event) {
 			const now = (new Date()).getTime();
-			if (now - lastTouchEnd <= 300) {
-				event.preventDefault();
-			}
+			if (now - lastTouchEnd <= 300) { event.preventDefault(); }
 			lastTouchEnd = now;
 		}, { passive: false });
 
 		document.body.addEventListener('touchmove', function(e) {
-			if (!e.target.closest('#chat-container')) {
-				e.preventDefault();
-			}
+			if (!e.target.closest('#chat-container')) { e.preventDefault(); }
 		}, { passive: false });
 		
 		let isMarkedAvailable = false;
 		try {
 			if (typeof marked !== 'undefined') {
 				const renderer = new marked.Renderer();
-				
 				renderer.code = function(code, language) {
 					let highlighted = code;
 					if (language && typeof hljs !== 'undefined' && hljs.getLanguage(language)) {
@@ -335,17 +305,13 @@
                         <pre class="!m-0 !p-0 !border-0 !rounded-none overflow-x-auto bg-gray-200"><code class="hljs language-${language} !p-4 block !bg-gray-200">${highlighted}</code></pre>
                     </div>`;
 				};
-				
 				renderer.table = function(header, body) {
 					return `<div class="my-4 w-full overflow-x-auto"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
 				};
-				
 				marked.use({ renderer: renderer, gfm: true, breaks: true });
 				isMarkedAvailable = true;
 			}
-		} catch (e) {
-			console.error(e);
-		}
+		} catch (e) { console.error(e); }
 		
 		function copyCode(btn) {
 			const wrapper = btn.closest('.code-wrapper');
@@ -363,61 +329,129 @@
 		let abortController = null;
 		let selectedFiles = [];
 		
+		const typeStyle = document.createElement('style');
+		typeStyle.innerHTML = `
+		    .typing-text::after { 
+		        content: ''; 
+		        animation: dot-steps 1.5s infinite; 
+		    }
+		    @keyframes dot-steps {
+		        0% { content: ''; }
+		        25% { content: '.'; }
+		        50% { content: '..'; }
+		        75% { content: '...'; }
+		        100% { content: ''; }
+		    }
+		`;
+		document.head.appendChild(typeStyle);
+		
+		const dbName = "AI_ImageStore_V1";
+		const storeName = "images";
+		const initDB = () => new Promise((resolve) => {
+		    const req = indexedDB.open(dbName, 1);
+		    req.onupgradeneeded = (e) => {
+		        if (!e.target.result.objectStoreNames.contains(storeName)) {
+		            e.target.result.createObjectStore(storeName);
+		        }
+		    };
+		    req.onsuccess = (e) => resolve(e.target.result);
+		});
+		
+		async function saveImgToDB(id, dataObj) {
+		    try {
+		        const db = await initDB();
+		        const tx = db.transaction(storeName, "readwrite");
+		        tx.objectStore(storeName).put(dataObj, id);
+		    } catch (e) {}
+		}
+		
+		async function getImgFromDB(id) {
+		    try {
+		        const db = await initDB();
+		        return new Promise((resolve) => {
+		            const req = db.transaction(storeName, "readonly").objectStore(storeName).get(id);
+		            req.onsuccess = () => resolve(req.result);
+		            req.onerror = () => resolve(null);
+		        });
+		    } catch (e) { return null; }
+		}
+		
 		const chatContainer = document.getElementById('chat-container');
 		const userInput = document.getElementById('user-input');
 		const actionBtn = document.getElementById('action-btn');
-		const actionIcon = document.getElementById('action-icon');
 		const resetBtn = document.getElementById('reset-btn');
 		const filePreviewContainer = document.getElementById('file-preview-container');
 		const fileList = document.getElementById('file-list');
 		const fileInput = document.getElementById('file-upload');
 		
-		document.addEventListener('DOMContentLoaded', () => {
-			const savedKey = localStorage.getItem('gemini_api_key');
-			const savedHistory = localStorage.getItem('gemini_chat_history');
-			
-			if (savedKey) {
-				resetBtn.classList.remove('hidden');
-				if (savedHistory) {
-					try {
-						chatHistory = JSON.parse(savedHistory);
-						chatHistory.forEach(msg => {
-							addMessageToUI(msg.role, msg.parts[0].text, false, msg.files || []);
-						});
-					} catch (e) {
-						localStorage.removeItem('gemini_chat_history');
-					}
-				} else {
-					const welcomeMsg = "Halo! ASISTEN siap membantu, ada yang bisa saya kerjakan hari ini?";
-					addMessageToUI('model', welcomeMsg, false);
-					chatHistory.push({ role: "model", parts: [{ text: welcomeMsg }] });
-					saveChatHistory();
-				}
-			} else {
-				userInput.placeholder = "Tempel API Key Google Gemini Anda di sini...";
-			}
-			if (window.visualViewport) {
-				let lastHeight = window.visualViewport.height;
-				window.visualViewport.addEventListener('resize', () => {
-					// Jika tinggi viewport bertambah (artinya keyboard turun/tutup)
-					if (window.visualViewport.height > lastHeight) {
-						setTimeout(() => {
-							window.scrollTo(0, 0);
-							// Scroll chat ke paling bawah
-							chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-						}, 50);
-					}
-					lastHeight = window.visualViewport.height;
-				});
-			}
+		document.addEventListener('DOMContentLoaded', async () => {
+		    const savedKey = localStorage.getItem('gemini_api_key');
+		    const savedHistory = localStorage.getItem('gemini_chat_history');
+		    
+		    if (savedKey) {
+		        resetBtn.classList.remove('hidden');
+		        if (savedHistory) {
+		            try {
+		                chatHistory = JSON.parse(savedHistory);
+		                
+		                for (const msg of chatHistory) {
+		                    const text = msg.parts[0]?.text || "";
+		                    const uiId = addMessageToUI(msg.role, text, false, msg.files || [], true);
+		                    
+		                    if (msg.imgRefId) {
+		                        getImgFromDB(msg.imgRefId).then(imgData => {
+		                            if (imgData) {
+		                                renderImageToBubble(uiId, imgData.data, imgData.mime, text.replace('[GAMBAR]: ', ''));
+		                                scrollToBottom(); 
+		                            } else {
+		                                const el = document.getElementById(uiId);
+		                                if(el) el.innerText = "[Gambar kadaluarsa]";
+		                            }
+		                        });
+		                    }
+		                }
+		
+		                setTimeout(() => {
+		                    scrollToBottom();
+		                    requestAnimationFrame(() => {
+		                        chatContainer.classList.add('loaded');
+		                    });
+		                }, 100);
+		
+		            } catch (e) { 
+		                localStorage.removeItem('gemini_chat_history'); 
+		                chatContainer.classList.add('loaded');
+		            }
+		        } else {
+		            const welcomeMsg = "Halo! ASISTEN siap membantu, ada yang bisa saya kerjakan hari ini?";
+		            addMessageToUI('model', welcomeMsg, false);
+		            chatHistory.push({ role: "model", parts: [{ text: welcomeMsg }] });
+		            saveChatHistory();
+		            chatContainer.classList.add('loaded');
+		        }
+		    } else { 
+		        userInput.placeholder = "Tempel API Key Google Gemini Anda di sini..."; 
+		        chatContainer.classList.add('loaded');
+		    }
+		    
+		    if (window.visualViewport) {
+		        let lastHeight = window.visualViewport.height;
+		        window.visualViewport.addEventListener('resize', () => {
+		            if (window.visualViewport.height < lastHeight) {
+		                setTimeout(scrollToBottom, 50);
+		            }
+		            lastHeight = window.visualViewport.height;
+		        });
+		    }
 		});
 		
 		function getFileType(filename) {
 			if (!filename) return 'FILE';
 			const ext = filename.split('.').pop().toLowerCase();
 			if (['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext)) return 'IMG';
-			if (ext === 'docx') return 'WORD';
+			if (ext === 'docx') return 'DOCX';
 			if (['xls', 'xlsx'].includes(ext)) return 'EXCEL';
+			if (['ppt', 'pptx'].includes(ext)) return 'PPT';
 			if (ext === 'pdf') return 'PDF';
 			return ext.toUpperCase();
 		}
@@ -461,16 +495,44 @@
 				const reader = new FileReader();
 				reader.onload = (e) => {
 					const base64Data = e.target.result.split(',')[1];
-					resolve({
-						inlineData: {
-							mimeType: file.type,
-							data: base64Data
-						}
-					});
+					resolve({ inlineData: { mimeType: file.type, data: base64Data } });
 				};
 				reader.onerror = reject;
 				reader.readAsDataURL(file);
 			});
+		}
+		
+		async function readPptxFile(file) {
+		    try {
+		        const zip = new JSZip();
+		        const content = await zip.loadAsync(file);
+		        let text = `\n--- START PRESENTATION: ${file.name} ---\n`;
+		        const slideFiles = Object.keys(content.files).filter(name => name.startsWith("ppt/slides/slide") && name.endsWith(".xml"));
+		        slideFiles.sort((a, b) => {
+		            const numA = parseInt(a.match(/slide(\d+)\.xml/)[1]);
+		            const numB = parseInt(b.match(/slide(\d+)\.xml/)[1]);
+		            return numA - numB;
+		        });
+		        for (const filename of slideFiles) {
+		            const slideNum = filename.match(/slide(\d+)\.xml/)[1];
+		            const xmlText = await content.files[filename].async("text");
+		            const parser = new DOMParser();
+		            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+		            const textNodes = xmlDoc.getElementsByTagName("a:t");
+		            let slideContent = [];
+		            for (let i = 0; i < textNodes.length; i++) {
+		                slideContent.push(textNodes[i].textContent);
+		            }
+		            if (slideContent.length > 0) {
+		                text += `\n[SLIDE ${slideNum}]\n${slideContent.join(" ")}\n`;
+		            }
+		        }
+		        text += `\n--- END PRESENTATION ---\n`;
+		        return text;
+		    } catch (e) {
+		        console.error("Gagal membaca PPTX:", e);
+		        return `[Error reading PowerPoint file: ${e.message}]`;
+		    }
 		}
 
 		async function processFiles(files) {
@@ -478,21 +540,22 @@
 			const mediaParts = [];
 			for (const file of files) {
 				const ext = file.name.split('.').pop().toLowerCase();
-				if (['html', 'css', 'js', 'txt', 'swift', 'docx', 'xlsx', 'xls'].includes(ext)) {
-					try {
-						const content = await fileToText(file);
-						textFiles.push(`\n=== File: ${file.name} ===\n${content}\n=== End File ===\n`);
-					} catch (e) {
-						console.error(e);
-					}
-				} 
+				if (['html', 'css', 'js', 'txt', 'swift', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].includes(ext)) {
+				    try {
+				        let content = "";
+				        if (['ppt', 'pptx'].includes(ext)) {
+				            content = await readPptxFile(file);
+				        } else {
+				            content = await fileToText(file);
+				        }
+				        textFiles.push(`\n=== File: ${file.name} ===\n${content}\n=== End File ===\n`);
+				    } catch (e) { console.error(e); }
+				}
 				else if (['pdf', 'jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext) || file.type.startsWith('image/')) {
 					try {
 						const base64Part = await fileToBase64(file);
 						mediaParts.push(base64Part);
-					} catch (e) {
-						console.error(e);
-					}
+					} catch (e) { console.error(e); }
 				}
 			}
 			return { textContext: textFiles.join('\n'), mediaParts };
@@ -506,7 +569,8 @@
 					const ext = file.name.split('.').pop().toLowerCase();
 					let type = ext;
 					if (['xlsx', 'xls'].includes(ext)) type = 'excel';
-					if (['docx', 'doc'].includes(ext)) type = 'word';
+					if (['docx', 'doc'].includes(ext)) type = 'docx';
+					if (['pptx', 'ppt'].includes(ext)) type = 'ppt';
 					
 					const iconSrc = `icon/${type}-file-icon.svg`;
 
@@ -514,14 +578,14 @@
 					card.className = 'relative bg-gray-100 rounded-xl p-3 flex items-center gap-3 group border border-transparent hover:border-gray-200 transition-all';
 					card.innerHTML = `
                         <div class="flex-shrink-0 flex items-center justify-center">
-                            <img src="${iconSrc}" alt="${type}" class="w-8 h-8 object-contain" onerror="this.src='https://placehold.co/32?text=FILE'">
+                            <img src="${iconSrc}" alt="${type}" class="w-7 h-7 object-contain" onerror="this.src='https://placehold.co/24?text=FILE'">
                         </div>
                         <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            <p class="text-sm font-medium text-gray-800 truncate leading-tight" title="${file.name}">${file.name}</p>
-                            <p class="text-[10px] text-gray-500 mt-0.5 font-medium">${formatFileSize(file.size)}</p>
+                            <p class="text-[15px] font-medium text-gray-900 truncate leading-snug" title="${file.name}">${file.name}</p>
+                            <p class="text-[10px] text-gray-500 mt-0.5 font-normal leading-tight">${formatFileSize(file.size)}</p>
                         </div>
-                        <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 p-1 text-gray-400 hover:text-red-500 transition-colors z-20" title="Hapus File">
-                            <svg class="w-5 h-5 fill-current drop-shadow-sm" viewBox="0 0 122.881 122.88"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.933,0,61.441,27.507,61.441,61.439 c0,33.933-27.508,61.44-61.441,61.44C27.508,122.88,0,95.372,0,61.439C0,27.507,27.508,0,61.44,0L61.44,0z M81.719,36.226 c1.363-1.363,3.572-1.363,4.936,0c1.363,1.363,1.363,3.573,0,4.936L66.375,61.439l20.279,20.278c1.363,1.363,1.363,3.573,0,4.937 c-1.363,1.362-3.572,1.362-4.936,0L61.44,66.376L41.162,86.654c-1.362,1.362-3.573,1.362-4.936,0c-1.363-1.363-1.363-3.573,0-4.937 l20.278-20.278L36.226,41.162c-1.363-1.363-1.363-3.573,0-4.936c1.363-1.363,3.573-1.363,4.936,0L61.44,56.504L81.719,36.226 L81.719,36.226z"/></g></svg>
+                        <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 p-1 text-gray-300 z-20 rounded-full" title="Hapus File">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 122.881 122.88"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.933,0,61.441,27.507,61.441,61.439 c0,33.933-27.508,61.44-61.441,61.44C27.508,122.88,0,95.372,0,61.439C0,27.507,27.508,0,61.44,0L61.44,0z M81.719,36.226 c1.363-1.363,3.572-1.363,4.936,0c1.363,1.363,1.363,3.573,0,4.936L66.375,61.439l20.279,20.278c1.363,1.363,1.363,3.573,0,4.937 c-1.363,1.362-3.572,1.362-4.936,0L61.44,66.376L41.162,86.654c-1.362,1.362-3.573,1.362-4.936,0c-1.363-1.363-1.363-3.573,0-4.937 l20.278-20.278L36.226,41.162c-1.363-1.363-1.363-3.573,0-4.936c1.363-1.363,3.573-1.363,4.936,0L61.44,56.504L81.719,36.226 L81.719,36.226z"/></g></svg>
                         </button>`;
 					fileList.appendChild(card);
 				});
@@ -537,20 +601,21 @@
 				const ext = file.name.split('.').pop().toLowerCase();
 				let type = ext;
 				if (['xlsx', 'xls'].includes(ext)) type = 'excel';
-				if (['docx', 'doc'].includes(ext)) type = 'word';
+				if (['docx', 'doc'].includes(ext)) type = 'docx';
+				if (['ppt', 'pptx'].includes(ext)) type = 'ppt';
 				
 				const iconSrc = `icon/${type}-file-icon.svg`;
 				
 				html += `
                     <div class="relative bg-gray-200 rounded-xl p-3 flex items-center gap-3 border border-transparent overflow-hidden">
                         <div class="flex-shrink-0 flex items-center justify-center">
-                            <img src="${iconSrc}" alt="${type}" class="w-8 h-8 object-contain" onerror="this.src='https://placehold.co/32?text=FILE'">
+                            <img src="${iconSrc}" alt="${type}" class="w-7 h-7 object-contain" onerror="this.src='https://placehold.co/24?text=FILE'">
                         </div>
                         <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            <p class="text-sm font-medium text-gray-800 truncate leading-tight" title="${file.name}">
+                            <p class="text-[15px] font-medium text-gray-900 truncate leading-snug" title="${file.name}">
                                 ${file.name}
                             </p>
-                            <p class="text-[10px] text-gray-500 mt-0.5 font-medium">
+                            <p class="text-[10px] text-gray-500 mt-0.5 font-normal leading-tight">
                                 ${formatFileSize(file.size)}
                             </p>
                         </div>
@@ -561,129 +626,245 @@
 		}
 
 		async function sendMessage(text, apiKey) {
-			const rawFiles = [...selectedFiles];
-			const filesToSend = selectedFiles.map(f => ({ name: f.name, size: f.size, type: f.type }));
-			
-			userInput.value = '';
-			selectedFiles = [];
-			renderFilePreviews();
-			
-			addMessageToUI('user', text, false, filesToSend);
-			
-			updateUIState(true);
-			showLoadingPlaceholder();
-			
-			abortController = new AbortController();
-			let fullText = "";
-			let collectedMetadata = null;
-			
-			try {
-				const { textContext, mediaParts } = await processFiles(rawFiles);
-				
-				const finalUserTextForAPI = text + (textContext ? `\n\n[USER UPLOADED DOCUMENTS CONTENT]:\n${textContext}` : "");
-				
-				const apiCurrentTurnParts = [...mediaParts, { text: finalUserTextForAPI }];
-				
-				const apiContents = chatHistory.map(msg => ({ role: msg.role, parts: msg.parts }));
-				apiContents.push({ role: "user", parts: apiCurrentTurnParts });
-				
-				const historyMsg = { role: "user", parts: [{ text: text }], files: filesToSend };
-				chatHistory.push(historyMsg);
-				saveChatHistory();
-				
-				const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:streamGenerateContent?key=${apiKey}`;
-				
-				const response = await fetch(url, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						contents: apiContents,
-						systemInstruction: { parts: [{ text: "Kamu adalah Aura, Asisten Pribadi Kak Nixon yang cerdas, ramah, dan profesional. WAJIB: Gunakan Google Search untuk memverifikasi semua informasi faktual." }] },
-						tools: [{ google_search: {} }],
-						generationConfig: { temperature: 0.5, maxOutputTokens: 8192 }
-					}),
-					signal: abortController.signal
-				});
-				
-				removeLoading();
-				if (!response.ok) throw new Error((await response.json()).error?.message || 'API Error');
-				
-				const msgId = addMessageToUI('model', '', true);
-				const msgEl = document.getElementById(msgId);
-				const reader = response.body.getReader();
-				const decoder = new TextDecoder();
-				let buffer = '';
-				
-				while (true) {
-					const { done, value } = await reader.read();
-					if (done) break;
-					buffer += decoder.decode(value, { stream: true });
-					
-					let braceCount = 0,
-						startIndex = -1,
-						inString = false,
-						isEscaped = false;
-					for (let i = 0; i < buffer.length; i++) {
-						const char = buffer[i];
-						if (isEscaped) { isEscaped = false; continue; }
-						if (char === '\\') { isEscaped = true; continue; }
-						if (char === '"') { inString = !inString; continue; }
-						if (!inString) {
-							if (char === '{') {
-								if (braceCount === 0) startIndex = i;
-								braceCount++;
-							} else if (char === '}') {
-								braceCount--;
-								if (braceCount === 0 && startIndex !== -1) {
-									const jsonStr = buffer.substring(startIndex, i + 1);
-									try {
-										const data = JSON.parse(jsonStr);
-										if (data.candidates?.[0]?.groundingMetadata) collectedMetadata = data.candidates[0].groundingMetadata;
-										const newText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-										if (newText) {
-											fullText += newText;
-											msgEl.innerHTML = isMarkedAvailable ? marked.parse(fullText) : `<p class="whitespace-pre-wrap">${fullText}</p>`;
-											chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'auto' });
-										}
-									} catch (e) {}
-									buffer = buffer.substring(i + 1);
-									i = -1;
-									startIndex = -1;
-								}
-							}
-						}
-					}
-				}
-				
-				chatHistory.push({ role: "model", parts: [{ text: fullText }] });
-				saveChatHistory();
-				if (collectedMetadata) {
-					renderGroundingSources(msgId, collectedMetadata);
-					setTimeout(() => chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }), 100);
-				}
-				
-			} catch (error) {
-				if (error.name !== 'AbortError') {
-					removeLoading();
-					const errDiv = document.createElement('div');
-					errDiv.className = 'w-full max-w-3xl mx-auto mb-6';
-					errDiv.innerHTML = `<div class="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm border border-red-100 flex items-center gap-2"><i class="fa-solid fa-circle-exclamation"></i><span>Error: ${error.message}</span></div>`;
-					chatContainer.appendChild(errDiv);
-				} else {
-					removeLoading();
-					if (fullText) { chatHistory.push({ role: "model", parts: [{ text: fullText }] });
-						saveChatHistory(); }
-				}
-			} finally {
-				updateUIState(false);
-				abortController = null;
-			}
+		    const currentFiles = [...selectedFiles];
+		    const filesToSend = selectedFiles.map(f => ({ name: f.name, size: f.size, type: f.type }));
+		    
+		    let imageBlobData = null;
+		    const imageFile = currentFiles.find(f => f.type.startsWith('image/'));
+		    if (imageFile) {
+		        try {
+		            const b64 = await fileToBase64(imageFile);
+		            imageBlobData = { inlineData: { mimeType: b64.inlineData.mimeType, data: b64.inlineData.data } };
+		        } catch (e) {}
+		    }
+		
+		    userInput.value = '';
+		    selectedFiles = [];
+		    renderFilePreviews();
+		    
+		    addMessageToUI('user', text, false, filesToSend);
+		    updateUIState(true);
+		    
+		    abortController = new AbortController();
+		    let fullText = "";
+		    let collectedMetadata = null;
+		    
+		    const loadingHtml = `<p class="text-[15px] italic typing-text leading-relaxed m-0" style="color: #9ca3af !important; font-weight: normal !important;">Thinking</p>`;
+    		let msgId = addMessageToUI('model', loadingHtml, false); 
+		    
+		    chatHistory.push({ role: "user", parts: [{ text: text }], files: filesToSend });
+		    chatHistory.push({ role: "model", parts: [{ text: "" }], uiId: msgId }); 
+		    saveChatHistory();
+		
+		    try {
+		        const { textContext, mediaParts } = await processFiles(currentFiles);
+		        const finalUserTextForAPI = text + (textContext ? `\n\n[USER DOCUMENTS]:\n${textContext}` : "");
+		        const apiCurrentTurnParts = [...mediaParts, { text: finalUserTextForAPI }];
+		        
+		        const apiContents = chatHistory.slice(0, -2).map(msg => ({ 
+		            role: msg.role, 
+		            parts: msg.parts 
+		        }));
+		        apiContents.push({ role: "user", parts: apiCurrentTurnParts });
+		
+		        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:streamGenerateContent?key=${apiKey}`;
+		        
+		        const systemPrompt = `Kamu adalah Aura, Asisten Pribadi yang cerdas.
+		        ATURAN KHUSUS:
+		        1. Jika pengguna meminta membuat gambar, visualisasi, atau lukisan, responmu HANYA boleh berisi format ini:
+		           [GAMBAR]: <deskripsi detail gambar dalam bahasa inggris untuk prompt>
+		        2. Jika pengguna mengirim gambar dan meminta mengubah/mengeditnya, responmu HANYA boleh berisi format ini:
+		           [EDIT]: <instruksi edit dalam bahasa inggris>
+		        3. Untuk pertanyaan lain, jawab seperti biasa dengan ramah.`;
+		
+		        const response = await fetch(url, {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/json' },
+		            body: JSON.stringify({
+		                contents: apiContents,
+		                systemInstruction: { parts: [{ text: systemPrompt }] },
+		                tools: [{ google_search: {} }],
+		                generationConfig: { temperature: 0.5, maxOutputTokens: 8192 }
+		            }),
+		            signal: abortController.signal
+		        });
+		        
+		        const msgEl = document.getElementById(msgId);
+		        
+		        if (!response.ok) throw new Error((await response.json()).error?.message || 'API Error');
+		        
+		        const reader = response.body.getReader();
+		        const decoder = new TextDecoder();
+		        let buffer = '';
+		        
+		        while (true) {
+		            const { done, value } = await reader.read();
+		            if (done) break;
+		            buffer += decoder.decode(value, { stream: true });
+		            
+		            let braceCount = 0, startIndex = -1, inString = false, isEscaped = false;
+		            for (let i = 0; i < buffer.length; i++) {
+		                const char = buffer[i];
+		                if (isEscaped) { isEscaped = false; continue; }
+		                if (char === '\\') { isEscaped = true; continue; }
+		                if (char === '"') { inString = !inString; continue; }
+		                if (!inString) {
+		                    if (char === '{') {
+		                        if (braceCount === 0) startIndex = i;
+		                        braceCount++;
+		                    } else if (char === '}') {
+		                        braceCount--;
+		                        if (braceCount === 0 && startIndex !== -1) {
+		                            const jsonStr = buffer.substring(startIndex, i + 1);
+		                            try {
+		                                const data = JSON.parse(jsonStr);
+		                                if (data.candidates?.[0]?.groundingMetadata) collectedMetadata = data.candidates[0].groundingMetadata;
+		                                const newText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+		                                if (newText) {
+		                                    fullText += newText;
+		                                    
+		                                    const isStartingCommand = fullText.trim().startsWith('[') && fullText.length < 20;
+		                                    const isCommand = fullText.includes('[GAMBAR]:') || fullText.includes('[EDIT]:');
+		                                    
+		                                    if (!isStartingCommand && !isCommand && msgEl) {
+		                                         msgEl.innerHTML = isMarkedAvailable ? marked.parse(fullText) : `<p class="whitespace-pre-wrap">${fullText}</p>`;
+		                                         scrollToBottom();
+		                                    }
+		                                }
+		                            } catch (e) {}
+		                            buffer = buffer.substring(i + 1);
+		                            i = -1;
+		                            startIndex = -1;
+		                        }
+		                    }
+		                }
+		            }
+		        }
+		        
+		        const imgMatch = fullText.match(/\[GAMBAR\]:\s*([\s\S]+)/i);
+		        const editMatch = fullText.match(/\[EDIT\]:\s*([\s\S]+)/i);
+		        const commandMatch = imgMatch || editMatch;
+		
+		        if (commandMatch) {
+		            const commandType = imgMatch ? 'GAMBAR' : 'EDIT';
+		            const promptContent = commandMatch[1].trim();
+		            const cleanPrompt = (commandType === 'EDIT' ? '/edit ' : '') + promptContent;
+		            
+		            chatHistory.pop();
+		            await handleImageGeneration(cleanPrompt, apiKey, imageBlobData, msgId);
+		            return;
+		        }
+		
+		        const lastHistoryMsg = chatHistory[chatHistory.length - 1];
+		        if (lastHistoryMsg) lastHistoryMsg.parts = [{ text: fullText }];
+		        saveChatHistory();
+		
+		        if (collectedMetadata) {
+		            renderGroundingSources(msgId, collectedMetadata);
+		            setTimeout(scrollToBottom, 100);
+		        }
+		        
+		    } catch (error) {
+		        if (error.name !== 'AbortError') {
+		            const errDiv = document.createElement('div');
+		            errDiv.className = 'w-full max-w-3xl mx-auto mb-6';
+		            errDiv.innerHTML = `<div class="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm border border-red-100 flex items-center gap-2"><i class="fa-solid fa-circle-exclamation"></i><span>Error: ${error.message}</span></div>`;
+		            chatContainer.appendChild(errDiv);
+		        }
+		    } finally {
+		        updateUIState(false);
+		        abortController = null;
+		    }
+		}
+
+		async function handleImageGeneration(promptText, apiKey, imageBlobObj = null, existingMsgId = null) {
+		    const isEdit = promptText.toLowerCase().startsWith('/edit');
+		    const cleanPrompt = promptText.replace(/^\/(gambar|edit)\s+/i, '').trim();
+		    
+		    const statusText = isEdit ? "Mengedit gambar" : "Membuat gambar";
+		    const loadingHtml = `<p class="text-[15px] italic typing-text leading-relaxed m-0" style="color: #9ca3af !important; font-weight: normal !important;">${statusText}</p>`;
+    
+    		let msgId = existingMsgId;
+		    if (!msgId) {
+		        msgId = addMessageToUI('model', loadingHtml, false);
+		    } else {
+		        const el = document.getElementById(msgId);
+		        if(el) el.innerHTML = loadingHtml;
+		    }
+		
+		    const contentDiv = document.getElementById(msgId);
+		
+		    try {
+		        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`;
+		        const parts = [];
+		        
+		        if (imageBlobObj) {
+		            parts.push(imageBlobObj);
+		        } else if (isEdit) {
+		             if (contentDiv) contentDiv.innerHTML = `<span class="text-red-500">Gagal: Mode edit memerlukan upload gambar baru.</span>`;
+		             return;
+		        }
+		        
+		        parts.push({ text: cleanPrompt });
+		
+		        const response = await fetch(url, {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/json' },
+		            body: JSON.stringify({ contents: [{ parts: parts }] })
+		        });
+		
+		        const data = await response.json();
+		        const candidate = data.candidates?.[0];
+		        
+		        const imageOutput = candidate?.content?.parts?.find(p => p.inlineData && p.inlineData.data);
+		
+		        if (imageOutput) {
+		            const base64 = imageOutput.inlineData.data;
+		            const mime = imageOutput.inlineData.mimeType || 'image/jpeg';
+		            const imgId = 'img_' + Date.now();
+		
+		            await saveImgToDB(imgId, { mime, data: base64 });
+		            renderImageToBubble(msgId, base64, mime, cleanPrompt);
+		            setTimeout(scrollToBottom, 100);
+		
+		            const existingIdx = chatHistory.findIndex(m => m.uiId === msgId);
+		            
+		            const newEntry = { 
+		                role: "model", 
+		                parts: [{ text: `[GAMBAR]: ${cleanPrompt}` }], 
+		                imgRefId: imgId,
+		                uiId: msgId
+		            };
+		
+		            if (existingIdx !== -1) {
+		                chatHistory[existingIdx] = newEntry;
+		            } else {
+		                chatHistory.push(newEntry);
+		            }
+		            saveChatHistory();
+		        } else {
+		            if (contentDiv) {
+		                const wrapper = contentDiv.closest('.w-full.max-w-3xl');
+		                if (wrapper) wrapper.remove();
+		            }
+		            
+		            const existingIdx = chatHistory.findIndex(m => m.uiId === msgId);
+		            if (existingIdx !== -1) {
+		                chatHistory.splice(existingIdx, 1);
+		                saveChatHistory();
+		            }
+		        }
+		
+		    } catch (error) {
+		        if (contentDiv) contentDiv.innerHTML = `<span class="text-red-500">Error: ${error.message}</span>`;
+		    } finally {
+		        updateUIState(false);
+		    }
 		}
 		
 		function handleFileSelect(event) {
 			const files = Array.from(event.target.files);
 			files.forEach(file => {
-				const name = file.name.toLowerCase();
 				if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
 					selectedFiles.push(file);
 				}
@@ -698,45 +879,102 @@
 		}
 		
 		function handleEnter(e) { if (e.key === 'Enter') { e.preventDefault(); handleInput(); } }
-		
 		function saveChatHistory() { localStorage.setItem('gemini_chat_history', JSON.stringify(chatHistory)); }
 		
 		const customAlert = document.getElementById('custom-alert');
-
-		function resetKey() {
-			customAlert.classList.remove('hidden');
+		function resetKey() { customAlert.classList.remove('hidden'); }
+		function closeCustomAlert() { customAlert.classList.add('hidden'); }
+		function confirmReset() { localStorage.clear(); location.reload(); }
+		customAlert.addEventListener('click', (e) => { if (e.target === customAlert) closeCustomAlert(); });
+		
+		async function handleImageDownload(e, dataUrl, fileName) {
+			e.preventDefault();
+			e.stopPropagation();
+			try {
+				const response = await fetch(dataUrl);
+				const blob = await response.blob();
+				const file = new File([blob], fileName, { type: blob.type });
+				if (navigator.canShare && navigator.canShare({ files: [file] })) {
+					await navigator.share({ files: [file], title: 'Simpan Gambar AI' });
+				} else {
+					const blobUrl = window.URL.createObjectURL(blob);
+					const link = document.createElement('a');
+					link.href = blobUrl;
+					link.download = fileName;
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+					window.URL.revokeObjectURL(blobUrl);
+				}
+			} catch (err) { console.error(err); }
 		}
 
-		function closeCustomAlert() {
-			customAlert.classList.add('hidden');
+		function renderImageToBubble(elementId, base64, mime, prompt) {
+		    const contentDiv = document.getElementById(elementId);
+		    if (!contentDiv) return;
+		    const timestamp = Date.now();
+		    
+		    contentDiv.innerHTML = `
+		        <div class="relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm mt-1 inline-block w-full">
+		            <img src="data:${mime};base64,${base64}" class="w-full h-auto bg-gray-50 block" alt="${prompt}">
+		            
+		            <a href="data:${mime};base64,${base64}" download="AI-${timestamp}.jpg" 
+		               class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-black/60 hover:bg-black/80 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 transform-gpu backdrop-blur-[2px]" 
+		               title="Download Gambar">
+		                
+		                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+		                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+		                    <polyline points="7 10 12 15 17 10"></polyline>
+		                    <line x1="12" y1="15" x2="12" y2="3"></line>
+		                </svg>
+		            </a>
+		        </div>`;
 		}
-
-		function confirmReset() {
-			localStorage.clear();
-			location.reload();
+		
+		function scrollToBottom() {
+		    const container = document.getElementById('chat-container');
+		    if (container) {
+		        container.scrollTop = container.scrollHeight;
+		        window.requestAnimationFrame(() => {
+		            container.scrollTop = container.scrollHeight;
+		        });
+		    }
 		}
-
-		customAlert.addEventListener('click', (e) => {
-			if (e.target === customAlert) {
-				closeCustomAlert();
-			}
-		});
 		
 		function handleInput() {
-			if (isGenerating) { stopGeneration(); } else {
-				const text = userInput.value.trim();
-				const apiKey = localStorage.getItem('gemini_api_key');
-				if (!text && selectedFiles.length === 0) return;
-				if (!apiKey) saveApiKey(text);
-				else sendMessage(text, apiKey);
-			}
+		    if (isGenerating) { 
+		        stopGeneration(); 
+		    } else {
+		        const text = userInput.value.trim();
+		        const apiKey = localStorage.getItem('gemini_api_key');
+		        
+		        if (!text && selectedFiles.length === 0) return;
+		        
+		        if (!apiKey) {
+		            saveApiKey(text);
+		        } else {
+		            sendMessage(text, apiKey);
+		        }
+		    }
 		}
 		
 		function stopGeneration() { if (abortController) abortController.abort(); }
 		
 		function updateUIState(generating) {
 			isGenerating = generating;
-			actionIcon.className = generating ? "fa-solid fa-square text-white text-xs" : "fa-solid fa-arrow-right text-xl";
+			const btn = document.getElementById('action-btn');
+			
+			if (generating) {
+				btn.innerHTML = `
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24">
+						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+					</svg>`;
+			} else {
+				btn.innerHTML = `
+					<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1">
+						<path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z" fill="white"></path>
+					</svg>`;
+			}
 		}
 		
 		function saveApiKey(keyText) {
@@ -754,56 +992,82 @@
 			}, 600);
 		}
 		
-		function addMessageToUI(role, text, isStream = false, files = []) {
-			const div = document.createElement('div');
-			const isUser = role === 'user';
-			const uniqueId = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 9);
-			
-			div.className = 'w-full max-w-3xl mx-auto mb-6';
-			const fileGrid = generateFileGridHtml(files);
-			
-			let contentHtml = '';
-			if (text) {
-				if (isUser) {
-					contentHtml = `<p class="whitespace-pre-wrap font-sans text-gray-700 font-normal">${text}</p>`;
-				} else {
-					try {
-						contentHtml = isMarkedAvailable ? marked.parse(text) : `<p class="whitespace-pre-wrap">${text}</p>`;
-					} catch (e) {
-						contentHtml = `<p class="whitespace-pre-wrap">${text}</p>`;
-					}
-				}
-			}
-			
-			const nameClass = isUser ? 'font-bold text-xs uppercase tracking-tight text-gray-500' : 'font-bold text-xs uppercase tracking-tight bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent';
-
-			div.innerHTML = `
-                <div class="w-full bg-gray-100 rounded-xl px-5 pt-3 pb-4">
-                    <div class="flex items-center justify-between mb-1 pb-1 border-b border-gray-200">
-                        <span class="${nameClass}">
-                            ${isUser ? 'ANDA' : 'ASISTEN'}
-                        </span>
-                    </div>
-                    ${fileGrid}
-                    <div id="${uniqueId}" class="prose prose-sm max-w-none text-gray-700 font-normal leading-relaxed break-words">
-                        ${contentHtml}
-                    </div>
-                </div>`;
-			
-			chatContainer.appendChild(div);
-			setTimeout(() => chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' }), 50);
-			return uniqueId;
+		function addMessageToUI(role, text, isStream = false, files = [], skipScroll = false) {
+		    const div = document.createElement('div');
+		    const isUser = role === 'user';
+		    const uniqueId = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 9);
+		    const btnId = 'btn-' + uniqueId;
+		    
+		    const now = new Date();
+		    const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+		    
+		    div.className = 'w-full max-w-3xl mx-auto mb-6';
+		    const fileGrid = generateFileGridHtml(files);
+		    
+		    let contentHtml = '';
+		    if (text) {
+		        if (isUser) {
+		            contentHtml = `<p class="whitespace-pre-wrap font-sans text-gray-900 font-medium text-[15px] leading-relaxed mb-0">${text}</p>`;
+		        } else {
+		            try {
+		                contentHtml = isMarkedAvailable ? marked.parse(text) : `<p class="whitespace-pre-wrap text-gray-900 font-medium text-[15px]">${text}</p>`;
+		            } catch (e) {
+		                contentHtml = `<p class="whitespace-pre-wrap text-gray-900 font-medium text-[15px]">${text}</p>`;
+		            }
+		        }
+		    }
+		    
+		    const nameClass = isUser ? 'font-bold text-xs uppercase tracking-tight text-gray-500' : 'font-bold text-xs uppercase tracking-tight bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent';
+		
+		    let copyBtnHtml = '';
+		    let bubbleClickAttr = '';
+		    const paddingBottom = isUser ? 'pb-1' : 'pb-4'; 
+		    
+		    if (!isUser) {
+		        bubbleClickAttr = `onclick="toggleCopyBtn('${btnId}', event)"`;
+		        copyBtnHtml = `
+		            <button id="${btnId}" onclick="copyMessageText('${uniqueId}', '${btnId}', event)" class="hidden absolute bottom-2 right-5 text-gray-400 z-10" title="Salin Pesan">
+		                <svg class="w-4 h-4" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+		                    <g stroke-width="0"></g>
+		                    <g stroke-linecap="round" stroke-linejoin="round"></g>
+		                    <g> 
+		                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.676 14.248C17.676 15.8651 16.3651 17.176 14.748 17.176H7.428C5.81091 17.176 4.5 15.8651 4.5 14.248V6.928C4.5 5.31091 5.81091 4 7.428 4H14.748C16.3651 4 17.676 5.31091 17.676 6.928V14.248Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+		                        <path d="M10.252 20H17.572C19.1891 20 20.5 18.689 20.5 17.072V9.75195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+		                    </g>
+		                </svg>
+		            </button>
+		        `;
+		    }
+		
+		    div.innerHTML = `
+		        <div class="w-full bg-gray-100 rounded-xl px-5 pt-3 ${paddingBottom} relative group cursor-pointer" ${bubbleClickAttr}>
+		            <div class="flex items-center justify-between mb-1 pb-1 border-b border-gray-200">
+		                <span class="${nameClass}">${isUser ? 'ANDA' : 'ASISTEN'}</span>
+		                <span class="font-medium text-xs text-gray-400 tracking-tight">${timeString}</span>
+		            </div>
+		            ${fileGrid}
+		            <div id="${uniqueId}" class="prose prose-sm max-w-none text-gray-900 font-medium leading-relaxed break-words pb-0.5">
+		                ${contentHtml}
+		            </div>
+		            ${copyBtnHtml}
+		        </div>`;
+		    
+		    chatContainer.appendChild(div);
+		    
+		    if (!skipScroll) {
+		        setTimeout(scrollToBottom, 50);
+		    }
+		    
+		    return uniqueId;
 		}
 		
 		function renderGroundingSources(elementId, metadata) {
 			if (!metadata?.groundingAttributions?.length) return;
 			const contentDiv = document.getElementById(elementId);
 			if (!contentDiv) return;
-			
 			const wrapperDiv = contentDiv.closest('.w-full.bg-gray-100');
 			const sourcesDiv = document.createElement('div');
 			sourcesDiv.className = 'mt-3 pt-3 border-t border-gray-300 text-xs text-gray-600';
-			
 			let sourcesHtml = '<div class="flex items-center gap-2 mb-2 font-semibold text-gray-700"><i class="fa-brands fa-google"></i> Sumber Informasi:</div><div class="flex flex-wrap gap-2">';
 			const seenUrls = new Set();
 			metadata.groundingAttributions.forEach(source => {
@@ -819,12 +1083,16 @@
 		
 		function showLoadingPlaceholder() {
 			const div = document.createElement('div');
+			const now = new Date();
+			const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+			
 			div.id = 'loading-indicator';
 			div.className = 'w-full max-w-3xl mx-auto mb-6';
 			div.innerHTML = `
                 <div class="w-full bg-gray-100 rounded-xl px-5 pt-3 pb-4">
                     <div class="flex items-center justify-between mb-1 pb-1 border-b border-gray-200">
                         <span class="font-bold text-xs uppercase tracking-tight bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">ASISTEN</span>
+                        <span class="font-medium text-xs text-gray-400 tracking-tight">${timeString}</span>
                     </div>
                     <div class="flex items-center gap-1 py-2">
                         <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
@@ -840,6 +1108,59 @@
 			const loader = document.getElementById('loading-indicator');
 			if (loader) loader.remove();
 		}
+		
+		function toggleCopyBtn(btnId, event) {
+			if (event) event.stopPropagation();
+
+			document.querySelectorAll('[id^="btn-msg-"]').forEach(btn => {
+				if (btn.id !== btnId) btn.classList.add('hidden');
+			});
+
+			const btn = document.getElementById(btnId);
+			if (btn) {
+				btn.classList.toggle('hidden');
+			}
+		}
+
+		function copyMessageText(msgContentId, btnId, event) {
+			if (event) event.stopPropagation();
+
+			const contentDiv = document.getElementById(msgContentId);
+			if (!contentDiv) return;
+
+			const textToCopy = contentDiv.innerText;
+
+			navigator.clipboard.writeText(textToCopy).then(() => {
+				const btn = document.getElementById(btnId);
+				
+				btn.innerHTML = `<svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+				btn.classList.remove('text-gray-400');
+				btn.classList.add('text-green-500');
+
+				setTimeout(() => {
+					btn.innerHTML = `
+						<svg class="w-4 h-4" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<g stroke-width="0"></g>
+							<g stroke-linecap="round" stroke-linejoin="round"></g>
+							<g> 
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M17.676 14.248C17.676 15.8651 16.3651 17.176 14.748 17.176H7.428C5.81091 17.176 4.5 15.8651 4.5 14.248V6.928C4.5 5.31091 5.81091 4 7.428 4H14.748C16.3651 4 17.676 5.31091 17.676 6.928V14.248Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+								<path d="M10.252 20H17.572C19.1891 20 20.5 18.689 20.5 17.072V9.75195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
+							</g>
+						</svg>`;
+					btn.classList.remove('text-green-500');
+					btn.classList.add('text-gray-400');
+				}, 2000);
+			}).catch(err => {
+				console.error(err);
+			});
+		}
+		document.addEventListener('click', function(event) {
+			if (!event.target.closest('[id^="btn-msg-"]')) {
+				document.querySelectorAll('[id^="btn-msg-"]').forEach(btn => {
+					btn.classList.add('hidden');
+				});
+			}
+		});
 	</script>
 </body>
 </html>
