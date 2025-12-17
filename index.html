@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
@@ -435,14 +434,15 @@
 		    }
 		    
 		    if (window.visualViewport) {
-		        let lastHeight = window.visualViewport.height;
-		        window.visualViewport.addEventListener('resize', () => {
-		            if (window.visualViewport.height < lastHeight) {
-		                setTimeout(scrollToBottom, 50);
-		            }
-		            lastHeight = window.visualViewport.height;
-		        });
-		    }
+				let lastHeight = window.visualViewport.height;
+				window.visualViewport.addEventListener('resize', () => {
+					if (window.visualViewport.height > lastHeight) setTimeout(() => {
+						window.scrollTo(0, 0);
+						scrollToBottom();
+					}, 50);
+					lastHeight = window.visualViewport.height;
+				});
+			}
 		});
 		
 		function getFileType(filename) {
