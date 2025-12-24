@@ -1672,26 +1672,32 @@
     renderSidebarHistory();
 
     if (window.visualViewport) {
-        let lastHeight = window.visualViewport.height;
-        window.visualViewport.addEventListener('resize', () => {
-            // Jika tinggi viewport bertambah (keyboard tertutup)
-            if (window.visualViewport.height > lastHeight) {
-                setTimeout(() => {
-                    // Reset posisi scroll window ke paling atas (Wajib untuk iOS)
-                    window.scrollTo(0, 0);
-                    
-                    const settingsPage = document.getElementById('settings-page');
-                    const authPage = document.getElementById('auth-page');
+    let lastHeight = window.visualViewport.height;
+    window.visualViewport.addEventListener('resize', () => {
+        if (window.visualViewport.height > lastHeight) {
+            // Kondisi ini terjadi saat keyboard ditutup (manual atau otomatis)
+            setTimeout(() => {
+                // 1. Paksa sistem mengembalikan posisi layout ke titik nol (Kunci fix iOS)
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
 
-                    // Jika berada di halaman Chat (Settings & Auth tertutup)
-                    if (authPage.classList.contains('hidden') && settingsPage.classList.contains('hidden')) {
-                        scrollToBottom();
-                    }
-                }, 50);
-            }
-            lastHeight = window.visualViewport.height;
-        });
-    }
+                const settingsPage = document.getElementById('settings-page');
+                const authPage = document.getElementById('auth-page');
+
+                // 2. Jalankan scrollToBottom HANYA jika user sedang di halaman Chat
+                // (Artinya Auth dan Settings sedang tertutup)
+                if (authPage.classList.contains('hidden') && settingsPage.classList.contains('hidden')) {
+                    scrollToBottom();
+                }
+                
+                // Pada halaman Auth & Settings, window.scrollTo(0,0) di atas 
+                // sudah otomatis memperbaiki posisi inputan agar tidak "melayang".
+            }, 50); // Delay 100ms agar sinkron dengan durasi animasi keyboard iOS
+        }
+        lastHeight = window.visualViewport.height;
+    });
+}
     chatContainer.classList.add('loaded');
     drawVoice();
 });
