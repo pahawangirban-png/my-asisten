@@ -496,27 +496,23 @@
 			await sessionCheck();
 		    const savedHistory = localStorage.getItem('gemini_chat_history');
 			
-			if (window.visualViewport) {
-        let lastHeight = window.visualViewport.height;
-        window.visualViewport.addEventListener('resize', () => {
-            // Jika keyboard ditutup (tinggi viewport bertambah)
-            if (window.visualViewport.height > lastHeight) {
-                setTimeout(() => {
-                    window.scrollTo(0, 0);
-                    
-                    // Jalankan scroll chat hanya jika fungsi tersedia/perlu
-                    if (typeof scrollToBottom === 'function') scrollToBottom();
-
-                    // Paksa blur jika yang aktif adalah input login agar kursor iPad tidak nyangkut
-                    const active = document.activeElement;
-                    if (active && (active.id === 'auth-email' || active.id === 'auth-password')) {
-                        active.blur();
-                    }
-                }, 50);
-            }
-            lastHeight = window.visualViewport.height;
-        });
-    }
+			document.addEventListener('contextmenu', e => { if (e.target.closest('.group')) { e.preventDefault(); } });
+	let lastTouchEnd = 0;
+	document.addEventListener('touchend', e => {
+		const now = Date.now();
+		if (now - lastTouchEnd <= 300) e.preventDefault();
+		lastTouchEnd = now;
+	}, false);
+	if (window.visualViewport) {
+		let lastHeight = window.visualViewport.height;
+		window.visualViewport.addEventListener('resize', () => {
+			if (window.visualViewport.height > lastHeight) setTimeout(() => {
+				window.scrollTo(0, 0);
+				scrollToBottom();
+			}, 50);
+			lastHeight = window.visualViewport.height;
+		});
+	}
 		    
 		    if (savedHistory) {
 		        try {
@@ -558,7 +554,16 @@
 		        chatContainer.classList.add('loaded');
 		    }
 		    
-		    
+		    if (window.visualViewport) {
+				let lastHeight = window.visualViewport.height;
+				window.visualViewport.addEventListener('resize', () => {
+					if (window.visualViewport.height > lastHeight) setTimeout(() => {
+						window.scrollTo(0, 0);
+						scrollToBottom();
+					}, 50);
+					lastHeight = window.visualViewport.height;
+				});
+			}
 		});
 		
 		function getFileType(filename) {
