@@ -5,8 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
   <title>AI ASISTEN</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,7 +22,6 @@
   <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
@@ -264,165 +261,428 @@
 	  overscroll-behavior: contain;
 	  padding-bottom: 8px;
 	}
+	
+	html.dark body,
+	html.dark main,
+	html.dark header,
+	html.dark footer,
+	html.dark .bg-white {
+	  background-color: #0f0f0f !important;
+	}
+	
+	html.dark .bg-gray-100,
+	html.dark .bg-gray-200 {
+	  background-color: #171717 !important;
+	  color: #d4d4d4 !important;
+	}
+	
+	html.dark .border-gray-200,
+	html.dark .border-gray-300 {
+	  border-color: #262626 !important;
+	}
+	
+	html.dark .prose hr {
+	  border: none !important;
+	  border-top: 1px solid rgba(255, 255, 255, 0.14) !important;
+	}
+	
+	html.dark input,
+	html.dark .text-gray-900,
+	html.dark .text-gray-800,
+	html.dark .text-gray-700,
+	html.dark .text-gray-600,
+	html.dark .text-gray-500,
+	html.dark .prose strong,
+	html.dark .prose h1,
+	html.dark .prose h2,
+	html.dark .prose h3 {
+	  color: #d4d4d4 !important;
+	}
+	
+	html.dark .prose blockquote {
+	  color: #d4d4d4 !important;
+	  border-left-color: #404040 !important;
+	}
+	
+	html.dark .prose th,
+	html.dark .prose td {
+	  border-color: #2a2a2a !important;
+	}
+	
+	html.dark .prose code:not(.hljs) {
+	  background-color: #262626 !important;
+	  color: #d4d4d4 !important;
+	}
+	
+	html.dark #action-btn.bg-gray-100 {
+	  background-color: #262626 !important;
+	}
+	
+	html.dark .text-gray-400,
+	html.dark #action-btn {
+	  color: #a3a3a3 !important;
+	}
+	
+	html.dark #custom-alert > div {
+	  background-color: #171717 !important;
+	  border: 1px solid #262626;
+	}
+	
+	html.dark #custom-alert h3 { color: #d4d4d4 !important; }
+	html.dark #custom-alert p { color: #a3a3a3 !important; }
+	
+	html.dark #custom-alert .border-gray-300\/70,
+	html.dark #custom-alert .border-r {
+	  border-color: #262626 !important;
+	}
+	
+	html.dark #custom-alert button:hover {
+	  background-color: #262626 !important;
+	}
+	
+	html.dark .relative.rounded-xl.p-3.flex.items-center {
+	  background-color: #1f1f1f !important;
+	  border-color: transparent !important;
+	}
+	
+	html.dark .relative.rounded-xl.p-3.flex.items-center img {
+	  filter: brightness(0) invert(1) !important;
+	}
+	
+	html.dark .text-gray-300 { color: #525252 !important; }
+	
+	html.dark #action-btn.text-red-600 { color: #ef4444 !important; }
+	html.dark #action-btn.text-red-600:hover { color: #dc2626 !important; }
+	
+	html.dark .prose th {
+	  background-color: #1f1f1f !important;
+	  color: #d4d4d4 !important;
+	}
+	
+	html.dark .code-wrapper {
+	  background-color: #1f1f1f !important;
+	  border: none !important;
+	}
+	
+	html.dark .code-wrapper > div:first-child {
+	  background-color: #1f1f1f !important;
+	  border-bottom: 1px solid #171717 !important;
+	}
+	
+	html.dark .code-wrapper > div:first-child span { color: #a3a3a3 !important; }
+	html.dark .code-wrapper button { color: #525252 !important; }
+	html.dark .code-wrapper button:hover { color: #d4d4d4 !important; }
+	
+	html.dark .code-wrapper pre,
+	html.dark .code-wrapper code.hljs {
+	  background-color: #1f1f1f !important;
+	  color: #e6edf3 !important;
+	}
+	
+	html.dark .hljs-keyword,
+	html.dark .hljs-built_in,
+	html.dark .hljs-tag { color: #79c0ff !important; }
+	
+	html.dark .hljs-string,
+	html.dark .hljs-bullet { color: #7ee787 !important; }
+	
+	html.dark .hljs-title,
+	html.dark .hljs-attr { color: #d2a8ff !important; }
+	
+	html.dark .hljs-number,
+	html.dark .hljs-literal { color: #a5d6ff !important; }
+	
+	html.dark .hljs-comment {
+	  color: #8b949e !important;
+	  font-style: italic;
+	}
+	
+	html.dark #settings-page,
+	html.dark #settings-page main {
+	  background-color: #0f0f0f !important;
+	}
+	
+	html.dark #settings-page header {
+	  background-color: #0f0f0f !important;
+	  border-bottom: 1px solid #262626 !important;
+	}
+	
+	html.dark #settings-page .bg-white {
+	  background-color: #171717 !important;
+	  border-color: #262626 !important;
+	}
+	
+	html.dark #settings-page textarea,
+	html.dark #settings-page #model-btn,
+	html.dark #settings-page #image-model-btn,
+	html.dark #settings-page .bg-gray-50 {
+	  background-color: #1f1f1f !important;
+	  border-color: #262626 !important;
+	  color: #d4d4d4 !important;
+	}
+	
+	html.dark #model-options,
+	html.dark #image-model-options,
+	html.dark #voice-model-options {
+	  background-color: #171717 !important;
+	  border-color: #262626 !important;
+	}
+	
+	html.dark #model-options div,
+	html.dark #image-model-options div,
+	html.dark #voice-model-options div {
+	  color: #d4d4d4 !important;
+	  border-color: rgba(255, 255, 255, 0.05) !important;
+	}
+	
+	html.dark .custom-slider { background: #262626 !important; }
+	
+	html.dark .custom-slider::-webkit-slider-thumb {
+	  background: rgba(255, 255, 255, 0.2) !important;
+	  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+	  backdrop-filter: blur(4px);
+	}
+	
+	html.dark #aura-sphere {
+	  background-color: #374151;
+	  background-image: none !important;
+	  box-shadow: none !important;
+	}
+	
+	html.dark #sidebar {
+	    background-color: #0f0f0f !important;
+	    border-right: none !important;
+	}
+	
+	html.dark #sidebar .h-20 div.border-b {
+	    border-color: #1f1f1f !important; 
+	}
+	
+	html.dark .history-item.bg-gray-50 {
+	    background-color: #121212 !important; 
+	    color: #a3a3a3 !important;
+	}
+	
+	html.dark .history-item .text-blue-400 {
+	    color: #60a5fa !important;
+	}
+	
+	html.dark .history-item .text-gray-400 {
+	    color: #404040 !important;
+	}
 	</style>
 </head>
 <body class="bg-white w-full font-sans text-gray-800">
-    <div id="auth-page" class="fixed inset-0 z-[300] bg-gray-50 flex items-center justify-center px-6 transition-opacity duration-300">
-        <div class="w-full max-w-[368px] bg-white rounded-2xl pt-6 pb-6 px-6 shadow-2xl shadow-gray-200/50 border border-gray-100 flex flex-col items-center">
-            
-            <div class="flex flex-col items-center mb-8">
-                <img src="icon/icon.png" alt="icon" class="w-20 h-20 object-contain">
-                <h2 class="mt-0.5 text-[18px] font-bold tracking-widest text-gray-700 uppercase" style="font-family: 'Orbitron', sans-serif;">
-                    AI ASISTEN
-                </h2>
+
+	    <header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-sm shadow-sm p-4 flex justify-between items-center z-50 h-20">
+	    <div class="w-full flex justify-between items-center relative">
+	        <div class="flex items-center gap-0">
+	            <img src="icon/icon.png" alt="icon" class="w-16 h-16 rounded-full object-cover -mt-1">
+	            <div class="flex flex-col justify-center h-16">
+	                <h1 class="font-semibold text-xl leading-none bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">AURA</h1>
+	                <p class="text-[12px] font-medium tracking-normal text-gray-400 mt-0">ARTIFICIAL INTELLIGENCE</p>
+	            </div>
+	        </div>
+	
+	        <div class="flex items-center gap-2">
+	            <button id="mic-open-btn" onclick="toggleVoicePage(true)" class="text-gray-400 transition p-2">
+				    <svg viewBox="0 0 24 24" class="w-7 h-7" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				        <path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z" fill="currentColor"></path>
+				    </svg>
+				</button>
+	            <button onclick="toggleTheme()" class="text-gray-400 transition p-2"><svg class="w-7 h-7 fill-current" viewBox="0 0 24 24"><path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8V16Z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM12 4V8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16V20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z"></path></svg></button>
+	            <button onclick="toggleSettings(true)" class="text-gray-400 transition p-2"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="none"><path d="M3.08168 13.9445C2.55298 12.9941 2.28862 12.5188 2.28862 12C2.28862 11.4812 2.55298 11.0059 3.08169 10.0555L4.43094 7.63L5.85685 5.24876C6.4156 4.31567 6.69498 3.84912 7.14431 3.5897C7.59364 3.33028 8.13737 3.3216 9.22483 3.30426L12 3.26L14.7752 3.30426C15.8626 3.3216 16.4064 3.33028 16.8557 3.5897C17.305 3.84912 17.5844 4.31567 18.1431 5.24876L19.5691 7.63L20.9183 10.0555C21.447 11.0059 21.7114 11.4812 21.7114 12C21.7114 12.5188 21.447 12.9941 20.9183 13.9445L19.5691 16.37L18.1431 18.7512C17.5844 19.6843 17.305 20.1509 16.8557 20.4103C16.4064 20.6697 15.8626 20.6784 14.7752 20.6957L12 20.74L9.22483 20.6957C8.13737 20.6784 7.59364 20.6697 7.14431 20.4103C6.69498 20.1509 6.4156 19.6843 5.85685 18.7512L4.43094 16.37L3.08168 13.9445Z" stroke="currentColor" stroke-width="2"></path><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"></circle></svg></button>
+	            <button onclick="toggleSidebar(true)" class="text-gray-400 p-2"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+	        </div>
+	    </div>
+	</header>
+
+    <main id="chat-container" class="fixed top-20 bottom-0 left-0 w-full overflow-y-auto pt-4 pb-28 px-4 space-y-6 bg-white"></main>
+
+	<footer class="fixed bottom-0 left-0 w-full z-50 bg-white border-gray-100">
+	    <div class="w-full px-4 py-4 bg-transparent">
+	        <div class="max-w-3xl mx-auto flex flex-col">
+	            <div id="file-preview-container" class="hidden w-full mb-2">
+	                <div id="file-list" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+	            </div>
+	            <div class="flex items-center gap-1 bg-gray-100 px-2 rounded-[28px] min-h-[56px] w-full z-20 py-1 border border-transparent">
+	                <input type="file" id="file-upload" class="hidden" accept=".html,.css,.js,.txt,.swift,.pdf,.docx,.xlsx,.xls,.ppt,.pptx,image/*" multiple onchange="handleFileSelect(event)">
+	                
+	                <button onclick="document.getElementById('file-upload').click()" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600">
+	                    <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2">
+	                        <path d="M16 12L12 8M12 8L8 12M12 8V17.2C12 18.5907 12 19.2861 12.5505 20.0646C12.9163 20.5819 13.9694 21.2203 14.5972 21.3054C15.5421 21.4334 15.9009 21.2462 16.6186 20.8719C19.8167 19.2036 22 15.8568 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 15.7014 4.01099 18.9331 7 20.6622" stroke-linecap="round" stroke-linejoin="round"></path>
+	                    </svg>
+	                </button>
+	
+	                <textarea id="user-input" placeholder="Ketik pesan..." class="flex-1 bg-transparent text-gray-800 focus:outline-none focus:ring-0 text-base py-3 px-1 resize-none max-h-40 overflow-y-auto leading-tight" rows="1" autocomplete="off" onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
+	
+	                <button onclick="handleInput()" id="action-btn" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-black">
+	                    <svg viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor">
+	                        <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
+	                    </svg>
+	                </button>
+	            </div>
+	        </div>
+	    </div>
+	</footer>
+
+    <div id="settings-page" class="hidden fixed inset-0 z-[100] bg-gray-50 w-full h-full overflow-hidden flex flex-col opacity-0 transition-opacity duration-200">
+        <header class="w-full bg-white/90 backdrop-blur-sm flex items-center justify-between h-20 px-6 relative z-[110] flex-shrink-0">
+            <button onclick="toggleSettings(false)" class="text-gray-400 p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <h1 class="absolute left-1/2 -translate-x-1/2 font-semibold text-xl text-gray-700 tracking-normal uppercase">Pengaturan</h1>
+            <button onclick="saveSettings()" class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full text-xs font-bold active:scale-95 border border-gray-200/50">SIMPAN</button>
+        </header>
+        <main class="flex-1 overflow-y-auto pt-4 pb-20 px-4">
+            <div class="max-w-3xl mx-auto space-y-3">
+                <div class="bg-white rounded-3xl pt-5 pb-6 px-5 shadow-sm border border-gray-100">
+                    <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-4">Pilih Model AI</label>
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Model Chat</label>
+                            <div class="relative">
+                                <button onclick="toggleDropdown(event, 'model-options', 'dropdown-icon')" id="model-btn" class="w-full bg-gray-50 py-2.5 px-4 rounded-xl flex justify-between items-center text-gray-700 border border-gray-100">
+                                    <span id="selected-model-text" class="font-medium">Gemini 3 Flash</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform" id="dropdown-icon"></i>
+                                </button>
+                                <div id="model-options" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-[120] overflow-y-auto max-h-[220px]">
+								    <div onclick="selectModel('Gemini 3 Flash', 'gemini-3-flash-preview')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Gemini 3 Flash</div>
+								    <div onclick="selectModel('Gemini 3 Pro', 'gemini-3-pro-preview')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Gemini 3 Pro</div>
+								</div>
+                            </div>
+                        </div>
+                 
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Model Suara</label>
+                            <div class="relative">
+                                <button onclick="toggleDropdown(event, 'voice-model-options', 'voice-dropdown-icon')" id="voice-model-btn" class="w-full bg-gray-50 py-2.5 px-4 rounded-xl flex justify-between items-center text-gray-700 border border-gray-100">
+                                    <span id="selected-voice-text" class="font-medium">Kore</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform" id="voice-dropdown-icon"></i>
+                                </button>
+                                <div id="voice-model-options" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-[120] overflow-y-auto max-h-[220px]">
+                                    <div onclick="selectVoiceModel('Aoede')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Aoede</div>
+                                    <div onclick="selectVoiceModel('Kore')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer">Kore</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl pt-5 pb-6 px-5 shadow-sm border border-gray-100">
+                    <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-3">Instruksi Sistem</label>
+                    <textarea id="cfg-sys-prompt" rows="3" class="w-full p-3 bg-gray-50 rounded-xl text-base text-gray-700 outline-none border border-gray-100" placeholder="Masukkan instruksi khusus..."></textarea>
+                </div>
+
+                <div class="bg-white rounded-3xl pt-5 pb-8 px-5 shadow-sm border border-gray-100">
+                    <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-5">Parameter AI</label>
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Atur Kreativitas</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="temp-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">0.7</span>
+                                </div>
+                                <input type="range" id="cfg-temp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('temp-val').innerText=this.value" class="custom-slider">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Atur Token</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="token-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">8192</span>
+                                </div>
+                                <input type="range" id="cfg-tokens" min="1024" max="8192" step="512" value="8192" oninput="document.getElementById('token-val').innerText=this.value" class="custom-slider">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Tingkat Pemikiran</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="thinking-text-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">High</span>
+                                </div>
+                                <input type="range" id="cfg-thinking" min="0" max="2" step="1" value="2" oninput="updateThinkingLabel(this.value)" class="custom-slider">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Resolusi Media</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="media-res-text-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">Medium</span>
+                                </div>
+                                <input type="range" id="cfg-media-res" min="0" max="3" step="1" value="1" oninput="updateMediaResLabel(this.value)" class="custom-slider">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        
-            <div class="w-full space-y-4">
-                <input type="email" id="auth-email" class="w-full bg-gray-50 py-4 px-6 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 text-sm text-gray-800" placeholder="Email">
-                <input type="password" id="auth-password" class="w-full bg-gray-50 py-4 px-6 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 text-sm text-gray-800" placeholder="Password">
-                
-                <button onclick="handleLogin()" id="login-btn" class="w-full bg-gray-800 hover:bg-black text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.97] mt-4 shadow-lg uppercase transition-colors">
-                    MASUK
-                </button>
-                
-                <div id="auth-error" class="text-red-500 text-[10px] text-center font-bold uppercase tracking-tight min-h-[1rem] mt-1 px-2"></div>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <div id="main-app" class="hidden">
-        <header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-sm shadow-sm p-4 flex justify-between items-center z-50 h-20">
-            <div class="w-full flex justify-between items-center relative">
-                <div class="flex items-center gap-0">
-                    <img src="icon/icon.png" alt="icon" class="w-16 h-16 rounded-full object-cover -mt-1">
-                    <div class="flex flex-col justify-center h-16">
-                        <h1 class="text-xl leading-none text-black font-bold" style="font-family: 'Orbitron', sans-serif;">AI ASISTEN</h1>
-                        <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase">ARTIFICIAL INTELLIGENCE</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="mic-open-btn" onclick="toggleVoicePage(true)" class="text-gray-400 transition p-2">
-                        <svg viewBox="0 0 24 24" class="w-7 h-7" fill="currentColor"><path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path></svg>
-                    </button>
-                    <button onclick="toggleSettings(true)" class="text-gray-400 transition p-2"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.08168 13.9445C2.55298 12.9941 2.28862 12.5188 2.28862 12C2.28862 11.4812 2.55298 11.0059 3.08169 10.0555L4.43094 7.63L5.85685 5.24876C6.4156 4.31567 6.69498 3.84912 7.14431 3.5897C7.59364 3.33028 8.13737 3.3216 9.22483 3.30426L12 3.26L14.7752 3.30426C15.8626 3.3216 16.4064 3.33028 16.8557 3.5897C17.305 3.84912 17.5844 4.31567 18.1431 5.24876L19.5691 7.63L20.9183 10.0555C21.447 11.0059 21.7114 11.4812 21.7114 12C21.7114 12.5188 21.447 12.9941 20.9183 13.9445L19.5691 16.37L18.1431 18.7512C17.5844 19.6843 17.305 20.1509 16.8557 20.4103C16.4064 20.6697 15.8626 20.6784 14.7752 20.6957L12 20.74L9.22483 20.6957C8.13737 20.6784 7.59364 20.6697 7.14431 20.4103C6.69498 20.1509 6.4156 19.6843 5.85685 18.7512L4.43094 16.37L3.08168 13.9445Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
-                    <button onclick="handleLogout()" class="text-gray-400 transition p-2"><svg viewBox="0 0 24 24" class="w-7 h-7" fill="currentColor"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2a9.985 9.985 0 0 1 8 4h-2.71a8 8 0 1 0 .001 12h2.71A9.985 9.985 0 0 1 12 22zm7-6v-3h-8v-2h8V8l5 4-5 4z"></path></svg></button>
-                    <button onclick="toggleSidebar(true)" class="text-gray-400 p-2"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
-                </div>
+    <div id="voice-page" class="hidden fixed inset-0 z-[200] bg-white flex flex-col opacity-0 transition-opacity duration-300 overflow-hidden">
+	    <header class="relative z-10 w-full h-20 flex items-center px-6 flex-shrink-0">
+	        <button onclick="toggleVoicePage(false)" class="text-gray-400 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">
+	            <i class="fa-solid fa-arrow-left text-xl"></i>
+	        </button>
+	        <div id="voice-timer" class="absolute left-1/2 -translate-x-1/2 font-mono text-gray-700 font-medium text-lg">00:00:00</div>
+	    </header>
+	
+	    <main onclick="interruptAI()" class="relative z-10 flex-1 w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+	        <div id="camera-container" class="hidden relative w-full h-full bg-black rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm">
+	            <video id="video-preview" autoplay playsinline muted class="w-full h-full object-cover"></video>
+	        </div>
+	        <div id="aura-sphere" class="w-52 h-52 rounded-full transition-transform bg-[#4B5563]"></div>
+	    </main>
+	
+	    <footer class="relative z-10 w-full px-6 py-6 flex items-center justify-center flex-shrink-0">
+	        <div class="flex items-center justify-center gap-12 bg-gray-100 px-6 py-6 rounded-full shadow-sm">
+	            <button id="camera-switch-btn" onclick="switchCamera()" class="w-6 h-6 flex items-center justify-center text-[#4B5563] active:scale-90 transition-all">
+	                <svg viewBox="0 0 56 56" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7.809 50.348H48.19c4.875 0 7.36-2.438 7.36-7.266V18.543c0-4.828-2.485-7.242-7.36-7.242h-5.484c-1.828 0-2.39-.375-3.445-1.547l-1.899-2.11c-1.148-1.288-2.343-1.992-4.781-1.992h-9.328c-2.414 0-3.61.704-4.781 1.992l-1.899 2.11c-1.031 1.148-1.617 1.547-3.445 1.547h-5.32c-4.875 0-7.36 2.414-7.36 7.242v24.539c0 4.828 2.485 7.266 7.36 7.266m30.117-12.75l-4.406-5.813c-.61-.797-.211-1.828.726-1.828h3.164c0-5.719-3.914-9.703-9.422-9.703c-1.734 0-3.14.422-4.57 1.195c-1.594.774-2.812-.14-2.812-1.289c0-.562.257-1.195.937-1.617c1.5-.914 3.844-1.711 6.445-1.711c7.477 0 12.89 5.438 12.89 13.125h2.79c.96 0 1.313 1.008.703 1.828l-4.43 5.813c-.492.656-1.476.68-2.015 0m-9.938 4.992c-7.476 0-12.867-5.696-12.867-13.125h-2.789c-.984 0-1.312-1.031-.703-1.852l4.43-5.812c.492-.633 1.476-.68 1.992 0l4.43 5.812c.609.82.21 1.852-.75 1.852h-3.165c0 5.437 3.915 9.68 9.422 9.68c1.758 0 3.188-.422 4.57-1.172c1.641-.82 2.813.164 2.813 1.359c0 .563-.281 1.102-.937 1.547c-1.477.96-3.868 1.71-6.446 1.71"/></svg>
+	            </button>
+	
+	            <div class="w-6 h-6 flex items-center justify-center">
+	                <button id="btnStartVoice" class="w-full h-full flex items-center justify-center text-[#4B5563] active:scale-95 transition-all">
+	                    <svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.736 4 21.276 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648l12.812 6.968Z"/></svg>
+	                </button>
+	                <button id="btnStopVoice" class="hidden w-full h-full flex items-center justify-center text-red-600 active:scale-95 transition-all">
+	                    <svg viewBox="0 0 1025 1024" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M128.428 0h768q53 0 90.5 37.5t37.5 90.5v768q0 53-37.5 90.5t-90.5 37.5h-768q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5z"/></svg>
+	                </button>
+	            </div>
+	
+	            <button id="video-toggle-btn" onclick="toggleVideoPreference()" class="w-6 h-6 flex items-center justify-center text-[#4B5563] active:scale-90 transition-all">
+	                <svg viewBox="0 0 576 512" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 128c0-35.3 28.7-64 64-64h256c35.3 0 64 28.7 64 64v256c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zm559.1-28.2c10.4 5.6 16.9 16.4 16.9 28.2v256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64l-14.2-9.5V174.9l14.2-9.5l96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg>
+	            </button>
+	        </div>
+	    </footer>
+	</div>
+
+    <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="hidden fixed inset-0 z-[140] bg-black/20 backdrop-blur-[2px] opacity-0 transition-opacity duration-300"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-[280px] bg-white z-[150] -translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="h-20 flex-shrink-0 px-4">
+            <div class="h-full flex items-center border-b border-gray-100">
+                <button onclick="startNewChat()" class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium text-base flex items-center justify-center gap-3">
+				    <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+				        <g stroke-width="0"></g>
+				        <g stroke-linecap="round" stroke-linejoin="round"></g>
+				        <g>
+				            <path d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"></path>
+				            <path d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"></path>
+				        </g>
+				    </svg>
+				    Percakapan Baru
+				</button>
             </div>
-        </header>
+        </div>
+        <div class="flex-1 overflow-y-auto pt-3 px-4 pb-4 space-y-0" id="chat-history-list"></div>
+    </aside>
 
-        <main id="chat-container" class="fixed top-20 bottom-0 left-0 w-full overflow-y-auto pt-4 pb-28 px-4 space-y-6 bg-white"></main>
-
-        <footer class="fixed bottom-0 left-0 w-full z-50 bg-white border-gray-100">
-            <div class="w-full px-4 py-4 bg-transparent">
-                <div class="max-w-3xl mx-auto flex flex-col">
-                    <div id="file-preview-container" class="hidden w-full mb-2"><div id="file-list" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div></div>
-                    <div class="flex items-center gap-1 bg-gray-100 px-2 rounded-[28px] min-h-[56px] w-full z-20 py-1 border border-transparent">
-                        <input type="file" id="file-upload" class="hidden" accept=".html,.css,.js,.txt,.swift,.pdf,.docx,.xlsx,.xls,.ppt,.pptx,image/*" multiple onchange="handleFileSelect(event)">
-                        <button onclick="document.getElementById('file-upload').click()" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600"><svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 12L12 8M12 8L8 12M12 8V17.2C12 18.5907 12 19.2861 12.5505 20.0646C12.9163 20.5819 13.9694 21.2203 14.5972 21.3054C15.5421 21.4334 15.9009 21.2462 16.6186 20.8719C19.8167 19.2036 22 15.8568 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 15.7014 4.01099 18.9331 7 20.6622" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
-                        <textarea id="user-input" placeholder="Ketik pesan..." class="flex-1 bg-transparent text-gray-800 focus:outline-none focus:ring-0 text-base py-3 px-1 resize-none max-h-40 overflow-y-auto leading-tight" rows="1" autocomplete="off" onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
-                        <button onclick="handleInput()" id="action-btn" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-black"><svg viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor"><path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path></svg></button>
-                    </div>
-                </div>
+    <div id="custom-alert" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+        <div class="bg-white/95 w-[270px] rounded-2xl text-center shadow-2xl animate-alert overflow-hidden">
+            <div class="pt-5 pb-4 px-4">
+                <h3 class="text-base font-bold text-gray-900 leading-snug mb-1">Hapus Percakapan?</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">Percakapan ini akan dihapus secara permanen dari riwayat.</p>
             </div>
-        </footer>
-
-        <div id="settings-page" class="hidden fixed inset-0 z-[100] bg-gray-50 w-full h-full overflow-hidden flex flex-col opacity-0 transition-opacity duration-200">
-            <header class="w-full bg-white/90 backdrop-blur-sm flex items-center justify-between h-20 px-6 relative z-[110] flex-shrink-0">
-                <button onclick="toggleSettings(false)" class="text-gray-400 p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-                <h1 class="absolute left-1/2 -translate-x-1/2 font-semibold text-xl text-gray-700 tracking-normal uppercase">Pengaturan</h1>
-                <button onclick="saveSettings()" class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full text-xs font-bold active:scale-95 border border-gray-200/50">SIMPAN</button>
-            </header>
-            <main class="flex-1 overflow-y-auto pt-4 pb-20 px-4">
-                <div class="max-w-3xl mx-auto space-y-3">
-                    <div class="bg-white rounded-3xl pt-5 pb-6 px-5 shadow-sm border border-gray-100">
-                        <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-4">Pilih Model AI</label>
-                        <div class="space-y-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Model Chat</label>
-                                <div class="relative">
-                                    <button onclick="toggleDropdown(event, 'model-options', 'dropdown-icon')" id="model-btn" class="w-full bg-gray-50 py-2.5 px-4 rounded-xl flex justify-between items-center text-gray-700 border border-gray-100">
-                                        <span id="selected-model-text" class="font-medium">Gemini 3 Flash</span>
-                                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform" id="dropdown-icon"></i>
-                                    </button>
-                                    <div id="model-options" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-[120] overflow-y-auto max-h-[220px]">
-                                        <div onclick="selectModel('Gemini 3 Flash', 'gemini-3-flash-preview')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Gemini 3 Flash</div>
-                                        <div onclick="selectModel('Gemini 3 Pro', 'gemini-3-pro-preview')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Gemini 3 Pro</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Model Suara</label>
-                                <div class="relative">
-                                    <button onclick="toggleDropdown(event, 'voice-model-options', 'voice-dropdown-icon')" id="voice-model-btn" class="w-full bg-gray-50 py-2.5 px-4 rounded-xl flex justify-between items-center text-gray-700 border border-gray-100">
-                                        <span id="selected-voice-text" class="font-medium">Kore</span>
-                                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform" id="voice-dropdown-icon"></i>
-                                    </button>
-                                    <div id="voice-model-options" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-[120] overflow-y-auto max-h-[220px]">
-                                        <div onclick="selectVoiceModel('Aoede')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Aoede</div>
-                                        <div onclick="selectVoiceModel('Kore')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer">Kore</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-3xl pt-5 pb-6 px-5 shadow-sm border border-gray-100">
-                        <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-3">Instruksi Sistem</label>
-                        <textarea id="cfg-sys-prompt" rows="3" class="w-full p-3 bg-gray-50 rounded-xl text-base text-gray-700 outline-none border border-gray-100" placeholder="Masukkan instruksi khusus..."></textarea>
-                    </div>
-                    <div class="bg-white rounded-3xl pt-5 pb-8 px-5 shadow-sm border border-gray-100">
-                        <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-5">Parameter AI</label>
-                        <div class="space-y-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Atur Kreativitas</label>
-                                <div class="relative w-full h-[24px] flex items-center">
-                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><span id="temp-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">0.7</span></div>
-                                    <input type="range" id="cfg-temp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('temp-val').innerText=this.value" class="custom-slider">
-                                </div>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Atur Token</label>
-                                <div class="relative w-full h-[24px] flex items-center">
-                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><span id="token-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">8192</span></div>
-                                    <input type="range" id="cfg-tokens" min="1024" max="8192" step="512" value="8192" oninput="document.getElementById('token-val').innerText=this.value" class="custom-slider">
-                                </div>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Tingkat Pemikiran</label>
-                                <div class="relative w-full h-[24px] flex items-center">
-                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><span id="thinking-text-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">High</span></div>
-                                    <input type="range" id="cfg-thinking" min="0" max="2" step="1" value="2" oninput="updateThinkingLabel(this.value)" class="custom-slider">
-                                </div>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Resolusi Media</label>
-                                <div class="relative w-full h-[24px] flex items-center">
-                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10"><span id="media-res-text-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">Medium</span></div>
-                                    <input type="range" id="cfg-media-res" min="0" max="3" step="1" value="1" oninput="updateMediaResLabel(this.value)" class="custom-slider">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-
-        <div id="voice-page" class="hidden fixed inset-0 z-[200] bg-white flex flex-col opacity-0 transition-opacity duration-300 overflow-hidden">
-            <header class="relative z-10 w-full h-20 flex items-center px-6 flex-shrink-0"><button onclick="toggleVoicePage(false)" class="text-gray-400 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center"><i class="fa-solid fa-arrow-left text-xl"></i></button><div id="voice-timer" class="absolute left-1/2 -translate-x-1/2 font-mono text-gray-700 font-medium text-lg">00:00:00</div></header>
-            <main onclick="interruptAI()" class="relative z-10 flex-1 w-full flex flex-col items-center justify-center px-6 overflow-hidden"><div id="camera-container" class="hidden relative w-full h-full bg-black rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm"><video id="video-preview" autoplay playsinline muted class="w-full h-full object-cover"></video></div><div id="aura-sphere" class="w-52 h-52 rounded-full transition-transform bg-[#4B5563]"></div></main>
-            <footer class="relative z-10 w-full px-6 py-6 flex items-center justify-center flex-shrink-0"><div class="flex items-center justify-center gap-12 bg-gray-100 px-6 py-6 rounded-full shadow-sm"><button id="camera-switch-btn" onclick="switchCamera()" class="w-6 h-6 flex items-center justify-center text-[#4B5563] active:scale-90 transition-all"><svg viewBox="0 0 56 56" class="w-full h-full" fill="currentColor"><path d="M7.809 50.348H48.19c4.875 0 7.36-2.438 7.36-7.266V18.543c0-4.828-2.485-7.242-7.36-7.242h-5.484c-1.828 0-2.39-.375-3.445-1.547l-1.899-2.11c-1.148-1.288-2.343-1.992-4.781-1.992h-9.328c-2.414 0-3.61.704-4.781 1.992l-1.899 2.11c-1.031 1.148-1.617 1.547-3.445 1.547h-5.32c-4.875 0-7.36 2.414-7.36 7.242v24.539c0 4.828 2.485 7.266 7.36 7.266m30.117-12.75l-4.406-5.813c-.61-.797-.211-1.828.726-1.828h3.164c0-5.719-3.914-9.703-9.422-9.703c-1.734 0-3.14.422-4.57 1.195c-1.594.774-2.812-.14-2.812-1.289c0-.562.257-1.195.937-1.617c1.5-.914 3.844-1.711 6.445-1.711c7.477 0 12.89 5.438 12.89 13.125h2.79c.96 0 1.313 1.008.703 1.828l-4.43 5.813c-.492.656-1.476.68-2.015 0m-9.938 4.992c-7.476 0-12.867-5.696-12.867-13.125h-2.789c-.984 0-1.312-1.031-.703-1.852l4.43-5.812c.492-.633 1.476-.68 1.992 0l4.43 5.812c.609.82.21 1.852-.75 1.852h-3.165c0 5.437 3.915 9.68 9.422 9.68c1.758 0 3.188-.422 4.57-1.172c1.641-.82 2.813.164 2.813 1.359c0 .563-.281 1.102-.937 1.547c-1.477.96-3.868 1.71-6.446 1.71"/></svg></button><div class="w-6 h-6 flex items-center justify-center"><button id="btnStartVoice" class="w-full h-full flex items-center justify-center text-[#4B5563] active:scale-95 transition-all"><svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor"><path d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.736 4 21.276 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648l12.812 6.968Z"/></svg></button><button id="btnStopVoice" class="hidden w-full h-full flex items-center justify-center text-red-600 active:scale-95 transition-all"><svg viewBox="0 0 1025 1024" class="w-5 h-5" fill="currentColor"><path d="M128.428 0h768q53 0 90.5 37.5t37.5 90.5v768q0 53-37.5 90.5t-90.5 37.5h-768q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5z"/></svg></button></div><button id="video-toggle-btn" onclick="toggleVideoPreference()" class="w-6 h-6 flex items-center justify-center text-[#4B5563] active:scale-90 transition-all"><svg viewBox="0 0 576 512" class="w-full h-full" fill="currentColor"><path d="M0 128c0-35.3 28.7-64 64-64h256c35.3 0 64 28.7 64 64v256c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zm559.1-28.2c10.4 5.6 16.9 16.4 16.9 28.2v256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64l-14.2-9.5V174.9l14.2-9.5l96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg></button></div></footer>
-        </div>
-
-        <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="hidden fixed inset-0 z-[140] bg-black/20 backdrop-blur-[2px] opacity-0 transition-opacity duration-300"></div>
-        <aside id="sidebar" class="fixed top-0 left-0 h-full w-[280px] bg-white z-[150] -translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
-            <div class="h-20 flex-shrink-0 px-4"><div class="h-full flex items-center border-b border-gray-100"><button onclick="startNewChat()" class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium text-base flex items-center justify-center gap-3"><svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6"><path d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"></path><path d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"></path></svg>Percakapan Baru</button></div></div>
-            <div class="flex-1 overflow-y-auto pt-3 px-4 pb-4 space-y-0" id="chat-history-list"></div>
-        </aside>
-
-        <div id="custom-alert" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-            <div class="bg-white/95 w-[270px] rounded-2xl text-center shadow-2xl animate-alert overflow-hidden">
-                <div class="pt-5 pb-4 px-4"><h3 class="text-base font-bold text-gray-900 leading-snug mb-1">Hapus Percakapan?</h3><p class="text-sm text-gray-600 leading-relaxed">Percakapan ini akan dihapus secara permanen dari riwayat.</p></div>
-                <div class="flex border-t border-gray-300/70"><button onclick="closeCustomAlert()" class="w-1/2 py-3 text-base text-blue-500 border-r border-gray-300/70">BATAL</button><button onclick="confirmDeleteSession()" class="w-1/2 py-3 text-base text-red-500">HAPUS</button></div>
+            <div class="flex border-t border-gray-300/70">
+                <button onclick="closeCustomAlert()" class="w-1/2 py-3 text-base text-blue-500 border-r border-gray-300/70">BATAL</button>
+                <button onclick="confirmDeleteSession()" class="w-1/2 py-3 text-base text-red-500">HAPUS</button>
             </div>
         </div>
     </div>
@@ -462,57 +722,6 @@
 			const filePreviewContainer = document.getElementById('file-preview-container');
 			const fileList = document.getElementById('file-list');
 			const fileInput = document.getElementById('file-upload');
-			
-			const supabaseClient = supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
-
-			async function handleLogin() {
-			    const email = document.getElementById('auth-email').value;
-			    const password = document.getElementById('auth-password').value;
-			    const btn = document.getElementById('login-btn');
-			    const errorEl = document.getElementById('auth-error');
-			
-			    if (!email || !password) return;
-			
-			    btn.disabled = true;
-			    btn.innerText = 'MEMPROSES...';
-			    errorEl.innerText = '';
-			
-			    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-			
-			    if (error) {
-			        errorEl.innerText = error.message;
-			        btn.disabled = false;
-			        btn.innerText = 'MASUK';
-			    } else {
-			        checkAuth();
-			    }
-			}
-			
-			async function checkAuth() {
-			    const { data: { session } } = await supabaseClient.auth.getSession();
-			    const authPage = document.getElementById('auth-page');
-			    const mainApp = document.getElementById('main-app');
-				
-			    if (session) {
-			        authPage.classList.add('hidden');
-			        mainApp.classList.remove('hidden');
-			    } else {
-			        authPage.classList.remove('hidden');
-			        mainApp.classList.add('hidden');
-			    }
-			}
-			
-			async function handleLogout() {
-			    try {
-			        await supabaseClient.auth.signOut();
-			        localStorage.removeItem('current_chat_id');
-			        chatHistory = [];
-			        window.location.reload(); 
-			    } catch (error) {
-			        console.error("Gagal Logout:", error);
-			        window.location.reload();
-			    }
-			}
 			
 			const initDB = () => new Promise((resolve) => {
 			    const req = indexedDB.open(dbName, 1);
@@ -1662,7 +1871,6 @@
 			} catch (e) {}
 			
 			document.addEventListener('DOMContentLoaded', async () => {
-				await checkAuth();
 			    const sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
 			    const lastId = localStorage.getItem('current_chat_id');
 			    if (lastId && localStorage.getItem(`chat_${lastId}`)) loadChat(lastId);
@@ -1677,17 +1885,8 @@
 			            if (window.visualViewport.height > lastHeight) {
 			                setTimeout(() => {
 			                    window.scrollTo(0, 0);
-			                    
-			                    const settingsPage = document.getElementById('settings-page');
-			                    const authPage = document.getElementById('auth-page');
-			                    const emailInput = document.getElementById('auth-email');
-			                    const passwordInput = document.getElementById('auth-password');
-			
-			                    if (authPage && !authPage.classList.contains('hidden')) {
-			                        window.scrollTo(0, 0);
-			                        if (emailInput) emailInput.blur();
-			                        if (passwordInput) passwordInput.blur();
-			                    } else if (settingsPage && settingsPage.classList.contains('hidden')) {
+			                    const settingsPage = document.getElementById('cfg-sys-prompt');
+			                    if (settingsPage && settingsPage.classList.contains('hidden')) {
 			                        scrollToBottom();
 			                    }
 			                }, 50);
@@ -1809,6 +2008,11 @@
 			    }
 			`;
 			document.head.appendChild(typeStyle);
+			
+			function toggleTheme() {
+			    const isDark = document.documentElement.classList.toggle('dark');
+			    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			}
 			
 			function autoResize(el) {
 			    el.style.height = 'auto';
