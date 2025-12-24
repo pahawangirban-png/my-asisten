@@ -492,28 +492,27 @@
 		const fileList = document.getElementById('file-list');
 		const fileInput = document.getElementById('file-upload');
 		
-		
-    document.addEventListener('DOMContentLoaded', async () => {
+		document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Cek Sesi
     await sessionCheck();
 
-    // Perbaikan Keyboard iPad - Versi Simple
+    // 2. Perbaikan Keyboard iPad
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
             const overlay = document.getElementById('login-overlay');
-            
-            // Hanya jalankan jika overlay login sedang tampil
-            if (overlay && !overlay.classList.contains('hidden')) {
-                // Kembalikan posisi scroll ke titik nol (0,0)
-                // Ini akan menarik kontainer kembali ke tengah layar
-                window.scrollTo(0, 0);
+            const isLoginVisible = overlay && !overlay.classList.contains('hidden');
 
-                // Jika keyboard tertutup (tinggi viewport kembali normal)
+            if (isLoginVisible) {
                 if (Math.ceil(window.visualViewport.height) >= window.innerHeight) {
-                    // Hilangkan fokus kursor agar iPad tidak mencoba scroll otomatis
-                    if (document.activeElement?.tagName === 'INPUT') {
-                        document.activeElement.blur();
-                    }
+                    window.scrollTo(0, 0);
+                    if (document.activeElement?.tagName === 'INPUT') document.activeElement.blur();
                 }
+                
+            } else {
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    scrollToBottom();
+                }, 50);
             }
         });
     }
