@@ -496,16 +496,23 @@
     document.addEventListener('DOMContentLoaded', async () => {
     await sessionCheck();
 
+    // Perbaikan Keyboard iPad - Versi Simple
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
-            // Cek jika layar kembali ke ukuran normal (keyboard tertutup)
-            if (Math.ceil(window.visualViewport.height) >= window.innerHeight) {
-                // Tarik layar ke posisi 0 agar tidak melayang/terlempar
+            const overlay = document.getElementById('login-overlay');
+            
+            // Hanya jalankan jika overlay login sedang tampil
+            if (overlay && !overlay.classList.contains('hidden')) {
+                // Kembalikan posisi scroll ke titik nol (0,0)
+                // Ini akan menarik kontainer kembali ke tengah layar
                 window.scrollTo(0, 0);
-                
-                // Matikan fokus kursor
-                if (document.activeElement?.tagName === 'INPUT') {
-                    document.activeElement.blur();
+
+                // Jika keyboard tertutup (tinggi viewport kembali normal)
+                if (Math.ceil(window.visualViewport.height) >= window.innerHeight) {
+                    // Hilangkan fokus kursor agar iPad tidak mencoba scroll otomatis
+                    if (document.activeElement?.tagName === 'INPUT') {
+                        document.activeElement.blur();
+                    }
                 }
             }
         });
