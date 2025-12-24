@@ -492,27 +492,21 @@
 		const fileList = document.getElementById('file-list');
 		const fileInput = document.getElementById('file-upload');
 		
-		document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cek Sesi
+		
+    document.addEventListener('DOMContentLoaded', async () => {
     await sessionCheck();
 
-    // 2. Perbaikan Keyboard iPad
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
-            const overlay = document.getElementById('login-overlay');
-            const isLoginVisible = overlay && !overlay.classList.contains('hidden');
-
-            if (isLoginVisible) {
-                if (Math.ceil(window.visualViewport.height) >= window.innerHeight) {
-                    window.scrollTo(0, 0);
-                    if (document.activeElement?.tagName === 'INPUT') document.activeElement.blur();
+            // Cek jika layar kembali ke ukuran normal (keyboard tertutup)
+            if (Math.ceil(window.visualViewport.height) >= window.innerHeight) {
+                // Tarik layar ke posisi 0 agar tidak melayang/terlempar
+                window.scrollTo(0, 0);
+                
+                // Matikan fokus kursor
+                if (document.activeElement?.tagName === 'INPUT') {
+                    document.activeElement.blur();
                 }
-                overlay.style.height = window.visualViewport.height + 'px';
-            } else {
-                setTimeout(() => {
-                    window.scrollTo(0, 0);
-                    scrollToBottom();
-                }, 50);
             }
         });
     }
