@@ -1662,41 +1662,41 @@
 			} catch (e) {}
 			
 			document.addEventListener('DOMContentLoaded', async () => {
-			    await checkAuth();
-			    const sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
-			    const lastId = localStorage.getItem('current_chat_id');
-			    if (lastId && localStorage.getItem(`chat_${lastId}`)) loadChat(lastId);
-			    else if (sessions.length > 0) loadChat(sessions[0].id);
-			    else startNewChat();
-			
-			    renderSidebarHistory();
-			
-			    if (window.visualViewport) {
-			        let lastHeight = window.visualViewport.height;
-			        window.visualViewport.addEventListener('resize', () => {
-			            if (window.visualViewport.height > lastHeight) {
-			                setTimeout(() => {
-			                    if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
-			                        document.activeElement.blur();
-			                    }
-			
-			                    window.scrollTo(0, 0);
-			                    document.body.scrollTop = 0;
-			                    document.documentElement.scrollTop = 0;
-			
-			                    const settings = document.getElementById('settings-page');
-			                    const auth = document.getElementById('auth-page');
-			                    if (auth?.classList.contains('hidden') && settings?.classList.contains('hidden')) {
-			                        if (typeof scrollToBottom === 'function') scrollToBottom();
-			                    }
-			                }, 150);
-			            }
-			            lastHeight = window.visualViewport.height;
-			        });
-			    }
-			    chatContainer.classList.add('loaded');
-			    drawVoice();
-			});
+    await checkAuth();
+    const sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
+    const lastId = localStorage.getItem('current_chat_id');
+    if (lastId && localStorage.getItem(`chat_${lastId}`)) loadChat(lastId);
+    else if (sessions.length > 0) loadChat(sessions[0].id);
+    else startNewChat();
+
+    renderSidebarHistory();
+
+    if (window.visualViewport) {
+        let lastHeight = window.visualViewport.height;
+        window.visualViewport.addEventListener('resize', () => {
+            if (window.visualViewport.height > lastHeight) {
+                if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+                    document.activeElement.blur();
+                }
+                
+                window.scrollTo(0, 0);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+
+                setTimeout(() => {
+                    const settings = document.getElementById('settings-page');
+                    const auth = document.getElementById('auth-page');
+                    if (auth?.classList.contains('hidden') && settings?.classList.contains('hidden')) {
+                        if (typeof scrollToBottom === 'function') scrollToBottom();
+                    }
+                }, 50);
+            }
+            lastHeight = window.visualViewport.height;
+        });
+    }
+    chatContainer.classList.add('loaded');
+    drawVoice();
+});
 			
 			document.addEventListener('click', (e) => {
 			    if (!e.target.closest('[id^="btn-msg-"]')) {
