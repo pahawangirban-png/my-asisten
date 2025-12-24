@@ -493,61 +493,73 @@
 		const fileInput = document.getElementById('file-upload');
 		
 		document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Cek Sesi
-    await sessionCheck();
-
-    // 2. Perbaikan Keyboard iPad
-    if (window.visualViewport) {
+			await sessionCheck();
+		    const savedHistory = localStorage.getItem('gemini_chat_history');
+			
+			if (window.visualViewport) {
+        let lastHeight = window.visualViewport.height;
         window.visualViewport.addEventListener('resize', () => {
-            const overlay = document.getElementById('login-overlay');
-            const isLoginVisible = overlay && !overlay.classList.contains('hidden');
-
-            if (isLoginVisible) {
-                if (Math.ceil(window.visualViewport.height) >= window.innerHeight) {
-                    window.scrollTo(0, 0);
-                    if (document.activeElement?.tagName === 'INPUT') document.activeElement.blur();
-                }
-                
-            } else {
+            // Jika keyboard ditutup (tinggi viewport bertambah)
+            if (window.visualViewport.height > lastHeight) {
                 setTimeout(() => {
                     window.scrollTo(0, 0);
-                    scrollToBottom();
+                    
+                    // Jalankan scroll chat hanya jika fungsi tersedia/perlu
+                    if (typeof scrollToBottom === 'function') scrollToBottom();
+
+                    // Paksa blur jika yang aktif adalah input login agar kursor iPad tidak nyangkut
+                    const active = document.activeElement;
+                    if (active && (active.id === 'auth-email' || active.id === 'auth-password')) {
+                        active.blur();
+                    }
                 }, 50);
             }
+            lastHeight = window.visualViewport.height;
         });
     }
-
-    // 3. Load Chat History
-    const savedHistory = localStorage.getItem('gemini_chat_history');
-    if (savedHistory) {
-        try {
-            chatHistory = JSON.parse(savedHistory);
-            for (const msg of chatHistory) {
-                const text = msg.parts[0]?.text || "";
-                const uiId = addMessageToUI(msg.role, text, false, msg.files || [], true);
-                
-                if (msg.imgRefId) {
-                    getImgFromDB(msg.imgRefId).then(imgData => {
-                        if (imgData) renderImageToBubble(uiId, imgData.data, imgData.mime, text.replace('[GAMBAR]: ', ''));
-                    });
-                }
-            }
-            setTimeout(() => {
-                scrollToBottom();
-                chatContainer.classList.add('loaded');
-            }, 100);
-        } catch (e) {
-            localStorage.removeItem('gemini_chat_history');
-            chatContainer.classList.add('loaded');
-        }
-    } else {
-        const welcomeMsg = "Halo! ASISTEN siap membantu, ada yang bisa saya kerjakan hari ini?";
-        addMessageToUI('model', welcomeMsg, false);
-        chatHistory.push({ role: "model", parts: [{ text: welcomeMsg }] });
-        saveChatHistory();
-        chatContainer.classList.add('loaded');
-    }
-});
+		    
+		    if (savedHistory) {
+		        try {
+		            chatHistory = JSON.parse(savedHistory);
+		            
+		            for (const msg of chatHistory) {
+		                const text = msg.parts[0]?.text || "";
+		                const uiId = addMessageToUI(msg.role, text, false, msg.files || [], true);
+		                
+		                if (msg.imgRefId) {
+		                    getImgFromDB(msg.imgRefId).then(imgData => {
+		                        if (imgData) {
+		                            renderImageToBubble(uiId, imgData.data, imgData.mime, text.replace('[GAMBAR]: ', ''));
+		                            scrollToBottom(); 
+		                        } else {
+		                            const el = document.getElementById(uiId);
+		                            if(el) el.innerText = "[Gambar kadaluarsa]";
+		                        }
+		                    });
+		                }
+		            }
+		
+		            setTimeout(() => {
+		                scrollToBottom();
+		                requestAnimationFrame(() => {
+		                    chatContainer.classList.add('loaded');
+		                });
+		            }, 100);
+		
+		        } catch (e) { 
+		            localStorage.removeItem('gemini_chat_history'); 
+		            chatContainer.classList.add('loaded');
+		        }
+		    } else {
+		        const welcomeMsg = "Halo! ASISTEN siap membantu, ada yang bisa saya kerjakan hari ini?";
+		        addMessageToUI('model', welcomeMsg, false);
+		        chatHistory.push({ role: "model", parts: [{ text: welcomeMsg }] });
+		        saveChatHistory();
+		        chatContainer.classList.add('loaded');
+		    }
+		    
+		    
+		});
 		
 		function getFileType(filename) {
 			if (!filename) return 'FILE';
