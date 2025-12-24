@@ -1,1166 +1,1900 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-	<title>AI ASISTEN</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+  <title>AI ASISTEN</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="AI ASISTEN">
+  <link rel="apple-touch-icon" href="icon/icon-512.png">
+  <link rel="icon" type="image/png" href="icon/icon-512.png">
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+	  scrollbar-width: none !important;
+	  -ms-overflow-style: none !important;
+	  -webkit-user-select: none !important;
+	  -moz-user-select: none !important;
+	  -ms-user-select: none !important;
+	  user-select: none !important;
+	  -webkit-touch-callout: none !important;
+	}
 	
-	<script src="https://cdn.tailwindcss.com"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
-	<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	::-webkit-scrollbar {
+	  display: none !important;
+	  width: 0 !important;
+	  height: 0 !important;
+	}
 	
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="default">
-	<meta name="theme-color" content="#ffffff">
-	<meta name="apple-mobile-web-app-title" content="AI ASISTEN">
-	<link rel="apple-touch-icon" href="icon/icon-512.png">
-	<link rel="icon" type="image/png" href="icon/icon-512.png">
+	html {
+	  height: 100%;
+	  overflow: hidden;
+	  overscroll-behavior: none;
+	}
 	
-	<script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/stackoverflow-light.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+	body {
+	  height: 100dvh;
+	  width: 100%;
+	  overflow: hidden;
+	  position: fixed;
+	  overscroll-behavior: none;
+	  touch-action: none;
+	  -webkit-font-smoothing: antialiased;
+	}
 	
-	<style>
-		::-webkit-scrollbar {
-			width: 6px;
-			height: 6px;
-		}
-		
-		::-webkit-scrollbar-track {
-			background: transparent;
-		}
-		
-		::-webkit-scrollbar-thumb {
-			background: #cbd5e1;
-			border-radius: 3px;
-		}
-		
-		html {
-			height: 100%;
-			overflow: hidden;
-			overscroll-behavior: none;
-		}
-		
-		body {
-			height: 100dvh;
-			width: 100%;
-			overflow: hidden;
-			position: fixed;
-			overscroll-behavior: none;
-			touch-action: none;
-			-webkit-font-smoothing: antialiased;
-		}
-		
-		#chat-container {
-			touch-action: pan-y; 
-			-webkit-overflow-scrolling: touch;
-		}
-		
-		button, input, textarea {
-			touch-action: manipulation;
-			-webkit-text-size-adjust: 100%;
-		}
-		
-		.prose > * {
-			font-size: 16px !important;
-			line-height: 1.5 !important;
-			color: #000000 !important;
-			margin-top: 0 !important;
-			margin-bottom: 0.6em !important;
-		}
-
-		.prose h1, .prose h2, .prose h3, .prose h4 {
-			font-weight: 400 !important;
-			font-size: 16px !important;
-			margin-top: 1.0em !important;
-			margin-bottom: 0.4em !important;
-			text-transform: none !important;
-			letter-spacing: normal !important;
-		}
-
-		.prose ul {
-			list-style-type: disc !important;
-			padding-left: 1.2em;
-			margin-bottom: 0.6em !important;
-		}
-
-		.prose ol {
-			list-style-type: decimal !important;
-			padding-left: 1.5em;
-			margin-bottom: 0.6em !important;
-		}
-
-		.prose li {
-			margin-bottom: 0.2em !important;
-			line-height: 1.5 !important;
-		}
-
-		.prose li p {
-			margin-bottom: 0 !important;
-			display: inline;
-		}
-
-		.prose table {
-			width: 100%;
-			border-collapse: collapse;
-			margin: 0.5em 0 !important;
-			font-size: 15px !important;
-			border: 1px solid #9ca3af;
-		}
-
-		.prose th, .prose td {
-			padding: 6px 10px !important;
-			border: 1px solid #d1d5db;
-			line-height: 1.4 !important;
-		}
-
-		.prose th {
-			background-color: #e5e7eb;
-			font-weight: 600;
-			color: #000000;
-		}
-
-		.prose pre {
-			margin: 0.5em 0 !important;
-			padding: 0;
-			background: transparent;
-			border: none;
-		}
-
-		.prose pre code {
-			font-family: ui-monospace, SFMono-Regular, monospace !important;
-			font-size: 14px !important;
-			line-height: 1.4 !important;
-		}
-
-		.prose code:not(pre code) {
-			background-color: #e5e7eb !important;
-			color: #000000 !important;
-			padding: 0.1em 0.3em;
-			border-radius: 4px;
-			font-size: 0.9em !important;
-			font-weight: 600;
-		}
-		
-		.prose strong, .prose b {
-			font-weight: 600 !important;
-			color: #000000 !important;
-		}
-
-		.prose em {
-			font-style: italic;
-			color: #374151;
-		}
-
-		.prose i {
-			font-style: normal !important;
-			color: inherit !important;
-		}
-
-		.prose hr {
-			margin: 0.8em 0 !important;
-			border-top: 1px solid #e5e7eb;
-		}
-		
-		.typing-dot {
-			animation: typing 1.4s infinite ease-in-out both;
-		}
-
-		.typing-dot:nth-child(1) {
-			animation-delay: -0.32s;
-		}
-
-		.typing-dot:nth-child(2) {
-			animation-delay: -0.16s;
-		}
-
-		@keyframes typing {
-			0%, 80%, 100% { transform: scale(0); }
-			40% { transform: scale(1); }
-		}
-		
-		@keyframes alert-pop {
-			0% { transform: scale(1.1); opacity: 0; }
-			100% { transform: scale(1); opacity: 1; }
-		}
-
-		.animate-alert {
-			animation: alert-pop 0.2s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
-		}
-		
-		#chat-container {
-		    opacity: 0;
-		    transition: opacity 0.2s ease-in-out;
-		}
-		.loaded {
-		    opacity: 1 !important;
-		}
+	#chat-container {
+	  touch-action: pan-y;
+	  -webkit-overflow-scrolling: touch;
+	  opacity: 0;
+	  transition: opacity 0.2s ease-in-out;
+	}
+	
+	.loaded {
+	  opacity: 1 !important;
+	}
+	
+	button,
+	input,
+	textarea {
+	  touch-action: manipulation;
+	  -webkit-text-size-adjust: 100%;
+	}
+	
+	.typing-dot {
+	  animation: typing 1.4s infinite ease-in-out both;
+	}
+	
+	.typing-dot:nth-child(1) {
+	  animation-delay: -0.32s;
+	}
+	
+	.typing-dot:nth-child(2) {
+	  animation-delay: -0.16s;
+	}
+	
+	@keyframes typing {
+	  0%, 80%, 100% { transform: scale(0); }
+	  40% { transform: scale(1); }
+	}
+	
+	@keyframes alert-pop {
+	  0% { transform: scale(1.1); opacity: 0; }
+	  100% { transform: scale(1); opacity: 1; }
+	}
+	
+	.animate-alert {
+	  animation: alert-pop 0.2s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+	}
+	
+	.prose p {
+	  margin: 0.5rem 0 !important;
+	}
+	
+	.prose ul {
+	  list-style-type: disc !important;
+	  padding-left: 1.2rem !important;
+	  margin: 0.5rem 0 !important;
+	}
+	
+	.prose ol {
+	  list-style-type: decimal !important;
+	  padding-left: 1.5rem !important;
+	  margin: 0.5rem 0 !important;
+	}
+	
+	.prose li {
+	  margin: 0.25rem 0;
+	}
+	
+	.prose table {
+	  width: 100%;
+	  border-collapse: collapse;
+	  margin: 0 !important;
+	  font-size: 0.95rem;
+	}
+	
+	.prose th {
+	  background-color: #e5e7eb !important;
+	  font-weight: 600;
+	  text-align: center;
+	  padding: 0.5rem;
+	  border: 1px solid #cbd5e1;
+	}
+	
+	.prose td {
+	  padding: 0.5rem;
+	  border: 1px solid #cbd5e1;
+	}
+	
+	.prose strong {
+	  font-weight: 600;
+	  color: #1e293b;
+	}
+	
+	.prose h1, .prose h2, .prose h3 {
+	  font-weight: 700;
+	  color: #1e293b;
+	  margin: 0.5rem 0 !important;
+	  line-height: 1.3;
+	}
+	
+	.prose h1 { font-size: 1.5rem; }
+	.prose h2 { font-size: 1.25rem; }
+	
+	.prose blockquote {
+	  border-left: 4px solid #cbd5e1;
+	  padding-left: 1rem;
+	  margin: 1rem 0 !important;
+	  font-style: italic;
+	  color: #64748b;
+	}
+	
+	.prose code:not(.hljs) {
+	  background-color: #e5e7eb !important;
+	  color: #1f2937 !important;
+	  padding: 0.2rem 0.4rem;
+	  border-radius: 0.25rem;
+	  font-family: monospace;
+	  font-size: 0.875em;
+	}
+	
+	.prose pre, .prose code, .hljs {
+	  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+	  font-size: 0.9rem !important;
+	  line-height: 1.35 !important;
+	  tab-size: 4 !important;
+	}
+	
+	code.hljs {
+	  padding: 0.5rem 0.75rem !important;
+	}
+	
+	.code-wrapper {
+	  background-color: #e5e7eb !important;
+	  border: none !important;
+	  border-radius: 0.5rem !important;
+	  overflow: hidden;
+	  margin: 0.75rem 0 !important;
+	  box-shadow: none !important;
+	}
+	
+	.code-wrapper > div:first-child {
+	  background-color: #e5e7eb !important;
+	  border-bottom: 2px solid #f3f4f6 !important;
+	  padding: 0.5rem 1rem !important;
+	  color: #4b5563;
+	}
+	
+	.code-wrapper > div:first-child span {
+	  font-size: 0.8rem !important;
+	  font-weight: 700 !important;
+	}
+	
+	.code-wrapper > div:first-child button {
+	  font-size: 0.8rem !important;
+	}
+	
+	.code-wrapper pre, .code-wrapper code.hljs {
+	  background-color: #e5e7eb !important;
+	  color: #1f2937 !important;
+	}
+	
+	.custom-slider {
+	  -webkit-appearance: none;
+	  width: 100%;
+	  height: 35px;
+	  background: #f3f4f6;
+	  border-radius: 16px;
+	  outline: none;
+	  margin: 0;
+	}
+	
+	.custom-slider::-webkit-slider-thumb {
+	  -webkit-appearance: none;
+	  appearance: none;
+	  width: 25px;
+	  height: 35px;
+	  background: rgba(75, 85, 99, 0.4);
+	  border-radius: 16px;
+	  cursor: pointer;
+	  border: 2px solid white;
+	  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	  position: relative;
+	  z-index: 20;
+	}
+	
+	.custom-slider::-moz-range-thumb {
+	  width: 30px;
+	  height: 25px;
+	  background: rgba(55, 65, 81, 0.5);
+	  border-radius: 16px;
+	  cursor: pointer;
+	  border: 2px solid white;
+	}
+	
+	#aura-sphere {
+	  width: 208px;
+	  height: 208px;
+	  border-radius: 50%;
+	  will-change: transform;
+	  background-color: #4B5563;
+	  box-shadow: none !important;
+	  transition: transform 0.05s linear;
+	}
+	
+	#model-options {
+	  -webkit-overflow-scrolling: touch !important;
+	  overscroll-behavior: contain;
+	  padding-bottom: 8px;
+	}
 	</style>
 </head>
-
 <body class="bg-white w-full font-sans text-gray-800">
-	
-	<header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-sm shadow-sm p-4 flex justify-between items-center z-50 h-20">
-		<div class="w-full flex justify-between items-center">
-			<div class="flex items-center gap-0">
-				<img src="icon/icon.png" alt="icon" class="w-16 h-16 rounded-full object-cover -mt-1">
-				<div class="flex flex-col justify-center h-16">
-					<h1 class="font-semibold text-xl leading-none bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">AI ASISTEN</h1>
-					<p class="text-[12px] font-medium tracking-wider text-gray-400 mt-0">ARTIFICIAL INTELLIGENCE</p>
+	<div id="auth-page" class="fixed inset-0 z-[300] bg-gray-50 flex items-center justify-center px-6 transition-opacity duration-300">
+		    <div class="w-full max-w-[368px] bg-white rounded-2xl pt-6 pb-6 px-6 shadow-2xl shadow-gray-200/50 border border-gray-100 flex flex-col items-center">
+    
+			    <div class="flex flex-col items-center mb-8">
+				    <img src="icon/icon.png" alt="icon" class="w-20 h-20 object-contain">
+				    
+				    <h2 class="text-xl font-bold text-gray-700 uppercase" style="font-family: 'Orbitron', sans-serif;">
+				        AI ASISTEN
+				    </h2>
 				</div>
+			
+			    <div class="w-full space-y-4">
+			        <input type="email" id="auth-email" class="w-full bg-gray-50 py-4 px-6 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 text-sm text-gray-800" placeholder="Email">
+			        
+			        <input type="password" id="auth-password" class="w-full bg-gray-50 py-4 px-6 rounded-2xl outline-none focus:ring-2 focus:ring-gray-200 text-sm text-gray-800" placeholder="Password">
+			        
+			        <button onclick="handleLogin()" id="login-btn" class="w-full bg-gray-800 hover:bg-black text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.97] mt-4 shadow-lg uppercase transition-colors">
+			            MASUK
+			        </button>
+			        
+			        <div id="auth-error" class="text-red-500 text-[10px] text-center font-bold uppercase tracking-tight min-h-[1rem] mt-1 px-2"></div>
+			    </div>
 			</div>
-			<button onclick="resetKey()" id="reset-btn" class="hidden text-gray-400 transition p-2" title="Mulai Ulang (Reset)">
-				<svg class="w-7 h-7 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-					<path d="M12 16c1.671 0 3-1.331 3-3s-1.329-3-3-3-3 1.331-3 3 1.329 3 3 3z"></path>
-					<path d="M20.817 11.186a8.94 8.94 0 0 0-1.355-3.219 9.053 9.053 0 0 0-2.43-2.43 8.95 8.95 0 0 0-3.219-1.355 9.028 9.028 0 0 0-1.838-.18V2L8 5l3.975 3V6.002c.484-.002.968.044 1.435.14a6.961 6.961 0 0 1 2.502 1.053 7.005 7.005 0 0 1 1.892 1.892A6.967 6.967 0 0 1 19 13a7.032 7.032 0 0 1-.55 2.725 7.11 7.11 0 0 1-.644 1.188 7.2 7.2 0 0 1-.858 1.039 7.028 7.028 0 0 1-3.536 1.907 7.13 7.13 0 0 1-2.822 0 6.961 6.961 0 0 1-2.503-1.054 7.002 7.002 0 0 1-1.89-1.89A6.996 6.996 0 0 1 5 13H3a9.02 9.02 0 0 0 1.539 5.034 9.096 9.096 0 0 0 2.428 2.428A8.95 8.95 0 0 0 12 22a9.09 9.09 0 0 0 1.814-.183 9.014 9.014 0 0 0 3.218-1.355 8.886 8.886 0 0 0 1.331-1.099 9.228 9.228 0 0 0 1.1-1.332A8.952 8.952 0 0 0 21 13a9.09 9.09 0 0 0-.183-1.814z"></path>
-				</svg>
-			</button>
 		</div>
+
+	    <header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-sm shadow-sm p-4 flex justify-between items-center z-50 h-20">
+	    <div class="w-full flex justify-between items-center relative">
+	        <div class="flex items-center gap-0">
+	            <img src="icon/icon.png" alt="icon" class="w-16 h-16 rounded-full object-cover -mt-1">
+	            
+	            <div class="flex flex-col justify-center h-16">
+	                <h1 class="text-xl leading-none text-black font-bold" style="font-family: 'Orbitron', sans-serif;">
+	                    AI ASISTEN
+	                </h1>
+	                <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase">
+	                    ARTIFICIAL INTELLIGENCE
+	                </p>
+	            </div>
+	        </div>
+	
+	        <div class="flex items-center gap-2">
+	            <button id="mic-open-btn" onclick="toggleVoicePage(true)" class="text-gray-400 transition p-2">
+				    <svg viewBox="0 0 24 24" class="w-7 h-7" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				        <path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z" fill="currentColor"></path>
+				    </svg>
+				</button>
+	            <button onclick="toggleSettings(true)" class="text-gray-400 transition p-2"><svg class="w-7 h-7" viewBox="0 0 24 24" fill="none"><path d="M3.08168 13.9445C2.55298 12.9941 2.28862 12.5188 2.28862 12C2.28862 11.4812 2.55298 11.0059 3.08169 10.0555L4.43094 7.63L5.85685 5.24876C6.4156 4.31567 6.69498 3.84912 7.14431 3.5897C7.59364 3.33028 8.13737 3.3216 9.22483 3.30426L12 3.26L14.7752 3.30426C15.8626 3.3216 16.4064 3.33028 16.8557 3.5897C17.305 3.84912 17.5844 4.31567 18.1431 5.24876L19.5691 7.63L20.9183 10.0555C21.447 11.0059 21.7114 11.4812 21.7114 12C21.7114 12.5188 21.447 12.9941 20.9183 13.9445L19.5691 16.37L18.1431 18.7512C17.5844 19.6843 17.305 20.1509 16.8557 20.4103C16.4064 20.6697 15.8626 20.6784 14.7752 20.6957L12 20.74L9.22483 20.6957C8.13737 20.6784 7.59364 20.6697 7.14431 20.4103C6.69498 20.1509 6.4156 19.6843 5.85685 18.7512L4.43094 16.37L3.08168 13.9445Z" stroke="currentColor" stroke-width="2"></path><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"></circle></svg></button>
+				<button onclick="handleLogout()" class="text-gray-400 transition p-2">
+				    <svg viewBox="0 0 24 24" class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+				        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2a9.985 9.985 0 0 1 8 4h-2.71a8 8 0 1 0 .001 12h2.71A9.985 9.985 0 0 1 12 22zm7-6v-3h-8v-2h8V8l5 4-5 4z"></path>
+				    </svg></button>
+	            <button onclick="toggleSidebar(true)" class="text-gray-400 p-2"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+	        </div>
+	    </div>
 	</header>
+
+    <main id="chat-container" class="fixed top-20 bottom-0 left-0 w-full overflow-y-auto pt-4 pb-28 px-4 space-y-6 bg-white"></main>
+
+	<footer class="fixed bottom-0 left-0 w-full z-50 bg-white border-gray-100">
+	    <div class="w-full px-4 py-4 bg-transparent">
+	        <div class="max-w-3xl mx-auto flex flex-col">
+	            <div id="file-preview-container" class="hidden w-full mb-2">
+	                <div id="file-list" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+	            </div>
+	            <div class="flex items-center gap-1 bg-gray-100 px-2 rounded-[28px] min-h-[56px] w-full z-20 py-1 border border-transparent">
+	                <input type="file" id="file-upload" class="hidden" accept=".html,.css,.js,.txt,.swift,.pdf,.docx,.xlsx,.xls,.ppt,.pptx,image/*" multiple onchange="handleFileSelect(event)">
+	                
+	                <button onclick="document.getElementById('file-upload').click()" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-600">
+	                    <svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2">
+	                        <path d="M16 12L12 8M12 8L8 12M12 8V17.2C12 18.5907 12 19.2861 12.5505 20.0646C12.9163 20.5819 13.9694 21.2203 14.5972 21.3054C15.5421 21.4334 15.9009 21.2462 16.6186 20.8719C19.8167 19.2036 22 15.8568 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 15.7014 4.01099 18.9331 7 20.6622" stroke-linecap="round" stroke-linejoin="round"></path>
+	                    </svg>
+	                </button>
 	
-	<main id="chat-container" class="fixed top-20 bottom-0 left-0 w-full overflow-y-auto pt-4 pb-32 px-4 space-y-6 bg-white">
-	</main>
+	                <textarea id="user-input" placeholder="Ketik pesan..." class="flex-1 bg-transparent text-gray-800 focus:outline-none focus:ring-0 text-base py-3 px-1 resize-none max-h-40 overflow-y-auto leading-tight" rows="1" autocomplete="off" onkeydown="handleEnter(event)" oninput="autoResize(this)"></textarea>
 	
-	<footer class="fixed bottom-0 left-0 w-full bg-white z-50">
-		<div class="w-full px-4 py-6 bg-white">
-			<div class="max-w-3xl mx-auto flex flex-col">
-				<div id="file-preview-container" class="hidden w-full mb-2">
-					<div id="file-list" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
-				</div>
-				<div class="flex items-center gap-0 bg-gray-100 pr-2 pl-2 rounded-full h-[58px] w-full z-20">
-					<input type="file" id="file-upload" class="hidden" accept=".html,.css,.js,.txt,.swift,.pdf,.docx,.xlsx,.xls,.ppt,.pptx,image/*" multiple onchange="handleFileSelect(event)">
-					
-					<button onclick="document.getElementById('file-upload').click()" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-gray-400 transition hover:text-gray-600" title="Upload File">
-						<svg viewBox="0 0 24 24" class="w-6 h-6" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<g stroke-width="0"></g>
-							<g stroke-linecap="round" stroke-linejoin="round"></g>
-							<g> 
-								<path d="M16 12L12 8M12 8L8 12M12 8V17.2C12 18.5907 12 19.2861 12.5505 20.0646C12.9163 20.5819 13.9694 21.2203 14.5972 21.3054C15.5421 21.4334 15.9009 21.2462 16.6186 20.8719C19.8167 19.2036 22 15.8568 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 15.7014 4.01099 18.9331 7 20.6622" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> 
-							</g>
-						</svg>
-					</button>
-					
-					<input type="text" id="user-input" placeholder="Ketik pesan..." class="w-full bg-transparent text-gray-800 focus:outline-none text-base h-full pl-2" autocomplete="off" onkeydown="handleEnter(event)">
-					
-					<button onclick="handleInput()" id="action-btn" class="flex-shrink-0 bg-black hover:bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center transition disabled:opacity-50 disabled:cursor-not-allowed">
-						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1">
-							<path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z" fill="white"></path>
-						</svg>
-					</button>
-				</div>
-			</div>
-		</div>
+	                <button onclick="handleInput()" id="action-btn" class="flex-shrink-0 w-10 h-10 flex items-center justify-center text-black">
+	                    <svg viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor">
+	                        <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
+	                    </svg>
+	                </button>
+	            </div>
+	        </div>
+	    </div>
 	</footer>
 
-	<div id="custom-alert" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-[2px] transition-opacity duration-200">
-		<div class="bg-white/95 w-[270px] rounded-2xl text-center shadow-2xl animate-alert backdrop-blur-xl overflow-hidden transform scale-100">
-			<div class="pt-5 pb-2 px-4">
-				<h3 class="text-base font-bold text-gray-900 leading-snug mb-1">Reset Asisten?</h3>
-				<p class="text-sm text-gray-600 leading-relaxed">Semua riwayat percakapan dan API Key akan dihapus dari perangkat ini.</p>
-			</div>
-			<div class="flex border-t border-gray-300/70">
-				<button onclick="closeCustomAlert()" class="w-1/2 py-3 text-base text-blue-500 hover:bg-gray-100 active:bg-gray-200 transition font-normal border-r border-gray-300/70">BATAL</button>
-				<button onclick="confirmReset()" class="w-1/2 py-3 text-base text-red-500 font-normal hover:bg-gray-100 active:bg-gray-200 transition">HAPUS</button>
-			</div>
-		</div>
+    <div id="settings-page" class="hidden fixed inset-0 z-[100] bg-gray-50 w-full h-full overflow-hidden flex flex-col opacity-0 transition-opacity duration-200">
+        <header class="w-full bg-white/90 backdrop-blur-sm flex items-center justify-between h-20 px-6 relative z-[110] flex-shrink-0">
+            <button onclick="toggleSettings(false)" class="text-gray-400 p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+            <h1 class="absolute left-1/2 -translate-x-1/2 font-semibold text-xl text-gray-700 tracking-normal uppercase">Pengaturan</h1>
+            <button onclick="saveSettings()" class="bg-gray-100 text-gray-700 px-6 py-2 rounded-full text-xs font-bold active:scale-95 border border-gray-200/50">SIMPAN</button>
+        </header>
+        <main class="flex-1 overflow-y-auto pt-4 pb-20 px-4">
+            <div class="max-w-3xl mx-auto space-y-3">
+                <div class="bg-white rounded-3xl pt-5 pb-6 px-5 shadow-sm border border-gray-100">
+                    <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-4">Pilih Model AI</label>
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Model Chat</label>
+                            <div class="relative">
+                                <button onclick="toggleDropdown(event, 'model-options', 'dropdown-icon')" id="model-btn" class="w-full bg-gray-50 py-2.5 px-4 rounded-xl flex justify-between items-center text-gray-700 border border-gray-100">
+                                    <span id="selected-model-text" class="font-medium">Gemini 3 Flash</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform" id="dropdown-icon"></i>
+                                </button>
+                                <div id="model-options" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-[120] overflow-y-auto max-h-[220px]">
+								    <div onclick="selectModel('Gemini 3 Flash', 'gemini-3-flash-preview')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Gemini 3 Flash</div>
+								    <div onclick="selectModel('Gemini 3 Pro', 'gemini-3-pro-preview')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Gemini 3 Pro</div>
+								</div>
+                            </div>
+                        </div>
+                 
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Model Suara</label>
+                            <div class="relative">
+                                <button onclick="toggleDropdown(event, 'voice-model-options', 'voice-dropdown-icon')" id="voice-model-btn" class="w-full bg-gray-50 py-2.5 px-4 rounded-xl flex justify-between items-center text-gray-700 border border-gray-100">
+                                    <span id="selected-voice-text" class="font-medium">Kore</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform" id="voice-dropdown-icon"></i>
+                                </button>
+                                <div id="voice-model-options" class="hidden absolute left-0 right-0 mt-1 bg-white border border-gray-100 rounded-2xl shadow-xl z-[120] overflow-y-auto max-h-[220px]">
+                                    <div onclick="selectVoiceModel('Aoede')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer border-b border-gray-100/50">Aoede</div>
+                                    <div onclick="selectVoiceModel('Kore')" class="py-2.5 px-5 hover:bg-gray-50 cursor-pointer">Kore</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl pt-5 pb-6 px-5 shadow-sm border border-gray-100">
+                    <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-3">Instruksi Sistem</label>
+                    <textarea id="cfg-sys-prompt" rows="3" class="w-full p-3 bg-gray-50 rounded-xl text-base text-gray-700 outline-none border border-gray-100" placeholder="Masukkan instruksi khusus..."></textarea>
+                </div>
+
+                <div class="bg-white rounded-3xl pt-5 pb-8 px-5 shadow-sm border border-gray-100">
+                    <label class="block text-[14px] font-black tracking-tight text-gray-800 uppercase mb-5">Parameter AI</label>
+                    <div class="space-y-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Atur Kreativitas</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="temp-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">0.7</span>
+                                </div>
+                                <input type="range" id="cfg-temp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('temp-val').innerText=this.value" class="custom-slider">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Atur Token</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="token-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">8192</span>
+                                </div>
+                                <input type="range" id="cfg-tokens" min="1024" max="8192" step="512" value="8192" oninput="document.getElementById('token-val').innerText=this.value" class="custom-slider">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Tingkat Pemikiran</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="thinking-text-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">High</span>
+                                </div>
+                                <input type="range" id="cfg-thinking" min="0" max="2" step="1" value="2" oninput="updateThinkingLabel(this.value)" class="custom-slider">
+                            </div>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[10px] font-bold tracking-wider text-gray-400 uppercase ml-1">Resolusi Media</label>
+                            <div class="relative w-full h-[24px] flex items-center">
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                                    <span id="media-res-text-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">Medium</span>
+                                </div>
+                                <input type="range" id="cfg-media-res" min="0" max="3" step="1" value="1" oninput="updateMediaResLabel(this.value)" class="custom-slider">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="voice-page" class="hidden fixed inset-0 z-[200] bg-white flex flex-col opacity-0 transition-opacity duration-300 overflow-hidden">
+	    <header class="relative z-10 w-full h-20 flex items-center px-6 flex-shrink-0">
+	        <button onclick="toggleVoicePage(false)" class="text-gray-400 bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center">
+	            <i class="fa-solid fa-arrow-left text-xl"></i>
+	        </button>
+	        <div id="voice-timer" class="absolute left-1/2 -translate-x-1/2 font-mono text-gray-700 font-medium text-lg">00:00:00</div>
+	    </header>
+	
+	    <main onclick="interruptAI()" class="relative z-10 flex-1 w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+	        <div id="camera-container" class="hidden relative w-full h-full bg-black rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-sm">
+	            <video id="video-preview" autoplay playsinline muted class="w-full h-full object-cover"></video>
+	        </div>
+	        <div id="aura-sphere" class="w-52 h-52 rounded-full transition-transform bg-[#4B5563]"></div>
+	    </main>
+	
+	    <footer class="relative z-10 w-full px-6 py-6 flex items-center justify-center flex-shrink-0">
+	        <div class="flex items-center justify-center gap-12 bg-gray-100 px-6 py-6 rounded-full shadow-sm">
+	            <button id="camera-switch-btn" onclick="switchCamera()" class="w-6 h-6 flex items-center justify-center text-[#4B5563] active:scale-90 transition-all">
+	                <svg viewBox="0 0 56 56" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7.809 50.348H48.19c4.875 0 7.36-2.438 7.36-7.266V18.543c0-4.828-2.485-7.242-7.36-7.242h-5.484c-1.828 0-2.39-.375-3.445-1.547l-1.899-2.11c-1.148-1.288-2.343-1.992-4.781-1.992h-9.328c-2.414 0-3.61.704-4.781 1.992l-1.899 2.11c-1.031 1.148-1.617 1.547-3.445 1.547h-5.32c-4.875 0-7.36 2.414-7.36 7.242v24.539c0 4.828 2.485 7.266 7.36 7.266m30.117-12.75l-4.406-5.813c-.61-.797-.211-1.828.726-1.828h3.164c0-5.719-3.914-9.703-9.422-9.703c-1.734 0-3.14.422-4.57 1.195c-1.594.774-2.812-.14-2.812-1.289c0-.562.257-1.195.937-1.617c1.5-.914 3.844-1.711 6.445-1.711c7.477 0 12.89 5.438 12.89 13.125h2.79c.96 0 1.313 1.008.703 1.828l-4.43 5.813c-.492.656-1.476.68-2.015 0m-9.938 4.992c-7.476 0-12.867-5.696-12.867-13.125h-2.789c-.984 0-1.312-1.031-.703-1.852l4.43-5.812c.492-.633 1.476-.68 1.992 0l4.43 5.812c.609.82.21 1.852-.75 1.852h-3.165c0 5.437 3.915 9.68 9.422 9.68c1.758 0 3.188-.422 4.57-1.172c1.641-.82 2.813.164 2.813 1.359c0 .563-.281 1.102-.937 1.547c-1.477.96-3.868 1.71-6.446 1.71"/></svg>
+	            </button>
+	
+	            <div class="w-6 h-6 flex items-center justify-center">
+	                <button id="btnStartVoice" class="w-full h-full flex items-center justify-center text-[#4B5563] active:scale-95 transition-all">
+	                    <svg viewBox="0 0 24 24" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.736 4 21.276 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648l12.812 6.968Z"/></svg>
+	                </button>
+	                <button id="btnStopVoice" class="hidden w-full h-full flex items-center justify-center text-red-600 active:scale-95 transition-all">
+	                    <svg viewBox="0 0 1025 1024" class="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M128.428 0h768q53 0 90.5 37.5t37.5 90.5v768q0 53-37.5 90.5t-90.5 37.5h-768q-53 0-90.5-37.5T.428 896V128q0-53 37.5-90.5t90.5-37.5z"/></svg>
+	                </button>
+	            </div>
+	
+	            <button id="video-toggle-btn" onclick="toggleVideoPreference()" class="w-6 h-6 flex items-center justify-center text-[#4B5563] active:scale-90 transition-all">
+	                <svg viewBox="0 0 576 512" class="w-full h-full" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 128c0-35.3 28.7-64 64-64h256c35.3 0 64 28.7 64 64v256c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zm559.1-28.2c10.4 5.6 16.9 16.4 16.9 28.2v256c0 11.8-6.5 22.6-16.9 28.2s-23 5-32.9-1.6l-96-64l-14.2-9.5V174.9l14.2-9.5l96-64c9.8-6.5 22.4-7.2 32.9-1.6z"/></svg>
+	            </button>
+	        </div>
+	    </footer>
 	</div>
 
-	<script>
-		document.addEventListener('gesturestart', function(e) { e.preventDefault(); });
-		
-		let lastTouchEnd = 0;
-		document.addEventListener('touchend', function(event) {
-			const now = (new Date()).getTime();
-			if (now - lastTouchEnd <= 300) { event.preventDefault(); }
-			lastTouchEnd = now;
-		}, { passive: false });
+    <div id="sidebar-overlay" onclick="toggleSidebar(false)" class="hidden fixed inset-0 z-[140] bg-black/20 backdrop-blur-[2px] opacity-0 transition-opacity duration-300"></div>
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-[280px] bg-white z-[150] -translate-x-full transition-transform duration-300 flex flex-col shadow-2xl">
+        <div class="h-20 flex-shrink-0 px-4">
+            <div class="h-full flex items-center border-b border-gray-100">
+                <button onclick="startNewChat()" class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium text-base flex items-center justify-center gap-3">
+				    <svg fill="currentColor" viewBox="0 0 24 24" class="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+				        <g stroke-width="0"></g>
+				        <g stroke-linecap="round" stroke-linejoin="round"></g>
+				        <g>
+				            <path d="M4 18h2v4.081L11.101 18H16c1.103 0 2-.897 2-2V8c0-1.103-.897-2-2-2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2z"></path>
+				            <path d="M20 2H8c-1.103 0-2 .897-2 2h12c1.103 0 2 .897 2 2v8c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2z"></path>
+				        </g>
+				    </svg>
+				    Percakapan Baru
+				</button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-auto pt-3 px-4 pb-4 space-y-0" id="chat-history-list"></div>
+    </aside>
 
-		document.body.addEventListener('touchmove', function(e) {
-			if (!e.target.closest('#chat-container')) { e.preventDefault(); }
-		}, { passive: false });
-		
-		let isMarkedAvailable = false;
-		try {
-			if (typeof marked !== 'undefined') {
-				const renderer = new marked.Renderer();
-				renderer.code = function(code, language) {
-					let highlighted = code;
-					if (language && typeof hljs !== 'undefined' && hljs.getLanguage(language)) {
-						highlighted = hljs.highlight(code, { language: language }).value;
-					} else if (typeof hljs !== 'undefined') {
-						try { highlighted = hljs.highlightAuto(code).value; } catch (e) {}
-					}
-					const langDisplay = (language || 'text').toUpperCase();
-					return `
-                    <div class="code-wrapper my-5 rounded-lg overflow-hidden bg-gray-200 shadow-sm">
-                        <div class="flex justify-between items-center px-4 py-2 bg-gray-200 border-b-2 border-gray-100">
-                            <span class="text-xs font-bold text-gray-600 font-sans tracking-tight">${langDisplay}</span>
-                            <button onclick="copyCode(this)" class="text-gray-500 hover:text-gray-800 transition flex items-center justify-center w-5 h-5" title="Salin Kode">
-                                <i class="fa-regular fa-clipboard text-sm"></i>
-                            </button>
-                        </div>
-                        <pre class="!m-0 !p-0 !border-0 !rounded-none overflow-x-auto bg-gray-200"><code class="hljs language-${language} !p-4 block !bg-gray-200">${highlighted}</code></pre>
-                    </div>`;
-				};
-				renderer.table = function(header, body) {
-					return `<div class="my-4 w-full overflow-x-auto"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
-				};
-				marked.use({ renderer: renderer, gfm: true, breaks: true });
-				isMarkedAvailable = true;
-			}
-		} catch (e) { console.error(e); }
-		
-		function copyCode(btn) {
-			const wrapper = btn.closest('.code-wrapper');
-			const codeBlock = wrapper.querySelector('code');
-			const text = codeBlock.innerText;
-			navigator.clipboard.writeText(text).then(() => {
-				const icon = btn.querySelector('i');
-				icon.className = 'fa-solid fa-check text-green-600 text-sm';
-				setTimeout(() => { icon.className = 'fa-regular fa-clipboard text-sm'; }, 2000);
-			}).catch(err => {});
-		}
-		
-		let chatHistory = [];
-		let isGenerating = false;
-		let abortController = null;
-		let selectedFiles = [];
-		
-		const typeStyle = document.createElement('style');
-		typeStyle.innerHTML = `
-		    .typing-text::after { 
-		        content: ''; 
-		        animation: dot-steps 1.5s infinite; 
-		    }
-		    @keyframes dot-steps {
-		        0% { content: ''; }
-		        25% { content: '.'; }
-		        50% { content: '..'; }
-		        75% { content: '...'; }
-		        100% { content: ''; }
-		    }
-		`;
-		document.head.appendChild(typeStyle);
-		
-		const dbName = "AI_ImageStore_V1";
-		const storeName = "images";
-		const initDB = () => new Promise((resolve) => {
-		    const req = indexedDB.open(dbName, 1);
-		    req.onupgradeneeded = (e) => {
-		        if (!e.target.result.objectStoreNames.contains(storeName)) {
-		            e.target.result.createObjectStore(storeName);
-		        }
-		    };
-		    req.onsuccess = (e) => resolve(e.target.result);
-		});
-		
-		async function saveImgToDB(id, dataObj) {
-		    try {
-		        const db = await initDB();
-		        const tx = db.transaction(storeName, "readwrite");
-		        tx.objectStore(storeName).put(dataObj, id);
-		    } catch (e) {}
-		}
-		
-		async function getImgFromDB(id) {
-		    try {
-		        const db = await initDB();
-		        return new Promise((resolve) => {
-		            const req = db.transaction(storeName, "readonly").objectStore(storeName).get(id);
-		            req.onsuccess = () => resolve(req.result);
-		            req.onerror = () => resolve(null);
-		        });
-		    } catch (e) { return null; }
-		}
-		
-		const chatContainer = document.getElementById('chat-container');
-		const userInput = document.getElementById('user-input');
-		const actionBtn = document.getElementById('action-btn');
-		const resetBtn = document.getElementById('reset-btn');
-		const filePreviewContainer = document.getElementById('file-preview-container');
-		const fileList = document.getElementById('file-list');
-		const fileInput = document.getElementById('file-upload');
-		
-		document.addEventListener('DOMContentLoaded', async () => {
-		    const savedKey = localStorage.getItem('gemini_api_key');
-		    const savedHistory = localStorage.getItem('gemini_chat_history');
-		    
-		    if (savedKey) {
-		        resetBtn.classList.remove('hidden');
-		        if (savedHistory) {
-		            try {
-		                chatHistory = JSON.parse(savedHistory);
-		                
-		                for (const msg of chatHistory) {
-		                    const text = msg.parts[0]?.text || "";
-		                    const uiId = addMessageToUI(msg.role, text, false, msg.files || [], true);
-		                    
-		                    if (msg.imgRefId) {
-		                        getImgFromDB(msg.imgRefId).then(imgData => {
-		                            if (imgData) {
-		                                renderImageToBubble(uiId, imgData.data, imgData.mime, text.replace('[GAMBAR]: ', ''));
-		                                scrollToBottom(); 
-		                            } else {
-		                                const el = document.getElementById(uiId);
-		                                if(el) el.innerText = "[Gambar kadaluarsa]";
-		                            }
-		                        });
-		                    }
-		                }
-		
-		                setTimeout(() => {
-		                    scrollToBottom();
-		                    requestAnimationFrame(() => {
-		                        chatContainer.classList.add('loaded');
-		                    });
-		                }, 100);
-		
-		            } catch (e) { 
-		                localStorage.removeItem('gemini_chat_history'); 
-		                chatContainer.classList.add('loaded');
-		            }
-		        } else {
-		            const welcomeMsg = "Halo! ASISTEN siap membantu, ada yang bisa saya kerjakan hari ini?";
-		            addMessageToUI('model', welcomeMsg, false);
-		            chatHistory.push({ role: "model", parts: [{ text: welcomeMsg }] });
-		            saveChatHistory();
-		            chatContainer.classList.add('loaded');
-		        }
-		    } else { 
-		        userInput.placeholder = "Tempel API Key Google Gemini Anda di sini..."; 
-		        chatContainer.classList.add('loaded');
-		    }
-		    
-		    if (window.visualViewport) {
-				let lastHeight = window.visualViewport.height;
-				window.visualViewport.addEventListener('resize', () => {
-					if (window.visualViewport.height > lastHeight) setTimeout(() => {
-						window.scrollTo(0, 0);
-						scrollToBottom();
-					}, 50);
-					lastHeight = window.visualViewport.height;
-				});
-			}
-		});
-		
-		function getFileType(filename) {
-			if (!filename) return 'FILE';
-			const ext = filename.split('.').pop().toLowerCase();
-			if (['jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext)) return 'IMG';
-			if (ext === 'docx') return 'DOCX';
-			if (['xls', 'xlsx'].includes(ext)) return 'EXCEL';
-			if (['ppt', 'pptx'].includes(ext)) return 'PPT';
-			if (ext === 'pdf') return 'PDF';
-			return ext.toUpperCase();
-		}
-
-		function formatFileSize(bytes) {
-			if (bytes === 0) return '0 B';
-			const k = 1024;
-			const sizes = ['B', 'KB', 'MB', 'GB'];
-			const i = Math.floor(Math.log(bytes) / Math.log(k));
-			return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-		}
-
-		async function fileToText(file) {
-			const ext = file.name.split('.').pop().toLowerCase();
-			if (ext === 'docx') {
-				const arrayBuffer = await file.arrayBuffer();
-				const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
-				return result.value;
-			}
-			if (['xlsx', 'xls'].includes(ext)) {
-				const arrayBuffer = await file.arrayBuffer();
-				const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-				let text = "";
-				workbook.SheetNames.forEach(sheetName => {
-					const sheet = workbook.Sheets[sheetName];
-					text += `\n--- Sheet: ${sheetName} ---\n`;
-					text += XLSX.utils.sheet_to_csv(sheet);
-				});
-				return text;
-			}
-			return new Promise((resolve, reject) => {
-				const reader = new FileReader();
-				reader.onload = (e) => resolve(e.target.result);
-				reader.onerror = reject;
-				reader.readAsText(file);
-			});
-		}
-
-		async function fileToBase64(file) {
-			return new Promise((resolve, reject) => {
-				const reader = new FileReader();
-				reader.onload = (e) => {
-					const base64Data = e.target.result.split(',')[1];
-					resolve({ inlineData: { mimeType: file.type, data: base64Data } });
-				};
-				reader.onerror = reject;
-				reader.readAsDataURL(file);
-			});
-		}
-		
-		async function readPptxFile(file) {
-		    try {
-		        const zip = new JSZip();
-		        const content = await zip.loadAsync(file);
-		        let text = `\n--- START PRESENTATION: ${file.name} ---\n`;
-		        const slideFiles = Object.keys(content.files).filter(name => name.startsWith("ppt/slides/slide") && name.endsWith(".xml"));
-		        slideFiles.sort((a, b) => {
-		            const numA = parseInt(a.match(/slide(\d+)\.xml/)[1]);
-		            const numB = parseInt(b.match(/slide(\d+)\.xml/)[1]);
-		            return numA - numB;
-		        });
-		        for (const filename of slideFiles) {
-		            const slideNum = filename.match(/slide(\d+)\.xml/)[1];
-		            const xmlText = await content.files[filename].async("text");
-		            const parser = new DOMParser();
-		            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-		            const textNodes = xmlDoc.getElementsByTagName("a:t");
-		            let slideContent = [];
-		            for (let i = 0; i < textNodes.length; i++) {
-		                slideContent.push(textNodes[i].textContent);
-		            }
-		            if (slideContent.length > 0) {
-		                text += `\n[SLIDE ${slideNum}]\n${slideContent.join(" ")}\n`;
-		            }
-		        }
-		        text += `\n--- END PRESENTATION ---\n`;
-		        return text;
-		    } catch (e) {
-		        console.error("Gagal membaca PPTX:", e);
-		        return `[Error reading PowerPoint file: ${e.message}]`;
-		    }
-		}
-
-		async function processFiles(files) {
-			const textFiles = [];
-			const mediaParts = [];
-			for (const file of files) {
-				const ext = file.name.split('.').pop().toLowerCase();
-				if (['html', 'css', 'js', 'txt', 'swift', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].includes(ext)) {
-				    try {
-				        let content = "";
-				        if (['ppt', 'pptx'].includes(ext)) {
-				            content = await readPptxFile(file);
-				        } else {
-				            content = await fileToText(file);
-				        }
-				        textFiles.push(`\n=== File: ${file.name} ===\n${content}\n=== End File ===\n`);
-				    } catch (e) { console.error(e); }
-				}
-				else if (['pdf', 'jpg', 'jpeg', 'png', 'webp', 'heic'].includes(ext) || file.type.startsWith('image/')) {
-					try {
-						const base64Part = await fileToBase64(file);
-						mediaParts.push(base64Part);
-					} catch (e) { console.error(e); }
-				}
-			}
-			return { textContext: textFiles.join('\n'), mediaParts };
-		}
-
-		function renderFilePreviews() {
-			fileList.innerHTML = '';
-			if (selectedFiles.length > 0) {
-				filePreviewContainer.classList.remove('hidden');
-				selectedFiles.forEach((file, index) => {
-					const ext = file.name.split('.').pop().toLowerCase();
-					let type = ext;
-					if (['xlsx', 'xls'].includes(ext)) type = 'excel';
-					if (['docx', 'doc'].includes(ext)) type = 'docx';
-					if (['pptx', 'ppt'].includes(ext)) type = 'ppt';
-					
-					const iconSrc = `icon/${type}-file-icon.svg`;
-
-					const card = document.createElement('div');
-					card.className = 'relative bg-gray-100 rounded-xl p-3 flex items-center gap-3 group border border-transparent hover:border-gray-200 transition-all';
-					card.innerHTML = `
-                        <div class="flex-shrink-0 flex items-center justify-center">
-                            <img src="${iconSrc}" alt="${type}" class="w-7 h-7 object-contain" onerror="this.src='https://placehold.co/24?text=FILE'">
-                        </div>
-                        <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            <p class="text-[15px] font-medium text-gray-900 truncate leading-snug" title="${file.name}">${file.name}</p>
-                            <p class="text-[10px] text-gray-500 mt-0.5 font-normal leading-tight">${formatFileSize(file.size)}</p>
-                        </div>
-                        <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 p-1 text-gray-300 z-20 rounded-full" title="Hapus File">
-                            <svg class="w-5 h-5 fill-current" viewBox="0 0 122.881 122.88"><g><path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.933,0,61.441,27.507,61.441,61.439 c0,33.933-27.508,61.44-61.441,61.44C27.508,122.88,0,95.372,0,61.439C0,27.507,27.508,0,61.44,0L61.44,0z M81.719,36.226 c1.363-1.363,3.572-1.363,4.936,0c1.363,1.363,1.363,3.573,0,4.936L66.375,61.439l20.279,20.278c1.363,1.363,1.363,3.573,0,4.937 c-1.363,1.362-3.572,1.362-4.936,0L61.44,66.376L41.162,86.654c-1.362,1.362-3.573,1.362-4.936,0c-1.363-1.363-1.363-3.573,0-4.937 l20.278-20.278L36.226,41.162c-1.363-1.363-1.363-3.573,0-4.936c1.363-1.363,3.573-1.363,4.936,0L61.44,56.504L81.719,36.226 L81.719,36.226z"/></g></svg>
-                        </button>`;
-					fileList.appendChild(card);
-				});
-			} else {
-				filePreviewContainer.classList.add('hidden');
-			}
-		}
-
-		function generateFileGridHtml(files) {
-			if (!files || files.length === 0) return '';
-			let html = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 mb-2">';
-			files.forEach(file => {
-				const ext = file.name.split('.').pop().toLowerCase();
-				let type = ext;
-				if (['xlsx', 'xls'].includes(ext)) type = 'excel';
-				if (['docx', 'doc'].includes(ext)) type = 'docx';
-				if (['ppt', 'pptx'].includes(ext)) type = 'ppt';
-				
-				const iconSrc = `icon/${type}-file-icon.svg`;
-				
-				html += `
-                    <div class="relative bg-gray-200 rounded-xl p-3 flex items-center gap-3 border border-transparent overflow-hidden">
-                        <div class="flex-shrink-0 flex items-center justify-center">
-                            <img src="${iconSrc}" alt="${type}" class="w-7 h-7 object-contain" onerror="this.src='https://placehold.co/24?text=FILE'">
-                        </div>
-                        <div class="flex-1 min-w-0 flex flex-col justify-center">
-                            <p class="text-[15px] font-medium text-gray-900 truncate leading-snug" title="${file.name}">
-                                ${file.name}
-                            </p>
-                            <p class="text-[10px] text-gray-500 mt-0.5 font-normal leading-tight">
-                                ${formatFileSize(file.size)}
-                            </p>
-                        </div>
-                    </div>`;
-			});
-			html += '</div>';
-			return html;
-		}
-
-		async function sendMessage(text, apiKey) {
-		    const currentFiles = [...selectedFiles];
-		    const filesToSend = selectedFiles.map(f => ({ name: f.name, size: f.size, type: f.type }));
-		    
-		    let imageBlobData = null;
-		    const imageFile = currentFiles.find(f => f.type.startsWith('image/'));
-		    if (imageFile) {
-		        try {
-		            const b64 = await fileToBase64(imageFile);
-		            imageBlobData = { inlineData: { mimeType: b64.inlineData.mimeType, data: b64.inlineData.data } };
-		        } catch (e) {}
-		    }
-		
-		    userInput.value = '';
-		    selectedFiles = [];
-		    renderFilePreviews();
-		    
-		    addMessageToUI('user', text, false, filesToSend);
-		    updateUIState(true);
-		    
-		    abortController = new AbortController();
-		    let fullText = "";
-		    let collectedMetadata = null;
-		    
-		    const loadingHtml = `<p class="text-[15px] italic typing-text leading-relaxed m-0" style="color: #9ca3af !important; font-weight: normal !important;">Thinking</p>`;
-    		let msgId = addMessageToUI('model', loadingHtml, false); 
-		    
-		    chatHistory.push({ role: "user", parts: [{ text: text }], files: filesToSend });
-		    chatHistory.push({ role: "model", parts: [{ text: "" }], uiId: msgId }); 
-		    saveChatHistory();
-		
-		    try {
-		        const { textContext, mediaParts } = await processFiles(currentFiles);
-		        const finalUserTextForAPI = text + (textContext ? `\n\n[USER DOCUMENTS]:\n${textContext}` : "");
-		        const apiCurrentTurnParts = [...mediaParts, { text: finalUserTextForAPI }];
-		        
-		        const apiContents = chatHistory.slice(0, -2).map(msg => ({ 
-		            role: msg.role, 
-		            parts: msg.parts 
-		        }));
-		        apiContents.push({ role: "user", parts: apiCurrentTurnParts });
-		
-		        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:streamGenerateContent?key=${apiKey}`;
-		        
-		        const systemPrompt = `Kamu adalah Aura, Asisten Pribadi yang cerdas.
-		        ATURAN KHUSUS:
-		        1. Jika pengguna meminta membuat gambar, visualisasi, atau lukisan, responmu HANYA boleh berisi format ini:
-		           [GAMBAR]: <deskripsi detail gambar dalam bahasa inggris untuk prompt>
-		        2. Jika pengguna mengirim gambar dan meminta mengubah/mengeditnya, responmu HANYA boleh berisi format ini:
-		           [EDIT]: <instruksi edit dalam bahasa inggris>
-		        3. Untuk pertanyaan lain, jawab seperti biasa dengan ramah.`;
-		
-		        const response = await fetch(url, {
-		            method: 'POST',
-		            headers: { 'Content-Type': 'application/json' },
-		            body: JSON.stringify({
-		                contents: apiContents,
-		                systemInstruction: { parts: [{ text: systemPrompt }] },
-		                tools: [{ google_search: {} }],
-		                generationConfig: { temperature: 0.5, maxOutputTokens: 8192 }
-		            }),
-		            signal: abortController.signal
-		        });
-		        
-		        const msgEl = document.getElementById(msgId);
-		        
-		        if (!response.ok) throw new Error((await response.json()).error?.message || 'API Error');
-		        
-		        const reader = response.body.getReader();
-		        const decoder = new TextDecoder();
-		        let buffer = '';
-		        
-		        while (true) {
-		            const { done, value } = await reader.read();
-		            if (done) break;
-		            buffer += decoder.decode(value, { stream: true });
-		            
-		            let braceCount = 0, startIndex = -1, inString = false, isEscaped = false;
-		            for (let i = 0; i < buffer.length; i++) {
-		                const char = buffer[i];
-		                if (isEscaped) { isEscaped = false; continue; }
-		                if (char === '\\') { isEscaped = true; continue; }
-		                if (char === '"') { inString = !inString; continue; }
-		                if (!inString) {
-		                    if (char === '{') {
-		                        if (braceCount === 0) startIndex = i;
-		                        braceCount++;
-		                    } else if (char === '}') {
-		                        braceCount--;
-		                        if (braceCount === 0 && startIndex !== -1) {
-		                            const jsonStr = buffer.substring(startIndex, i + 1);
-		                            try {
-		                                const data = JSON.parse(jsonStr);
-		                                if (data.candidates?.[0]?.groundingMetadata) collectedMetadata = data.candidates[0].groundingMetadata;
-		                                const newText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-		                                if (newText) {
-		                                    fullText += newText;
-		                                    
-		                                    const isStartingCommand = fullText.trim().startsWith('[') && fullText.length < 20;
-		                                    const isCommand = fullText.includes('[GAMBAR]:') || fullText.includes('[EDIT]:');
-		                                    
-		                                    if (!isStartingCommand && !isCommand && msgEl) {
-		                                         msgEl.innerHTML = isMarkedAvailable ? marked.parse(fullText) : `<p class="whitespace-pre-wrap">${fullText}</p>`;
-		                                         scrollToBottom();
-		                                    }
-		                                }
-		                            } catch (e) {}
-		                            buffer = buffer.substring(i + 1);
-		                            i = -1;
-		                            startIndex = -1;
-		                        }
-		                    }
-		                }
-		            }
-		        }
-		        
-		        const imgMatch = fullText.match(/\[GAMBAR\]:\s*([\s\S]+)/i);
-		        const editMatch = fullText.match(/\[EDIT\]:\s*([\s\S]+)/i);
-		        const commandMatch = imgMatch || editMatch;
-		
-		        if (commandMatch) {
-		            const commandType = imgMatch ? 'GAMBAR' : 'EDIT';
-		            const promptContent = commandMatch[1].trim();
-		            const cleanPrompt = (commandType === 'EDIT' ? '/edit ' : '') + promptContent;
-		            
-		            chatHistory.pop();
-		            await handleImageGeneration(cleanPrompt, apiKey, imageBlobData, msgId);
-		            return;
-		        }
-		
-		        const lastHistoryMsg = chatHistory[chatHistory.length - 1];
-		        if (lastHistoryMsg) lastHistoryMsg.parts = [{ text: fullText }];
-		        saveChatHistory();
-		
-		        if (collectedMetadata) {
-		            renderGroundingSources(msgId, collectedMetadata);
-		            setTimeout(scrollToBottom, 100);
-		        }
-		        
-		    } catch (error) {
-		        if (error.name !== 'AbortError') {
-		            const errDiv = document.createElement('div');
-		            errDiv.className = 'w-full max-w-3xl mx-auto mb-6';
-		            errDiv.innerHTML = `<div class="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm border border-red-100 flex items-center gap-2"><i class="fa-solid fa-circle-exclamation"></i><span>Error: ${error.message}</span></div>`;
-		            chatContainer.appendChild(errDiv);
-		        }
-		    } finally {
-		        updateUIState(false);
-		        abortController = null;
-		    }
-		}
-
-		async function handleImageGeneration(promptText, apiKey, imageBlobObj = null, existingMsgId = null) {
-		    const isEdit = promptText.toLowerCase().startsWith('/edit');
-		    const cleanPrompt = promptText.replace(/^\/(gambar|edit)\s+/i, '').trim();
-		    
-		    const statusText = isEdit ? "Mengedit gambar" : "Membuat gambar";
-		    const loadingHtml = `<p class="text-[15px] italic typing-text leading-relaxed m-0" style="color: #9ca3af !important; font-weight: normal !important;">${statusText}</p>`;
-    
-    		let msgId = existingMsgId;
-		    if (!msgId) {
-		        msgId = addMessageToUI('model', loadingHtml, false);
-		    } else {
-		        const el = document.getElementById(msgId);
-		        if(el) el.innerHTML = loadingHtml;
-		    }
-		
-		    const contentDiv = document.getElementById(msgId);
-		
-		    try {
-		        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`;
-		        const parts = [];
-		        
-		        if (imageBlobObj) {
-		            parts.push(imageBlobObj);
-		        } else if (isEdit) {
-		             if (contentDiv) contentDiv.innerHTML = `<span class="text-red-500">Gagal: Mode edit memerlukan upload gambar baru.</span>`;
-		             return;
-		        }
-		        
-		        parts.push({ text: cleanPrompt });
-		
-		        const response = await fetch(url, {
-		            method: 'POST',
-		            headers: { 'Content-Type': 'application/json' },
-		            body: JSON.stringify({ contents: [{ parts: parts }] })
-		        });
-		
-		        const data = await response.json();
-		        const candidate = data.candidates?.[0];
-		        
-		        const imageOutput = candidate?.content?.parts?.find(p => p.inlineData && p.inlineData.data);
-		
-		        if (imageOutput) {
-		            const base64 = imageOutput.inlineData.data;
-		            const mime = imageOutput.inlineData.mimeType || 'image/jpeg';
-		            const imgId = 'img_' + Date.now();
-		
-		            await saveImgToDB(imgId, { mime, data: base64 });
-		            renderImageToBubble(msgId, base64, mime, cleanPrompt);
-		            setTimeout(scrollToBottom, 100);
-		
-		            const existingIdx = chatHistory.findIndex(m => m.uiId === msgId);
-		            
-		            const newEntry = { 
-		                role: "model", 
-		                parts: [{ text: `[GAMBAR]: ${cleanPrompt}` }], 
-		                imgRefId: imgId,
-		                uiId: msgId
-		            };
-		
-		            if (existingIdx !== -1) {
-		                chatHistory[existingIdx] = newEntry;
-		            } else {
-		                chatHistory.push(newEntry);
-		            }
-		            saveChatHistory();
-		        } else {
-		            if (contentDiv) {
-		                const wrapper = contentDiv.closest('.w-full.max-w-3xl');
-		                if (wrapper) wrapper.remove();
-		            }
-		            
-		            const existingIdx = chatHistory.findIndex(m => m.uiId === msgId);
-		            if (existingIdx !== -1) {
-		                chatHistory.splice(existingIdx, 1);
-		                saveChatHistory();
-		            }
-		        }
-		
-		    } catch (error) {
-		        if (contentDiv) contentDiv.innerHTML = `<span class="text-red-500">Error: ${error.message}</span>`;
-		    } finally {
-		        updateUIState(false);
-		    }
-		}
-		
-		function handleFileSelect(event) {
-			const files = Array.from(event.target.files);
-			files.forEach(file => {
-				if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
-					selectedFiles.push(file);
-				}
-			});
-			renderFilePreviews();
-			fileInput.value = '';
-		}
-		
-		function removeFile(index) {
-			selectedFiles.splice(index, 1);
-			renderFilePreviews();
-		}
-		
-		function handleEnter(e) { if (e.key === 'Enter') { e.preventDefault(); handleInput(); } }
-		function saveChatHistory() { localStorage.setItem('gemini_chat_history', JSON.stringify(chatHistory)); }
-		
-		const customAlert = document.getElementById('custom-alert');
-		function resetKey() { customAlert.classList.remove('hidden'); }
-		function closeCustomAlert() { customAlert.classList.add('hidden'); }
-		function confirmReset() { localStorage.clear(); location.reload(); }
-		customAlert.addEventListener('click', (e) => { if (e.target === customAlert) closeCustomAlert(); });
-		
-		async function handleImageDownload(e, dataUrl, fileName) {
-			e.preventDefault();
-			e.stopPropagation();
-			try {
-				const response = await fetch(dataUrl);
-				const blob = await response.blob();
-				const file = new File([blob], fileName, { type: blob.type });
-				if (navigator.canShare && navigator.canShare({ files: [file] })) {
-					await navigator.share({ files: [file], title: 'Simpan Gambar AI' });
-				} else {
-					const blobUrl = window.URL.createObjectURL(blob);
-					const link = document.createElement('a');
-					link.href = blobUrl;
-					link.download = fileName;
-					document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-					window.URL.revokeObjectURL(blobUrl);
-				}
-			} catch (err) { console.error(err); }
-		}
-
-		function renderImageToBubble(elementId, base64, mime, prompt) {
-		    const contentDiv = document.getElementById(elementId);
-		    if (!contentDiv) return;
-		    const timestamp = Date.now();
-		    
-		    contentDiv.innerHTML = `
-		        <div class="relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm mt-1 inline-block w-full">
-		            <img src="data:${mime};base64,${base64}" class="w-full h-auto bg-gray-50 block" alt="${prompt}">
-		            
-		            <a href="data:${mime};base64,${base64}" download="AI-${timestamp}.jpg" 
-		               class="absolute top-2 right-2 w-6 h-6 flex items-center justify-center bg-black/60 hover:bg-black/80 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 z-10 transform-gpu backdrop-blur-[2px]" 
-		               title="Download Gambar">
-		                
-		                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-		                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-		                    <polyline points="7 10 12 15 17 10"></polyline>
-		                    <line x1="12" y1="15" x2="12" y2="3"></line>
-		                </svg>
-		            </a>
-		        </div>`;
-		}
-		
-		function scrollToBottom() {
-		    const container = document.getElementById('chat-container');
-		    if (container) {
-		        container.scrollTop = container.scrollHeight;
-		        window.requestAnimationFrame(() => {
-		            container.scrollTop = container.scrollHeight;
-		        });
-		    }
-		}
-		
-		function handleInput() {
-		    if (isGenerating) { 
-		        stopGeneration(); 
-		    } else {
-		        const text = userInput.value.trim();
-		        const apiKey = localStorage.getItem('gemini_api_key');
-		        
-		        if (!text && selectedFiles.length === 0) return;
-		        
-		        if (!apiKey) {
-		            saveApiKey(text);
-		        } else {
-		            sendMessage(text, apiKey);
-		        }
-		    }
-		}
-		
-		function stopGeneration() { if (abortController) abortController.abort(); }
-		
-		function updateUIState(generating) {
-			isGenerating = generating;
-			const btn = document.getElementById('action-btn');
-			
-			if (generating) {
-				btn.innerHTML = `
-					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white fill-current" viewBox="0 0 24 24">
-						<rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-					</svg>`;
-			} else {
-				btn.innerHTML = `
-					<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 ml-1">
-						<path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z" fill="white"></path>
-					</svg>`;
-			}
-		}
-		
-		function saveApiKey(keyText) {
-			if (keyText.length < 10) { alert("API Key tidak valid."); return; }
-			localStorage.setItem('gemini_api_key', keyText);
-			userInput.value = '';
-			userInput.placeholder = "Ketik pesan...";
-			resetBtn.classList.remove('hidden');
-			addMessageToUI('user', 'API Key dimasukkan.', false);
-			setTimeout(() => {
-				const msg = "**API Key tersimpan!** ✅\n\nSilakan mulai chat.";
-				addMessageToUI('model', msg, false);
-				chatHistory = [{ role: "model", parts: [{ text: msg }] }];
-				saveChatHistory();
-			}, 600);
-		}
-		
-		function addMessageToUI(role, text, isStream = false, files = [], skipScroll = false) {
-		    const div = document.createElement('div');
-		    const isUser = role === 'user';
-		    const uniqueId = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 9);
-		    const btnId = 'btn-' + uniqueId;
-		    
-		    const now = new Date();
-		    const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-		    
-		    div.className = 'w-full max-w-3xl mx-auto mb-6';
-		    const fileGrid = generateFileGridHtml(files);
-		    
-		    let contentHtml = '';
-		    if (text) {
-		        if (isUser) {
-		            contentHtml = `<p class="whitespace-pre-wrap font-sans text-gray-900 font-medium text-[15px] leading-relaxed mb-0">${text}</p>`;
-		        } else {
-		            try {
-		                contentHtml = isMarkedAvailable ? marked.parse(text) : `<p class="whitespace-pre-wrap text-gray-900 font-medium text-[15px]">${text}</p>`;
-		            } catch (e) {
-		                contentHtml = `<p class="whitespace-pre-wrap text-gray-900 font-medium text-[15px]">${text}</p>`;
-		            }
-		        }
-		    }
-		    
-		    const nameClass = isUser ? 'font-bold text-xs uppercase tracking-tight text-gray-500' : 'font-bold text-xs uppercase tracking-tight bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent';
-		
-		    let copyBtnHtml = '';
-		    let bubbleClickAttr = '';
-		    const paddingBottom = isUser ? 'pb-1' : 'pb-4'; 
-		    
-		    if (!isUser) {
-		        bubbleClickAttr = `onclick="toggleCopyBtn('${btnId}', event)"`;
-		        copyBtnHtml = `
-		            <button id="${btnId}" onclick="copyMessageText('${uniqueId}', '${btnId}', event)" class="hidden absolute bottom-2 right-5 text-gray-400 z-10" title="Salin Pesan">
-		                <svg class="w-4 h-4" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-		                    <g stroke-width="0"></g>
-		                    <g stroke-linecap="round" stroke-linejoin="round"></g>
-		                    <g> 
-		                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.676 14.248C17.676 15.8651 16.3651 17.176 14.748 17.176H7.428C5.81091 17.176 4.5 15.8651 4.5 14.248V6.928C4.5 5.31091 5.81091 4 7.428 4H14.748C16.3651 4 17.676 5.31091 17.676 6.928V14.248Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
-		                        <path d="M10.252 20H17.572C19.1891 20 20.5 18.689 20.5 17.072V9.75195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
-		                    </g>
-		                </svg>
-		            </button>
-		        `;
-		    }
-		
-		    div.innerHTML = `
-		        <div class="w-full bg-gray-100 rounded-xl px-5 pt-3 ${paddingBottom} relative group cursor-pointer" ${bubbleClickAttr}>
-		            <div class="flex items-center justify-between mb-1 pb-1 border-b border-gray-200">
-		                <span class="${nameClass}">${isUser ? 'ANDA' : 'ASISTEN'}</span>
-		                <span class="font-medium text-xs text-gray-400 tracking-tight">${timeString}</span>
-		            </div>
-		            ${fileGrid}
-		            <div id="${uniqueId}" class="prose prose-sm max-w-none text-gray-900 font-medium leading-relaxed break-words pb-0.5">
-		                ${contentHtml}
-		            </div>
-		            ${copyBtnHtml}
-		        </div>`;
-		    
-		    chatContainer.appendChild(div);
-		    
-		    if (!skipScroll) {
-		        setTimeout(scrollToBottom, 50);
-		    }
-		    
-		    return uniqueId;
-		}
-		
-		function renderGroundingSources(elementId, metadata) {
-			if (!metadata?.groundingAttributions?.length) return;
-			const contentDiv = document.getElementById(elementId);
-			if (!contentDiv) return;
-			const wrapperDiv = contentDiv.closest('.w-full.bg-gray-100');
-			const sourcesDiv = document.createElement('div');
-			sourcesDiv.className = 'mt-3 pt-3 border-t border-gray-300 text-xs text-gray-600';
-			let sourcesHtml = '<div class="flex items-center gap-2 mb-2 font-semibold text-gray-700"><i class="fa-brands fa-google"></i> Sumber Informasi:</div><div class="flex flex-wrap gap-2">';
-			const seenUrls = new Set();
-			metadata.groundingAttributions.forEach(source => {
-				if (source.web?.uri && !seenUrls.has(source.web.uri)) {
-					seenUrls.add(source.web.uri);
-					sourcesHtml += `<a href="${source.web.uri}" target="_blank" class="flex items-center gap-1 bg-white px-2 py-1 rounded border border-gray-200 hover:border-blue-400 hover:text-blue-600 transition shadow-sm truncate max-w-[200px]" title="${source.web.title}"><span class="truncate">${source.web.title}</span><i class="fa-solid fa-external-link-alt text-[10px] opacity-50"></i></a>`;
-				}
-			});
-			sourcesHtml += '</div>';
-			sourcesDiv.innerHTML = sourcesHtml;
-			wrapperDiv.appendChild(sourcesDiv);
-		}
-		
-		function showLoadingPlaceholder() {
-			const div = document.createElement('div');
-			const now = new Date();
-			const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-			
-			div.id = 'loading-indicator';
-			div.className = 'w-full max-w-3xl mx-auto mb-6';
-			div.innerHTML = `
-                <div class="w-full bg-gray-100 rounded-xl px-5 pt-3 pb-4">
-                    <div class="flex items-center justify-between mb-1 pb-1 border-b border-gray-200">
-                        <span class="font-bold text-xs uppercase tracking-tight bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">ASISTEN</span>
-                        <span class="font-medium text-xs text-gray-400 tracking-tight">${timeString}</span>
-                    </div>
-                    <div class="flex items-center gap-1 py-2">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full typing-dot"></div>
-                    </div>
-                </div>`;
-			chatContainer.appendChild(div);
-			chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
-		}
-		
-		function removeLoading() {
-			const loader = document.getElementById('loading-indicator');
-			if (loader) loader.remove();
-		}
-		
-		function toggleCopyBtn(btnId, event) {
-			if (event) event.stopPropagation();
-
-			document.querySelectorAll('[id^="btn-msg-"]').forEach(btn => {
-				if (btn.id !== btnId) btn.classList.add('hidden');
-			});
-
-			const btn = document.getElementById(btnId);
-			if (btn) {
-				btn.classList.toggle('hidden');
-			}
-		}
-
-		function copyMessageText(msgContentId, btnId, event) {
-			if (event) event.stopPropagation();
-
-			const contentDiv = document.getElementById(msgContentId);
-			if (!contentDiv) return;
-
-			const textToCopy = contentDiv.innerText;
-
-			navigator.clipboard.writeText(textToCopy).then(() => {
-				const btn = document.getElementById(btnId);
-				
-				btn.innerHTML = `<svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
-				btn.classList.remove('text-gray-400');
-				btn.classList.add('text-green-500');
-
-				setTimeout(() => {
-					btn.innerHTML = `
-						<svg class="w-4 h-4" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<g stroke-width="0"></g>
-							<g stroke-linecap="round" stroke-linejoin="round"></g>
-							<g> 
-								<path fill-rule="evenodd" clip-rule="evenodd" d="M17.676 14.248C17.676 15.8651 16.3651 17.176 14.748 17.176H7.428C5.81091 17.176 4.5 15.8651 4.5 14.248V6.928C4.5 5.31091 5.81091 4 7.428 4H14.748C16.3651 4 17.676 5.31091 17.676 6.928V14.248Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
-								<path d="M10.252 20H17.572C19.1891 20 20.5 18.689 20.5 17.072V9.75195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> 
-							</g>
-						</svg>`;
-					btn.classList.remove('text-green-500');
-					btn.classList.add('text-gray-400');
-				}, 2000);
-			}).catch(err => {
-				console.error(err);
-			});
-		}
-		document.addEventListener('click', function(event) {
-			if (!event.target.closest('[id^="btn-msg-"]')) {
-				document.querySelectorAll('[id^="btn-msg-"]').forEach(btn => {
-					btn.classList.add('hidden');
-				});
-			}
-		});
-	</script>
+    <div id="custom-alert" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+        <div class="bg-white/95 w-[270px] rounded-2xl text-center shadow-2xl animate-alert overflow-hidden">
+            <div class="pt-5 pb-4 px-4">
+                <h3 class="text-base font-bold text-gray-900 leading-snug mb-1">Hapus Percakapan?</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">Percakapan ini akan dihapus secara permanen dari riwayat.</p>
+            </div>
+            <div class="flex border-t border-gray-300/70">
+                <button onclick="closeCustomAlert()" class="w-1/2 py-3 text-base text-blue-500 border-r border-gray-300/70">BATAL</button>
+                <button onclick="confirmDeleteSession()" class="w-1/2 py-3 text-base text-red-500">HAPUS</button>
+            </div>
+        </div>
+    </div>
 </body>
+	<script>
+			const SUPABASE_PROJECT_URL = "https://eofuiyhnyyxrapxilank.supabase.co";
+			const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
+			const dbName = "AI_ImageStore_V1";
+			const storeName = "images";
+			
+			let chatHistory = [];
+			let selectedFiles = [];
+			let isGenerating = false;
+			let abortController = null;
+			let currentChatId = localStorage.getItem('current_chat_id') || Date.now().toString();
+			let selectedSessionId = null;
+			let sessionIdToDelete = null;
+			
+			let selectedModelId = localStorage.getItem('custom_model_id') || 'gemini-3-flash-preview';
+			let selectedImageModelId = localStorage.getItem('custom_image_model_id') || 'gemini-3-pro-image-preview';
+			let selectedVoiceName = localStorage.getItem('custom_voice_name') || 'Kore';
+			
+			let wsVoice, inCtx, outCtx, analyserVoice, analyserAI, mediaStream;
+			let isAISpeaking = false, nextTime = 0, currentVol = 0;
+			let dataArrayAI = new Uint8Array(128);
+			let isVideoEnabled = false;
+			let tempVideoPreviewStream = null;
+			let videoInterval;
+			let currentFacingMode = 'user';
+			
+			let voiceTimerInterval = null;
+			let voiceSecondsElapsed = 0;
+			
+			const chatContainer = document.getElementById('chat-container');
+			const userInput = document.getElementById('user-input');
+			const actionBtn = document.getElementById('action-btn');
+			const filePreviewContainer = document.getElementById('file-preview-container');
+			const fileList = document.getElementById('file-list');
+			const fileInput = document.getElementById('file-upload');
+			
+			const supabaseClient = supabase.createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
+
+			async function handleLogin() {
+			    const email = document.getElementById('auth-email').value;
+			    const password = document.getElementById('auth-password').value;
+			    const btn = document.getElementById('login-btn');
+			    const errorEl = document.getElementById('auth-error');
+			
+			    if (!email || !password) return;
+			
+			    btn.disabled = true;
+			    btn.innerText = 'MEMPROSES...';
+			    errorEl.innerText = '';
+			
+			    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+			
+			    if (error) {
+			        errorEl.innerText = error.message;
+			        btn.disabled = false;
+			        btn.innerText = 'MASUK';
+			    } else {
+			        checkAuth();
+			    }
+			}
+			
+			async function checkAuth() {
+			    const { data: { session } } = await supabaseClient.auth.getSession();
+			    const authPage = document.getElementById('auth-page');
+			    
+			    if (session) {
+			        authPage.classList.add('hidden');
+			    } else {
+			        authPage.classList.remove('hidden');
+			    }
+			}
+			
+			async function handleLogout() {
+			    await supabaseClient.auth.signOut();
+			    localStorage.removeItem('current_chat_id');
+			    chatHistory = [];
+			    chatContainer.innerHTML = '';
+			    checkAuth();
+			}
+			
+			const initDB = () => new Promise((resolve) => {
+			    const req = indexedDB.open(dbName, 1);
+			    req.onupgradeneeded = (e) => {
+			        if (!e.target.result.objectStoreNames.contains(storeName)) {
+			            e.target.result.createObjectStore(storeName);
+			        }
+			    };
+			    req.onsuccess = (e) => resolve(e.target.result);
+			});
+			
+			async function saveImgToDB(id, dataObj) {
+			    try {
+			        const db = await initDB();
+			        const tx = db.transaction(storeName, "readwrite");
+			        tx.objectStore(storeName).put(dataObj, id);
+			    } catch (e) {}
+			}
+			
+			async function getImgFromDB(id) {
+			    try {
+			        const db = await initDB();
+			        return new Promise((resolve) => {
+			            const req = db.transaction(storeName, "readonly").objectStore(storeName).get(id);
+			            req.onsuccess = () => resolve(req.result);
+			            req.onerror = () => resolve(null);
+			        });
+			    } catch (e) { return null; }
+			}
+			
+			function scrollToBottom() {
+			    if (chatContainer) {
+			        chatContainer.scrollTop = chatContainer.scrollHeight;
+			        window.requestAnimationFrame(() => {
+			            chatContainer.scrollTop = chatContainer.scrollHeight;
+			        });
+			    }
+			}
+			
+			function updateUIState(generating) {
+			    isGenerating = generating;
+			    const actionBtn = document.getElementById('action-btn');
+			    actionBtn.className = generating 
+			        ? "flex-shrink-0 w-10 h-10 flex items-center justify-center text-red-600 transition-none" 
+			        : "flex-shrink-0 w-10 h-10 flex items-center justify-center text-black dark:text-[#a3a3a3] transition-none";
+			    
+			    actionBtn.innerHTML = generating
+			        ? `<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 fill-current" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5" ry="1.5"></rect></svg>`
+			        : `<svg viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor"><path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path></svg>`;
+			}
+			
+			function updateThinkingLabel(val) {
+			    const labels = ["Low", "Medium", "High"];
+			    const el = document.getElementById('thinking-text-val');
+			    if (el) el.innerText = labels[val];
+			}
+			
+			function updateMediaResLabel(val) {
+			    const labels = ["Low", "Medium", "High", "Ultra"];
+			    const el = document.getElementById('media-res-text-val');
+			    if (el) el.innerText = labels[val];
+			}
+			
+			function copyCode(btn) {
+			    const wrapper = btn.closest('.code-wrapper');
+			    const codeBlock = wrapper.querySelector('code');
+			    navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+			        const icon = btn.querySelector('i');
+			        icon.className = 'fa-solid fa-check text-green-600 text-sm';
+			        setTimeout(() => { icon.className = 'fa-regular fa-clipboard text-sm'; }, 2000);
+			    });
+			}
+			
+			function toggleCopyBtn(btnId, event) {
+			    if (event) event.stopPropagation();
+			    document.querySelectorAll('[id^="btn-msg-"]').forEach(btn => {
+			        if (btn.id !== btnId) btn.classList.add('hidden');
+			    });
+			    const btn = document.getElementById(btnId);
+			    if (btn) btn.classList.toggle('hidden');
+			}
+			
+			function copyMessageText(msgContentId, btnId, event) {
+			    if (event) event.stopPropagation();
+			    const contentDiv = document.getElementById(msgContentId);
+			    if (!contentDiv) return;
+			    navigator.clipboard.writeText(contentDiv.innerText).then(() => {
+			        const btn = document.getElementById(btnId);
+			        btn.innerHTML = `<svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+			        setTimeout(() => {
+			            btn.innerHTML = `<svg class="w-4 h-4" viewBox="0 -0.5 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M17.676 14.248C17.676 15.8651 16.3651 17.176 14.748 17.176H7.428C5.81091 17.176 4.5 15.8651 4.5 14.248V6.928C4.5 5.31091 5.81091 4 7.428 4H14.748C16.3651 4 17.676 5.31091 17.676 6.928V14.248Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M10.252 20H17.572C19.1891 20 20.5 18.689 20.5 17.072V9.75195" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>`;
+			        }, 2000);
+			    });
+			}
+			
+			function formatFileSize(bytes) {
+			    if (bytes === 0) return '0 B';
+			    const k = 1024, sizes = ['B', 'KB', 'MB', 'GB'];
+			    const i = Math.floor(Math.log(bytes) / Math.log(k));
+			    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+			}
+			
+			async function fileToText(file) {
+			    const ext = file.name.split('.').pop().toLowerCase();
+			    if (ext === 'docx') {
+			        const ab = await file.arrayBuffer();
+			        const res = await mammoth.extractRawText({ arrayBuffer: ab });
+			        return res.value;
+			    }
+			    if (['xlsx', 'xls'].includes(ext)) {
+			        const ab = await file.arrayBuffer();
+			        const wb = XLSX.read(ab, { type: 'array' });
+			        return wb.SheetNames.map(n => `\n-- ${n} --\n${XLSX.utils.sheet_to_csv(wb.Sheets[n])}`).join('');
+			    }
+			    return new Promise((resolve) => {
+			        const reader = new FileReader();
+			        reader.onload = (e) => resolve(e.target.result);
+			        reader.readAsText(file);
+			    });
+			}
+			
+			async function readPptxFile(file) {
+			    try {
+			        const zip = new JSZip();
+			        const content = await zip.loadAsync(file);
+			        let text = `\n--- START: ${file.name} ---\n`;
+			        const slides = Object.keys(content.files).filter(n => n.startsWith("ppt/slides/slide") && n.endsWith(".xml")).sort();
+			        for (const f of slides) {
+			            const xml = await content.files[f].async("text");
+			            const nodes = new DOMParser().parseFromString(xml, "text/xml").getElementsByTagName("a:t");
+			            text += `\n[SLIDE]\n${Array.from(nodes).map(n => n.textContent).join(" ")}\n`;
+			        }
+			        return text + `\n--- END ---`;
+			    } catch (e) { return `[Error PPTX: ${e.message}]`; }
+			}
+			
+			async function fileToBase64(file) {
+			    return new Promise((resolve) => {
+			        const reader = new FileReader();
+			        reader.onload = (e) => resolve({ inlineData: { mimeType: file.type, data: e.target.result.split(',')[1] } });
+			        reader.readAsDataURL(file);
+			    });
+			}
+			
+			async function processFiles(files) {
+			    const texts = [];
+			    const media = [];
+			    for (const f of files) {
+			        const ext = f.name.split('.').pop().toLowerCase();
+			        if (['html', 'css', 'js', 'txt', 'docx', 'xlsx', 'xls', 'ppt', 'pptx'].includes(ext)) {
+			            texts.push(`\nFILE: ${f.name}\n${ext.includes('ppt') ? await readPptxFile(f) : await fileToText(f)}\n`);
+			        } else if (f.type.startsWith('image/') || ext === 'pdf') {
+			            media.push(await fileToBase64(f));
+			        }
+			    }
+			    return { textContext: texts.join('\n'), mediaParts: media };
+			}
+			
+			function handleInput() {
+			    if (isGenerating) {
+			        stopGeneration();
+			    } else {
+			        const text = userInput.value.trim();
+			        if (!text && selectedFiles.length === 0) return;
+			        sendMessage(text);
+			    }
+			}
+			
+			function updateThinkingLabel(val) {
+				const labels = ["Minimal", "Low", "High"];
+				const el = document.getElementById('thinking-text-val');
+				if (el) el.innerText = labels[val] || "High";
+				localStorage.setItem('custom_thinking_index', val);
+			}
+			
+			function updateMediaResLabel(val) {
+				const labels = ["Low", "Medium", "High", "Ultra"];
+				const el = document.getElementById('media-res-text-val');
+				if (el) el.innerText = labels[val] || "Medium";
+				localStorage.setItem('custom_media_res_index', val);
+			}
+			
+			function saveSettings() {
+				const settings = {
+					'custom_system_prompt': document.getElementById('cfg-sys-prompt').value,
+					'custom_temp': document.getElementById('cfg-temp').value,
+					'custom_tokens': document.getElementById('cfg-tokens').value,
+					'custom_thinking_index': document.getElementById('cfg-thinking').value,
+					'custom_media_res_index': document.getElementById('cfg-media-res').value,
+					'custom_model_id': selectedModelId,
+					'custom_model_name': document.getElementById('selected-model-text').innerText,
+					'custom_voice_name': selectedVoiceName
+				};
+				
+				Object.keys(settings).forEach(k => localStorage.setItem(k, settings[k]));
+				alert('Pengaturan Tersimpan!');
+				toggleSettings(false);
+			}
+			
+			function toggleSettings(show) {
+				const page = document.getElementById('settings-page');
+				if (show) {
+					page.classList.remove('hidden');
+					setTimeout(() => {
+						page.classList.remove('opacity-0');
+						document.getElementById('selected-model-text').innerText = localStorage.getItem('custom_model_name') || 'Gemini 3 Flash';
+						document.getElementById('selected-voice-text').innerText = localStorage.getItem('custom_voice_name') || 'Kore';
+						document.getElementById('cfg-sys-prompt').value = localStorage.getItem('custom_system_prompt') || '';
+						
+						const temp = localStorage.getItem('custom_temp') || '0.7';
+						document.getElementById('cfg-temp').value = temp;
+						document.getElementById('temp-val').innerText = temp;
+						
+						const tokens = localStorage.getItem('custom_tokens') || '8192';
+						document.getElementById('cfg-tokens').value = tokens;
+						document.getElementById('token-val').innerText = tokens;
+						
+						const thinkIdx = localStorage.getItem('custom_thinking_index') || '2';
+						document.getElementById('cfg-thinking').value = thinkIdx;
+						updateThinkingLabel(thinkIdx);
+			
+						const mediaIdx = localStorage.getItem('custom_media_res_index') || '1';
+						document.getElementById('cfg-media-res').value = mediaIdx;
+						updateMediaResLabel(mediaIdx);
+					}, 10);
+				} else {
+					page.classList.add('opacity-0');
+					setTimeout(() => page.classList.add('hidden'), 200);
+					closeAllDropdowns();
+				}
+			}
+			
+			async function sendMessage(text) {
+				const currentFiles = [...selectedFiles];
+				const filesToSend = selectedFiles.map(f => ({ name: f.name, size: f.size, type: f.type }));
+				const chatModel = localStorage.getItem('custom_model_id') || 'gemini-3-flash-preview';
+				const isThinkingModel = chatModel.toLowerCase().includes('think') || chatModel.toLowerCase().includes('gemini-3');
+			
+				const maxTokens = parseInt(localStorage.getItem('custom_tokens')) || 8192;
+				const tempValue = parseFloat(localStorage.getItem('custom_temp')) || 0.7;
+			
+				const sysPrompt = (localStorage.getItem('custom_system_prompt') || "Kamu Ai Asisten yang ramah.") + 
+					`\n\nATURAN:\n1. Jika user meminta gambar, LANGSUNG gunakan [GAMBAR]: <deskripsi> tanpa teks penjelasan sebelumnya.\n2. Jika user meminta edit gambar, LANGSUNG gunakan [EDIT]: <deskripsi> tanpa teks penjelasan sebelumnya.\n3. Gunakan Google Search untuk informasi terkini.\n4. JANGAN PERNAH menjelaskan cara kerja perintah [GAMBAR] atau [EDIT] kepada user!.`;
+						
+				userInput.value = '';
+				userInput.style.height = 'auto';
+				selectedFiles = [];
+				renderFilePreviews();
+				
+				addMessageToUI('user', text, false, filesToSend);
+				updateUIState(true);
+			
+				abortController = new AbortController();
+				let fullText = "";
+				let collectedMetadata = null;
+				const loadingHtml = `<p class="font-sans text-sm text-gray-500 italic typing-text m-0">Thinking</p>`;
+				let msgId = addMessageToUI('model', loadingHtml, false);
+			
+				chatHistory.push({ role: "user", parts: [{ text: text }], files: filesToSend });
+				chatHistory.push({ role: "model", parts: [{ text: "" }], uiId: msgId });
+			
+				try {
+					const { textContext, mediaParts } = await processFiles(currentFiles);
+					const finalUserText = text + (textContext ? `\n\n[DOCS]:\n${textContext}` : "");
+					const apiContents = chatHistory.filter(m => m.uiId !== msgId && m.parts[0].text !== "").map(m => ({ role: m.role, parts: m.parts }));
+					apiContents.push({ role: "user", parts: [...mediaParts, { text: finalUserText }] });
+			
+					const genConfig = { maxOutputTokens: maxTokens };
+					if (!isThinkingModel) {
+						genConfig.temperature = tempValue;
+					}
+			
+					const response = await fetch(`${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?type=chat&model=${chatModel}`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+						body: JSON.stringify({
+							contents: apiContents,
+							systemInstruction: { parts: [{ text: sysPrompt }] },
+							tools: [{ google_search: {} }],
+							generationConfig: genConfig
+						}),
+						signal: abortController.signal
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error?.message || `Error ${response.status}`);
+					}
+			
+					const reader = response.body.getReader();
+					const decoder = new TextDecoder();
+					let buffer = '';
+			
+					while (true) {
+						const { done, value } = await reader.read();
+						if (done) break;
+						buffer += decoder.decode(value, { stream: true });
+						let startIndex = -1, braceCount = 0, inString = false;
+			
+						for (let i = 0; i < buffer.length; i++) {
+							if (buffer[i] === '"' && buffer[i-1] !== '\\') inString = !inString;
+							if (!inString) {
+								if (buffer[i] === '{') { if (braceCount === 0) startIndex = i; braceCount++; }
+								else if (buffer[i] === '}') {
+									braceCount--;
+									if (braceCount === 0 && startIndex !== -1) {
+										try {
+											const data = JSON.parse(buffer.substring(startIndex, i + 1));
+											if (data.candidates?.[0]?.groundingMetadata) collectedMetadata = data.candidates[0].groundingMetadata;
+											const newChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+											if (newChunk) {
+												fullText += newChunk;
+												const msgEl = document.getElementById(msgId);
+												if (msgEl && !/\[GAMBAR\]:|\[EDIT\]:/i.test(fullText)) {
+													msgEl.innerHTML = typeof marked !== 'undefined' ? marked.parse(fullText) : fullText;
+													scrollToBottom();
+												}
+											}
+										} catch (e) {}
+										buffer = buffer.substring(i + 1); i = -1;
+									}
+								}
+							}
+						}
+					}
+			
+					const imgCmd = fullText.match(/\[GAMBAR\]:\s*([\s\S]*)/i) || fullText.match(/\[EDIT\]:\s*([\s\S]*)/i);
+					if (imgCmd) {
+						const thinkingBubble = document.getElementById(msgId);
+						if (thinkingBubble) thinkingBubble.closest('.w-full.max-w-3xl').remove();
+						chatHistory = chatHistory.filter(m => m.uiId !== msgId);
+						const isEdit = fullText.toUpperCase().includes('[EDIT]');
+						const { mediaParts } = await processFiles(currentFiles);
+						await handleImageGeneration((isEdit ? '/edit ' : '') + imgCmd[1].trim(), mediaParts[0], null);
+						return;
+					}
+			
+					if (!fullText.trim()) {
+						const thinkingBubble = document.getElementById(msgId);
+						if (thinkingBubble) thinkingBubble.closest('.w-full.max-w-3xl').remove();
+						chatHistory = chatHistory.filter(m => m.uiId !== msgId);
+					} else {
+						const modelMsg = chatHistory.find(m => m.uiId === msgId);
+						if (modelMsg) modelMsg.parts = [{ text: fullText }];
+						if (collectedMetadata) renderGroundingSources(msgId, collectedMetadata);
+					}
+			
+				} catch (error) {
+					const msgEl = document.getElementById(msgId);
+					if (msgEl) {
+						if (error.name === 'AbortError') {
+							msgEl.closest('.w-full.max-w-3xl').remove();
+						} else {
+							msgEl.innerHTML = `<span class="text-red-500 italic">Error: ${error.message}</span>`;
+						}
+					}
+					chatHistory = chatHistory.filter(m => m.uiId !== msgId);
+				} finally {
+				    updateUIState(false);
+				    saveChatHistory();
+				    if (chatHistory.length === 5) {
+				        generateSummary(currentChatId);
+				    }
+				}
+			}
+			
+			async function generateSummary(chatId) {
+			    if (!chatHistory || chatHistory.length < 5) return;
+			
+			    const context = chatHistory.slice(1, 5).map(m => {
+			        const roleName = m.role === 'user' ? 'User' : 'AI';
+			        return `${roleName}: "${m.parts[0].text}"`;
+			    }).join('\n');
+			
+			    const url = `${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?type=chat&model=gemini-2.0-flash&stream=false`;
+			
+			    try {
+			        const response = await fetch(url, {
+			            method: 'POST',
+			            headers: { 
+			                'Content-Type': 'application/json', 
+			                'Authorization': `Bearer ${SUPABASE_ANON_KEY}` 
+			            },
+			            body: JSON.stringify({
+			                contents: [{ 
+			                    role: "user", 
+			                    parts: [{ text: `Tugas kamu hanya membuat judul list percakapan tanpa simbol apapun cukup 1 jusul saja.:\n\n${context}` }] 
+			                }],
+			                generationConfig: { temperature: 1.0, maxOutputTokens: 20 }
+			            })
+			        });
+			
+			        if (!response.ok) return;
+			
+			        const resData = await response.json();
+			        const rawTitle = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+			
+			        if (rawTitle) {
+			            let sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
+			            const idx = sessions.findIndex(s => s.id === chatId);
+			            if (idx !== -1) {
+			                sessions[idx].title = rawTitle;
+			                localStorage.setItem('aura_sessions', JSON.stringify(sessions));
+			                renderSidebarHistory(); 
+			            }
+			        }
+			    } catch (e) {
+			        console.error("Gagal membuat summary:", e);
+			    }
+			}
+			
+			async function handleImageGeneration(prompt, imgObj = null, msgId = null) {
+				const isEdit = prompt.toLowerCase().startsWith('/edit');
+				const cleanPrompt = prompt.replace(/^\/(gambar|edit)\s+/i, '').trim();
+				const permanentImageModel = 'gemini-2.5-flash-image'; 
+				
+				let targetId = msgId;
+				const loadingHtml = `<p class="font-sans text-sm text-gray-500 italic typing-text m-0">${isEdit ? 'Mengedit' : 'Membuat'} gambar</p>`;
+				
+				if (!targetId) {
+					targetId = addMessageToUI('model', loadingHtml, false);
+				} else {
+					const el = document.getElementById(targetId);
+					if (el) el.innerHTML = loadingHtml;
+				}
+			
+				try {
+					const response = await fetch(`${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?type=image&model=${permanentImageModel}`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+						body: JSON.stringify({ 
+							contents: [{ 
+								parts: imgObj ? [imgObj, { text: cleanPrompt }] : [{ text: cleanPrompt }] 
+							}]
+						})
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error?.message || 'Gagal memproses gambar');
+					}
+			
+					const data = await response.json();
+					const b64 = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+			
+					if (b64) {
+						const imgId = 'img_' + Date.now();
+						const mime = 'image/jpeg'; // Default browser display
+						await saveImgToDB(imgId, { mime, data: b64 });
+						renderImageToBubble(targetId, b64, mime, cleanPrompt);
+						
+						const entry = { 
+							role: "model", 
+							parts: [{ text: `[GAMBAR]: ${cleanPrompt}` }], 
+							imgRefId: imgId, 
+							uiId: targetId 
+						};
+						
+						const idx = chatHistory.findIndex(m => m.uiId === targetId);
+						if (idx !== -1) chatHistory[idx] = entry; 
+						else chatHistory.push(entry);
+						
+						saveChatHistory();
+					} else {
+						const el = document.getElementById(targetId);
+						if (el) el.closest('.w-full.max-w-3xl').remove();
+						chatHistory = chatHistory.filter(m => m.uiId !== targetId);
+					}
+				} catch (e) {
+					const el = document.getElementById(targetId);
+					if (el) el.innerHTML = `<span class="text-red-500 italic text-xs">Error: ${e.message}</span>`;
+				} finally {
+					updateUIState(false);
+				}
+			}
+
+			function stopGeneration() {
+			    if (abortController) {
+			        abortController.abort();
+			        abortController = null;
+			    }
+			    updateUIState(false);
+			}
+
+			function renderImageToBubble(id, b64, mime, prompt) {
+			    const el = document.getElementById(id);
+			    if (!el) return;
+			    el.innerHTML = `
+			        <div class="relative group rounded-xl overflow-hidden border border-gray-200 mt-1 inline-block w-full">
+			            <img src="data:${mime};base64,${b64}" class="w-full h-auto block" alt="${prompt}">
+			            <button onclick="downloadImage(this)" class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-black/60 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10">
+			                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+			            </button>
+			        </div>`;
+			}
+			
+			async function downloadImage(btn) {
+			    try {
+			        const img = btn.closest('.group').querySelector('img');
+			        const response = await fetch(img.src);
+			        const blob = await response.blob();
+			        const file = new File([blob], `AURA-${Date.now()}.jpg`, { type: "image/jpeg" });
+			
+			        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+			            await navigator.share({
+			                files: [file]
+			            });
+			        } else {
+			            const a = document.createElement('a');
+			            a.href = URL.createObjectURL(blob);
+			            a.download = file.name;
+			            document.body.appendChild(a);
+			            a.click();
+			            document.body.removeChild(a);
+			            URL.revokeObjectURL(a.href);
+			        }
+			    } catch (e) {}
+			}
+			
+			function renderSidebarHistory() {
+			    const historyList = document.getElementById('chat-history-list');
+			    const sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
+			    
+			    historyList.innerHTML = sessions.map(session => {
+			        const isActive = session.id === currentChatId;
+			        const isShowTrash = session.id === selectedSessionId;
+			        const textClass = isActive ? 'text-blue-500 font-semibold' : 'text-gray-600';
+			        
+			        return `
+			            <div onclick="handleSessionClick('${session.id}', event)" 
+			                 class="history-item flex items-center justify-between py-1.5 px-2 rounded-lg cursor-pointer bg-transparent">
+			                <span class="truncate text-sm flex-1 pr-2 leading-tight select-none pointer-events-none ${textClass}">
+			                    ${session.title}
+			                </span>
+			                <button onclick="requestDelete('${session.id}', event)" 
+			                        class="flex-shrink-0 p-1 text-gray-400 transition-all flex items-center justify-center ${isShowTrash ? 'opacity-100' : 'opacity-0 pointer-events-none'}">
+			                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+			                        <path fill="currentColor" d="m9.4 16.5l2.6-2.6l2.6 2.6l1.4-1.4l-2.6-2.6L16 9.9l-1.4-1.4l-2.6 2.6l-2.6-2.6L8 9.9l2.6 2.6L8 15.1l1.4 1.4ZM5 21V6H4V4h5V3h6v1h5v2h-1v15H5Z"/>
+			                    </svg>
+			                </button>
+			            </div>
+			        `;
+			    }).join('');
+			}
+			
+			function handleSessionClick(id, event) {
+			    if (event) event.stopPropagation();
+			    if (selectedSessionId === id) {
+			        loadChat(id);
+			        selectedSessionId = null;
+			    } else {
+			        selectedSessionId = id;
+			        renderSidebarHistory();
+			    }
+			}
+			
+			function saveChatHistory() {
+                if (chatHistory.length === 0) return;
+
+                localStorage.setItem(`chat_${currentChatId}`, JSON.stringify(chatHistory));
+                
+                let sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
+                const idx = sessions.findIndex(s => s.id === currentChatId);
+
+                if (idx === -1) {
+                    const firstMsg = chatHistory.find(m => m.role === 'user')?.parts[0].text || "Percakapan Baru";
+                    const title = firstMsg.substring(0, 30) + (firstMsg.length > 30 ? '...' : '');
+                    sessions.unshift({ id: currentChatId, title: title, timestamp: Date.now() });
+                    localStorage.setItem('aura_sessions', JSON.stringify(sessions));
+                }
+                
+                localStorage.setItem('current_chat_id', currentChatId);
+                renderSidebarHistory();
+            }
+			
+			function loadChat(id) {
+			    const data = localStorage.getItem(`chat_${id}`);
+			    if (!data) return;
+			
+			    currentChatId = id;
+			    localStorage.setItem('current_chat_id', id);
+			    chatHistory = JSON.parse(data);
+			    chatContainer.innerHTML = '';
+			    
+			    chatHistory.forEach(msg => {
+			        const text = msg.parts[0]?.text || "";
+			        const uiId = addMessageToUI(msg.role, text, false, msg.files || [], true);
+			        if (msg.imgRefId) {
+			            getImgFromDB(msg.imgRefId).then(img => {
+			                if (img) renderImageToBubble(uiId, img.data, img.mime, text.replace('[GAMBAR]: ', ''));
+			            });
+			        }
+			    });
+			    
+			    selectedSessionId = null;
+			    renderSidebarHistory();
+			    toggleSidebar(false);
+			    setTimeout(scrollToBottom, 50);
+			}
+			
+			function startNewChat() {
+			    currentChatId = Date.now().toString();
+			    chatHistory = [];
+			    selectedSessionId = null;
+			    localStorage.setItem('current_chat_id', currentChatId);
+			    chatContainer.innerHTML = '';
+			    
+			    const welcome = "Halo! Ada yang bisa saya bantu di percakapan baru ini?";
+			    addMessageToUI('model', welcome, false);
+			    chatHistory.push({ role: "model", parts: [{ text: welcome }] });
+			    
+			    toggleSidebar(false);
+			    renderSidebarHistory();
+			}
+			
+			function requestDelete(id, event) {
+			    if (event) event.stopPropagation();
+			    sessionIdToDelete = id;
+			    const alertEl = document.getElementById('custom-alert');
+			    if (alertEl) alertEl.classList.remove('hidden');
+			}
+			
+			function closeCustomAlert() {
+			    const alertEl = document.getElementById('custom-alert');
+			    if (alertEl) alertEl.classList.add('hidden');
+			    sessionIdToDelete = null;
+			}
+			
+			async function confirmDeleteSession() {
+			    if (!sessionIdToDelete) return;
+			    try {
+			        const data = localStorage.getItem(`chat_${sessionIdToDelete}`);
+			        if (data) {
+			            const history = JSON.parse(data);
+			            const db = await initDB();
+			            const tx = db.transaction(storeName, "readwrite");
+			            history.forEach(m => { if (m.imgRefId) tx.objectStore(storeName).delete(m.imgRefId); });
+			        }
+			    } catch (e) {}
+			
+			    localStorage.removeItem(`chat_${sessionIdToDelete}`);
+			    let sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
+			    sessions = sessions.filter(s => s.id !== sessionIdToDelete);
+			    localStorage.setItem('aura_sessions', JSON.stringify(sessions));
+			
+			    if (currentChatId === sessionIdToDelete) startNewChat();
+			    else renderSidebarHistory();
+			    closeCustomAlert();
+			}
+			
+			function toggleSidebar(show) {
+			    const sidebar = document.getElementById('sidebar');
+			    const overlay = document.getElementById('sidebar-overlay');
+			    if (show) {
+			        overlay.classList.remove('hidden');
+			        setTimeout(() => {
+			            overlay.classList.add('opacity-100');
+			            sidebar.classList.remove('-translate-x-full');
+			        }, 10);
+			    } else {
+			        sidebar.classList.add('-translate-x-full');
+			        overlay.classList.remove('opacity-100');
+			        setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+			    }
+			}
+			
+			function toggleDropdown(e, optId, iconId) {
+			    if (e) e.stopPropagation();
+			    closeAllDropdowns(optId);
+			    const opt = document.getElementById(optId);
+			    const icon = document.getElementById(iconId);
+			    if (opt.classList.contains('hidden')) {
+			        opt.classList.remove('hidden');
+			        icon.classList.add('rotate-180');
+			    } else {
+			        opt.classList.add('hidden');
+			        icon.classList.remove('rotate-180');
+			    }
+			}
+			
+			function selectModel(name, id) {
+			    document.getElementById('selected-model-text').innerText = name;
+			    selectedModelId = id;
+			    closeAllDropdowns();
+			}
+			
+			function selectImageModel(name, id) {
+			    document.getElementById('selected-image-model-text').innerText = name;
+			    selectedImageModelId = id;
+			    closeAllDropdowns();
+			}
+			
+			function selectVoiceModel(name) {
+			    document.getElementById('selected-voice-text').innerText = name;
+			    selectedVoiceName = name;
+			    closeAllDropdowns();
+			}
+			
+			function closeAllDropdowns(exceptId = null) {
+			    const list = [
+			        { id: 'model-options', icon: 'dropdown-icon' },
+			        { id: 'image-model-options', icon: 'image-dropdown-icon' },
+			        { id: 'voice-model-options', icon: 'voice-dropdown-icon' }
+			    ];
+			    list.forEach(item => {
+			        if (item.id !== exceptId) {
+			            const el = document.getElementById(item.id);
+			            const icon = document.getElementById(item.icon);
+			            if (el) el.classList.add('hidden');
+			            if (icon) icon.classList.remove('rotate-180');
+			        }
+			    });
+			}
+			
+			function stopAllVoiceProcesses() {
+			    if (videoInterval) clearInterval(videoInterval);
+			    if (wsVoice) {
+			        wsVoice.onclose = null;
+			        wsVoice.close();
+			        wsVoice = null;
+			    }
+			    
+			    if (mediaStream) { 
+			        mediaStream.getTracks().forEach(track => track.stop()); 
+			        mediaStream = null; 
+			    }
+			    if (tempVideoPreviewStream) {
+			        tempVideoPreviewStream.getTracks().forEach(track => track.stop());
+			        tempVideoPreviewStream = null;
+			    }
+			    
+			    if (inCtx?.state !== 'closed') inCtx?.close();
+			    if (outCtx?.state !== 'closed') outCtx?.close();
+			    
+			    if (voiceTimerInterval) {
+			        clearInterval(voiceTimerInterval);
+			        voiceTimerInterval = null;
+			    }
+			    voiceSecondsElapsed = 0;
+			    const timerEl = document.getElementById('voice-timer');
+			    if (timerEl) timerEl.innerText = "00:00:00";
+			    
+			    isAISpeaking = false; 
+			    nextTime = 0; 
+			    currentVol = 0; 
+			    analyserAI = null;
+			    isVideoEnabled = false;
+			
+			    const sphere = document.getElementById('aura-sphere');
+			    if (sphere) {
+			        sphere.style.transform = 'scale(1)';
+			        sphere.classList.remove('hidden');
+			    }
+			    
+			    const voicePage = document.getElementById('voice-page');
+			    if (voicePage) voicePage.classList.remove('video-active');
+			    
+			    const container = document.getElementById('camera-container');
+			    if (container) container.classList.add('hidden');
+			    
+			    const videoPreview = document.getElementById('video-preview');
+			    if (videoPreview) videoPreview.srcObject = null;
+			
+			    document.getElementById('btnStartVoice')?.classList.remove('hidden');
+			    document.getElementById('btnStopVoice')?.classList.add('hidden');
+			}
+			
+			function toggleVoicePage(show) {
+			    const page = document.getElementById('voice-page');
+			    if (show) {
+			        page.classList.remove('hidden');
+			        setTimeout(() => page.classList.remove('opacity-0'), 10);
+			    } else {
+			        stopAllVoiceProcesses();
+			        page.classList.add('opacity-0');
+			        setTimeout(() => page.classList.add('hidden'), 300);
+			    }
+			}
+			
+			function updateVoiceTimer() {
+			    voiceSecondsElapsed++;
+			    const h = Math.floor(voiceSecondsElapsed / 3600).toString().padStart(2, '0');
+			    const m = Math.floor((voiceSecondsElapsed % 3600) / 60).toString().padStart(2, '0');
+			    const s = (voiceSecondsElapsed % 60).toString().padStart(2, '0');
+			    document.getElementById('voice-timer').innerText = `${h}:${m}:${s}`;
+			}
+			
+			async function toggleVideoPreference() {
+			    if (!wsVoice || wsVoice.readyState !== WebSocket.OPEN) return;
+			
+			    isVideoEnabled = !isVideoEnabled;
+			    const container = document.getElementById('camera-container');
+			    const videoEl = document.getElementById('video-preview');
+			    const sphere = document.getElementById('aura-sphere');
+			    const voicePage = document.getElementById('voice-page');
+			
+			    if (isVideoEnabled) {
+			        container.classList.remove('hidden');
+			        sphere.classList.add('hidden');
+			        voicePage.classList.add('video-active');
+			
+			        try {
+			            tempVideoPreviewStream = await navigator.mediaDevices.getUserMedia({ 
+			                video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } 
+			            });
+			            videoEl.srcObject = tempVideoPreviewStream;
+			            if (mediaStream) {
+			                tempVideoPreviewStream.getVideoTracks().forEach(track => mediaStream.addTrack(track));
+			            }
+			            startVideoStream();
+			        } catch (err) {
+			            isVideoEnabled = false;
+			            container.classList.add('hidden');
+			            sphere.classList.remove('hidden');
+			            voicePage.classList.remove('video-active');
+			        }
+			    } else {
+			        container.classList.add('hidden');
+			        sphere.classList.remove('hidden');
+			        voicePage.classList.remove('video-active');
+			        
+			        if (tempVideoPreviewStream) {
+			            tempVideoPreviewStream.getTracks().forEach(t => t.stop());
+			            tempVideoPreviewStream = null;
+			        }
+			        videoEl.srcObject = null;
+			        if (videoInterval) clearInterval(videoInterval);
+			    }
+			}
+			
+			async function switchCamera() {
+			    if (!isVideoEnabled || !tempVideoPreviewStream) return;
+			
+			    currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+			    
+			    if (tempVideoPreviewStream) {
+			        tempVideoPreviewStream.getTracks().forEach(t => t.stop());
+			    }
+			
+			    try {
+			        tempVideoPreviewStream = await navigator.mediaDevices.getUserMedia({ 
+			            video: { facingMode: currentFacingMode, width: 640, height: 480, frameRate: 15 } 
+			        });
+			        document.getElementById('video-preview').srcObject = tempVideoPreviewStream;
+			        
+			        if (mediaStream) {
+			            const oldVideoTracks = mediaStream.getVideoTracks();
+			            oldVideoTracks.forEach(track => {
+			                mediaStream.removeTrack(track);
+			                track.stop();
+			            });
+			            tempVideoPreviewStream.getVideoTracks().forEach(track => mediaStream.addTrack(track));
+			        }
+			    } catch (err) {
+			        console.error("Gagal ganti kamera:", err);
+			    }
+			}
+			
+			async function initAudioVoice() {
+			    inCtx = new AudioContext({ sampleRate: 16000 });
+			    outCtx = new AudioContext({ sampleRate: 24000 });
+			    
+			    const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			    
+			    if (isVideoEnabled && tempVideoPreviewStream) {
+			        mediaStream = new MediaStream([
+			            ...audioStream.getAudioTracks(),
+			            ...tempVideoPreviewStream.getVideoTracks()
+			        ]);
+			    } else {
+			        mediaStream = audioStream;
+			    }
+			    
+			    const mic = inCtx.createMediaStreamSource(mediaStream);
+			    analyserVoice = inCtx.createAnalyser();
+			    analyserVoice.fftSize = 512;
+			    mic.connect(analyserVoice);
+			
+			    await inCtx.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
+			        class P extends AudioWorkletProcessor {
+			            process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; }
+			        }; registerProcessor('p', P);`));
+			
+			    const node = new AudioWorkletNode(inCtx, 'p');
+			    node.port.onmessage = (e) => {
+			        if (wsVoice?.readyState === WebSocket.OPEN && !isAISpeaking) {
+			            const i16 = new Int16Array(e.data.length);
+			            for (let i = 0; i < e.data.length; i++) i16[i] = e.data[i] * 0x7FFF;
+			            wsVoice.send(JSON.stringify({
+			                type: 'audio',
+			                data: { data: btoa(String.fromCharCode(...new Uint8Array(i16.buffer))), mimeType: 'audio/pcm;rate=16000' }
+			            }));
+			        }
+			    };
+			    mic.connect(node);
+			    
+			    if (isVideoEnabled) startVideoStream();
+			}
+			
+			function startVideoStream() {
+			    const videoEl = document.getElementById('video-preview');
+			    const canvas = document.createElement('canvas');
+			    const ctx = canvas.getContext('2d');
+			
+			    if (videoInterval) clearInterval(videoInterval);
+			    
+			    videoInterval = setInterval(() => {
+			        if (wsVoice?.readyState === WebSocket.OPEN && !isAISpeaking && isVideoEnabled) {
+			            canvas.width = 320; 
+			            canvas.height = (videoEl.videoHeight / videoEl.videoWidth) * 320;
+			            ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+			            const base64Image = canvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+			            
+			            wsVoice.send(JSON.stringify({
+			                type: 'image',
+			                data: { data: base64Image, mimeType: 'image/jpeg' }
+			            }));
+			        }
+			    }, 1000);
+			}
+			
+			function playAudioVoice(b64) {
+			    const bin = atob(b64);
+			    const bytes = new Uint8Array(bin.length);
+			    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+			    const i16 = new Int16Array(bytes.buffer);
+			    const buf = outCtx.createBuffer(1, i16.length, 24000);
+			    const data = buf.getChannelData(0);
+			    for (let i = 0; i < i16.length; i++) data[i] = i16[i] / 32768.0;
+			    
+			    const source = outCtx.createBufferSource();
+			    source.buffer = buf;
+			    if (!analyserAI) { analyserAI = outCtx.createAnalyser(); analyserAI.fftSize = 256; }
+			    source.connect(analyserAI);
+			    analyserAI.connect(outCtx.destination);
+			
+			    const now = outCtx.currentTime;
+			    if (nextTime < now) nextTime = now;
+			    source.start(nextTime);
+			    nextTime += buf.duration;
+			    source.onended = () => { if (outCtx.currentTime >= nextTime - 0.1) isAISpeaking = false; };
+			}
+			
+			function interruptAI() {
+			    if (isAISpeaking) {
+			        isAISpeaking = false;
+			        if (outCtx && outCtx.state !== 'closed') {
+			            outCtx.close().then(() => {
+			                outCtx = new AudioContext({ sampleRate: 24000 });
+			                nextTime = 0;
+			                analyserAI = null;
+			            });
+			        }
+			    }
+			}
+			
+			function getPeak(arr) {
+			    let max = 0;
+			    for (let i = 0; i < arr.length; i++) {
+			        const a = Math.abs(arr[i] - 128);
+			        if (a > max) max = a;
+			    }
+			    return max;
+			}
+			
+			function drawVoice() {
+			    requestAnimationFrame(drawVoice);
+			    const sphere = document.getElementById('aura-sphere');
+			    if (!sphere || document.getElementById('voice-page').classList.contains('hidden')) return;
+			
+			    let peak = 0;
+			    const isActive = !document.getElementById('btnStopVoice').classList.contains('hidden');
+			
+			    if (isActive) {
+			        const data = new Uint8Array(128);
+			        if (isAISpeaking && analyserAI) {
+			            analyserAI.getByteTimeDomainData(data);
+			            peak = getPeak(data);
+			        } else if (!isAISpeaking && analyserVoice) {
+			            analyserVoice.getByteTimeDomainData(data);
+			            peak = getPeak(data);
+			        }
+			    }
+			
+			    currentVol += (peak - currentVol) * 0.3;
+			    const s = 1 + (currentVol / 60);
+			    
+			    sphere.style.transform = `scale(${Math.min(s, 1.35)})`;
+			    sphere.style.boxShadow = 'none';
+			}
+			
+			function handleFileSelect(event) {
+			    const files = Array.from(event.target.files);
+			    files.forEach(file => {
+			        if (!selectedFiles.some(f => f.name === file.name && f.size === file.size)) {
+			            selectedFiles.push(file);
+			        }
+			    });
+			    renderFilePreviews();
+			    fileInput.value = '';
+			}
+			
+			function removeFile(index) {
+			    selectedFiles.splice(index, 1);
+			    renderFilePreviews();
+			}
+			
+			function renderFilePreviews() {
+			    fileList.innerHTML = '';
+			    if (selectedFiles.length > 0) {
+			        filePreviewContainer.classList.remove('hidden');
+			        selectedFiles.forEach((file, index) => {
+			            const ext = file.name.split('.').pop().toLowerCase();
+			            let type = ext;
+			            if (['xlsx', 'xls'].includes(ext)) type = 'excel';
+			            if (['docx', 'doc'].includes(ext)) type = 'docx';
+			            if (['pptx', 'ppt'].includes(ext)) type = 'ppt';
+			
+			            const iconSrc = `icon/${type}-file-icon.svg`;
+			
+			            const card = document.createElement('div');
+			            card.className = 'relative bg-gray-100 rounded-xl p-3 flex items-center gap-3 group border border-transparent hover:border-gray-200 transition-all';
+			            card.innerHTML = `
+			                <div class="flex-shrink-0 flex items-center justify-center">
+			                    <img src="${iconSrc}" alt="${type}" class="w-7 h-7 object-contain" onerror="this.src='https://placehold.co/24?text=FILE'">
+			                </div>
+			                <div class="flex-1 min-w-0 flex flex-col justify-center">
+			                    <p class="text-sm text-gray-900 truncate leading-snug" title="${file.name}">${file.name}</p>
+			                    <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">${formatFileSize(file.size)}</p>
+			                </div>
+			                <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 p-1 text-gray-300 z-20 rounded-full" title="Hapus File">
+			                    <svg class="w-5 h-5 fill-current" viewBox="0 0 122.881 122.88">
+			                        <g><path fill-rule="evenodd" clip-rule="evenodd" d="M61.44,0c33.933,0,61.441,27.507,61.441,61.439 c0,33.933-27.508,61.44-61.441,61.44C27.508,122.88,0,95.372,0,61.439C0,27.507,27.508,0,61.44,0L61.44,0z M81.719,36.226 c1.363-1.363,3.572-1.363,4.936,0c1.363,1.363,1.363,3.573,0,4.936L66.375,61.439l20.279,20.278c1.363,1.363,1.363,3.573,0,4.937 c-1.363,1.362-3.572,1.362-4.936,0L61.44,66.376L41.162,86.654c-1.362,1.362-3.573,1.362-4.936,0c-1.363-1.363-1.363-3.573,0-4.937 l20.278-20.278L36.226,41.162c-1.363-1.363-1.363-3.573,0-4.936c1.363-1.363,3.573-1.363,4.936,0L61.44,56.504L81.719,36.226 L81.719,36.226z"/></g>
+			                    </svg>
+			                </button>`;
+			            fileList.appendChild(card);
+			        });
+			    } else {
+			        filePreviewContainer.classList.add('hidden');
+			    }
+			}
+			
+			function generateFileGridHtml(files) {
+			    if (!files || files.length === 0) return '';
+			    let html = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 mb-2">';
+			    files.forEach(file => {
+			        const ext = file.name.split('.').pop().toLowerCase();
+			        html += `
+			            <div class="relative bg-gray-200 rounded-xl p-3 flex items-center gap-3 border border-transparent overflow-hidden">
+			                <div class="flex-shrink-0 flex items-center justify-center">
+			                    <img src="icon/${ext}-file-icon.svg" class="w-7 h-7 object-contain" onerror="this.src='https://placehold.co/24?text=FILE'">
+			                </div>
+			                <div class="flex-1 min-w-0 flex flex-col justify-center">
+			                    <p class="text-sm text-gray-900 truncate leading-snug">${file.name}</p>
+			                    <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">${formatFileSize(file.size)}</p>
+			                </div>
+			            </div>`;
+			    });
+			    return html + '</div>';
+			}
+			
+			function renderGroundingSources(elementId, metadata) {
+			    if (!metadata?.groundingAttributions?.length) return;
+			    const contentDiv = document.getElementById(elementId);
+			    if (!contentDiv) return;
+			    const wrapper = contentDiv.closest('.w-full.bg-gray-100');
+			    const sourcesDiv = document.createElement('div');
+			    sourcesDiv.className = 'mt-3 pt-3 border-t border-gray-300 text-xs text-gray-600';
+			    let html = '<div class="flex items-center gap-2 mb-2 font-semibold text-gray-700"><i class="fa-brands fa-google"></i> Sumber Informasi:</div><div class="flex flex-wrap gap-2">';
+			    const seen = new Set();
+			    metadata.groundingAttributions.forEach(s => {
+			        if (s.web?.uri && !seen.has(s.web.uri)) {
+			            seen.add(s.web.uri);
+			            html += `<a href="${s.web.uri}" target="_blank" class="flex items-center gap-1 bg-white px-2 py-1 rounded border border-gray-200 hover:text-blue-600 transition truncate max-w-[200px] shadow-sm"><span class="truncate">${s.web.title}</span><i class="fa-solid fa-external-link-alt text-[10px] opacity-50"></i></a>`;
+			        }
+			    });
+			    sourcesDiv.innerHTML = html + '</div>';
+			    wrapper.appendChild(sourcesDiv);
+			}
+			
+			function escapeHTML(text) {
+			    const div = document.createElement('div');
+			    div.textContent = text;
+			    return div.innerHTML;
+			}
+			
+			function addMessageToUI(role, text, isStream = false, files = [], skipScroll = false) {
+			    if (!text?.trim() && (!files || files.length === 0)) return null;
+			
+			    const div = document.createElement('div');
+			    const isUser = role === 'user';
+			    const id = 'msg-' + Date.now() + Math.random().toString(36).substr(2, 5);
+			    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+			    div.className = 'w-full max-w-3xl mx-auto mb-6';
+			    
+			    const fileGrid = generateFileGridHtml(files);
+			    let content;
+			
+			    if (isUser) {
+			        content = `<p class="whitespace-pre-wrap font-sans text-gray-700 text-base leading-relaxed mb-0">${escapeHTML(text)}</p>`;
+			    } else {
+			        content = text.includes('typing-text') ? text : (typeof marked !== 'undefined' ? marked.parse(text) : text);
+			    }
+			
+			    const nameClass = isUser ? 'text-gray-500' : 'bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent';
+			
+			    div.innerHTML = `
+			        <div class="w-full bg-gray-100 rounded-xl px-5 pt-3 ${isUser ? 'pb-3' : 'pb-4'} relative group cursor-pointer" ${!isUser ? `onclick="toggleCopyBtn('btn-${id}', event)"` : ''}>
+			            <div class="flex items-center justify-between mb-1 pb-1 border-b border-gray-200">
+			                <span class="font-bold text-xs uppercase tracking-tight ${nameClass}">${isUser ? 'ANDA' : 'AURA'}</span>
+			                <span class="text-xs text-gray-400 tracking-tight">${time}</span>
+			            </div>
+			            ${fileGrid}
+			            <div id="${id}" class="prose max-w-none text-gray-700 text-base leading-relaxed break-words pb-0.5">${content}</div>
+			            ${!isUser ? `<button id="btn-${id}" onclick="copyMessageText('${id}', 'btn-${id}', event)" class="hidden absolute bottom-2 right-5 text-gray-400 z-10"><svg class="w-4 h-4" viewBox="0 -0.5 25 25" fill="none" stroke="currentColor"><path d="M17.676 14.248C17.676 15.8651 16.3651 17.176 14.748 17.176H7.428C5.81091 17.176 4.5 15.8651 4.5 14.248V6.928C4.5 5.31091 5.81091 4 7.428 4H14.748C16.3651 4 17.676 5.31091 17.676 6.928V14.248Z" stroke-width="1.5"/><path d="M10.252 20H17.572C19.1891 20 20.5 18.689 20.5 17.072V9.75195" stroke-width="1.5"/></svg></button>` : ''}
+			        </div>`;
+			    
+			    chatContainer.appendChild(div);
+			    if (!skipScroll) setTimeout(scrollToBottom, 50);
+			    return id;
+			}
+			
+			try {
+			    if (typeof marked !== 'undefined') {
+			        const renderer = new marked.Renderer();
+			        renderer.code = function(code, language) {
+			            let highlighted = code;
+			            if (language && typeof hljs !== 'undefined' && hljs.getLanguage(language)) {
+			                highlighted = hljs.highlight(code, { language: language }).value;
+			            } else if (typeof hljs !== 'undefined') {
+			                try { highlighted = hljs.highlightAuto(code).value; } catch (e) {}
+			            }
+			            const langDisplay = (language || 'text').toUpperCase();
+			            return `<div class="code-wrapper">
+			                        <div class="flex justify-between items-center px-4 py-2 bg-gray-200">
+			                            <span class="text-xs font-bold text-gray-600">${langDisplay}</span>
+			                            <button onclick="copyCode(this)" class="text-gray-500 hover:text-gray-800 transition flex items-center justify-center w-5 h-5">
+			                                <i class="fa-regular fa-clipboard text-sm"></i>
+			                            </button>
+			                        </div>
+			                        <pre><code class="hljs language-${language}">${highlighted}</code></pre>
+			                    </div>`;
+			        };
+			        renderer.table = (header, body) => `<div class="my-4 w-full overflow-x-auto"><table><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+			        marked.use({ renderer: renderer, gfm: true, breaks: true });
+			    }
+			} catch (e) {}
+			
+			document.addEventListener('DOMContentLoaded', async () => {
+				await checkAuth();
+			    const sessions = JSON.parse(localStorage.getItem('aura_sessions') || '[]');
+			    const lastId = localStorage.getItem('current_chat_id');
+			    if (lastId && localStorage.getItem(`chat_${lastId}`)) loadChat(lastId);
+			    else if (sessions.length > 0) loadChat(sessions[0].id);
+			    else startNewChat();
+			
+			    renderSidebarHistory();
+			
+			    if (window.visualViewport) {
+			        let lastHeight = window.visualViewport.height;
+			        window.visualViewport.addEventListener('resize', () => {
+			            if (window.visualViewport.height > lastHeight) {
+			                setTimeout(() => {
+			                    window.scrollTo(0, 0);
+			                    const settingsPage = document.getElementById('settings-page');
+			                    if (settingsPage && settingsPage.classList.contains('hidden')) {
+			                        scrollToBottom();
+			                    }
+			                }, 50);
+			            }
+			            lastHeight = window.visualViewport.height;
+			        });
+			    }
+			    chatContainer.classList.add('loaded');
+			    drawVoice();
+			});
+			
+			document.addEventListener('click', (e) => {
+			    if (!e.target.closest('[id^="btn-msg-"]')) {
+			        document.querySelectorAll('[id^="btn-msg-"]').forEach(btn => btn.classList.add('hidden'));
+			    }
+			    if (!e.target.closest('.history-item') && selectedSessionId !== null) {
+			        selectedSessionId = null;
+			        renderSidebarHistory();
+			    }
+			    if (!e.target.closest('#model-btn') && !e.target.closest('#image-model-btn') && !e.target.closest('#voice-model-btn')) {
+			        closeAllDropdowns();
+			    }
+			});
+			
+			document.addEventListener('gesturestart', function(e) {
+			    e.preventDefault();
+			});
+			
+			let lastTouchEnd = 0;
+			document.addEventListener('touchend', function(event) {
+			    const now = (new Date()).getTime();
+			    if (now - lastTouchEnd <= 300) {
+			        event.preventDefault();
+			    }
+			    lastTouchEnd = now;
+			}, { passive: false });
+			
+			document.body.addEventListener('touchmove', function(e) {
+			    const isScrollable = e.target.closest('#chat-container') ||
+			                         e.target.closest('#settings-page main') ||
+			                         e.target.closest('#model-options') ||
+			                         e.target.closest('#chat-history-list') ||
+			                         e.target.closest('#user-input');
+			
+			    if (!isScrollable) {
+			        e.preventDefault();
+			    }
+			}, { passive: false });
+			
+			document.getElementById('btnStartVoice').onclick = async () => {
+			    const vModel = localStorage.getItem('custom_voice_name') || 'Kore';
+			    const vPrompt = localStorage.getItem('custom_system_prompt') || "Kamu Ai Asisten yang ramah.";
+			    const vTemp = parseFloat(localStorage.getItem('custom_temp')) || 0.7;
+			    const vTokens = parseInt(localStorage.getItem('custom_tokens')) || 8192;
+			
+			    wsVoice = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
+			
+			    wsVoice.onopen = () => {
+			        wsVoice.send(JSON.stringify({
+			            type: 'setup',
+			            config: {
+			                generationConfig: {
+			                    temperature: vTemp,
+			                    maxOutputTokens: vTokens,
+			                    responseModalities: ['AUDIO'],
+			                    speechConfig: { 
+			                        voiceConfig: { 
+			                            prebuiltVoiceConfig: { voiceName: vModel } 
+			                        } 
+			                    }
+			                },
+			                systemInstruction: vPrompt,
+			                tools: [{ googleSearch: {} }]
+			            }
+			        }));
+			        document.getElementById('btnStartVoice').classList.add('hidden');
+			        document.getElementById('btnStopVoice').classList.remove('hidden');
+			
+			        voiceSecondsElapsed = 0;
+			        const timerEl = document.getElementById('voice-timer');
+			        if (timerEl) timerEl.innerText = "00:00:00";
+			        if (voiceTimerInterval) clearInterval(voiceTimerInterval);
+			        voiceTimerInterval = setInterval(updateVoiceTimer, 1000);
+			
+			        initAudioVoice();
+			    };
+			
+			    wsVoice.onmessage = async (e) => {
+			        const res = JSON.parse(e.data);
+			        if (res.type === 'gemini_msg') {
+			            const audio = res.data.serverContent?.modelTurn?.parts?.[0]?.inlineData;
+			            if (audio) { 
+			                isAISpeaking = true; 
+			                playAudioVoice(audio.data); 
+			            }
+			        }
+			    };
+			
+			    wsVoice.onclose = () => stopAllVoiceProcesses();
+			};
+			
+			document.getElementById('btnStopVoice').onclick = () => stopAllVoiceProcesses();
+			
+			if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+			window.addEventListener('gesturestart', (e) => e.preventDefault());
+			
+			const typeStyle = document.createElement('style');
+			typeStyle.innerHTML = `
+			    .typing-text::after { 
+			        content: ''; 
+			        animation: dot-steps 1.5s infinite; 
+			    }
+			    @keyframes dot-steps {
+			        0% { content: ''; }
+			        25% { content: '.'; }
+			        50% { content: '..'; }
+			        75% { content: '...'; }
+			        100% { content: ''; }
+			    }
+			`;
+			document.head.appendChild(typeStyle);
+			
+			function autoResize(el) {
+			    el.style.height = 'auto';
+			    el.style.height = (el.scrollHeight) + 'px';
+			    
+			    if (el.scrollHeight > 58) {
+			        scrollToBottom();
+			    }
+			}
+			
+			function handleEnter(e) {
+			    if (e.key === 'Enter' && !e.shiftKey) {
+			        e.preventDefault();
+			        handleInput();
+			    }
+			}
+		</script>
+	</body>
 </html>
