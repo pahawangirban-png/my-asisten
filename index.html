@@ -25,7 +25,7 @@
             height: 100%;
             width: 100%;
             overflow: hidden;
-            position: fixed; /* Kunci viewport */
+            position: fixed; /* Kunci viewport utama */
             background-color: #ffffff;
             font-family: 'Inter', sans-serif;
             -webkit-text-size-adjust: 100%;
@@ -35,8 +35,9 @@
         /* Layout Grid Utama */
         #app-container {
             display: grid;
-            grid-template-rows: auto 1fr auto; /* Header, Chat (fleksibel), Footer */
-            height: 100dvh; /* Dynamic Viewport Height */
+            grid-template-rows: auto 1fr auto; 
+            height: 100%; /* Akan diatur secara dinamis oleh JS */
+            height: 100dvh; 
             width: 100%;
             overflow: hidden;
         }
@@ -53,15 +54,15 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             background-color: #fcfcfc;
-            overscroll-behavior-y: contain; /* Kunci scroll hanya di dalam area ini */
-            padding: 1.5rem 1rem;
+            overscroll-behavior-y: contain;
+            padding: 1rem;
         }
 
         footer {
             background: white;
             border-top: 1px solid #f8fafc;
-            padding: 16px;
-            padding-bottom: calc(env(safe-area-inset-bottom, 16px));
+            padding: 12px 16px;
+            padding-bottom: calc(env(safe-area-inset-bottom, 12px));
             z-index: 10;
         }
 
@@ -71,7 +72,7 @@
             border-radius: 9999px;
             display: flex;
             align-items: center;
-            padding: 4px 8px;
+            padding: 4px;
             width: 100%;
         }
 
@@ -82,22 +83,15 @@
             box-shadow: none !important;
             resize: none;
             width: 100%;
-            /* Padding horizontal lebar agar placeholder tidak mepet */
-            padding: 12px 24px !important; 
+            padding: 10px 24px !important; 
             font-size: 16px;
             line-height: 1.5;
-            max-height: 140px;
+            max-height: 120px;
             color: #1f2937;
         }
 
         textarea::placeholder {
             color: #9ca3af;
-        }
-
-        /* Hilangkan ring fokus */
-        textarea:focus {
-            outline: none;
-            box-shadow: none;
         }
 
         /* Animasi Typing */
@@ -160,7 +154,7 @@
                     <i data-lucide="bot" class="w-7 h-7 text-indigo-500"></i>
                 </div>
                 <h2 class="text-xl font-semibold text-gray-800">Halo! Ada yang bisa saya bantu?</h2>
-                <p class="text-gray-400 text-xs px-8 leading-relaxed">Asisten cerdas ini dilengkapi dengan integrasi Google Search untuk jawaban yang akurat.</p>
+                <p class="text-gray-400 text-xs px-8 leading-relaxed">Dilengkapi integrasi Google Search untuk jawaban akurat.</p>
             </div>
             <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-6"></div>
         </main>
@@ -173,7 +167,8 @@
                         id="chat-input"
                         rows="1"
                         placeholder="Tulis pesan ke AI Asisten..."
-                        oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
+                        oninput="handleAutoResize(this)"
+                        onblur="resetViewport()"
                     ></textarea>
                     <button 
                         id="send-btn"
@@ -192,6 +187,7 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
         const ENDPOINT = `${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?model=gemini-3-flash-preview`;
 
+        const appContainer = document.getElementById('app-container');
         const scrollArea = document.getElementById('chat-scroll-area');
         const messageList = document.getElementById('message-list');
         const welcome = document.getElementById('welcome-screen');
@@ -200,13 +196,46 @@
 
         lucide.createIcons();
 
+        // FUNGSI PERBAIKAN: Reset viewport saat keyboard ditutup manual
+        function resetViewport() {
+            // Memaksa browser untuk mereset posisi scroll yang bergeser karena keyboard
+            window.scrollTo(0, 0);
+            
+            // Memberi sedikit jeda untuk sinkronisasi layout setelah animasi keyboard selesai
+            setTimeout(() => {
+                if (window.visualViewport) {
+                    appContainer.style.height = `${window.visualViewport.height}px`;
+                }
+                scrollToBottom();
+            }, 100);
+        }
+
+        // Monitoring Visual Viewport (Penting untuk iOS)
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                appContainer.style.height = `${window.visualViewport.height}px`;
+                if (document.activeElement === input) {
+                    scrollToBottom();
+                }
+            });
+            window.visualViewport.addEventListener('scroll', () => {
+                // Menjaga agar tidak ada offset scroll liar saat keyboard muncul
+                if (window.scrollY !== 0) window.scrollTo(0, 0);
+            });
+        }
+
+        function handleAutoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight) + 'px';
+        }
+
         function scrollToBottom() {
             setTimeout(() => {
                 scrollArea.scrollTo({
                     top: scrollArea.scrollHeight,
                     behavior: 'smooth'
                 });
-            }, 50);
+            }, 60);
         }
 
         function clearChat() {
@@ -214,6 +243,7 @@
             if (welcome) welcome.style.display = 'block';
             input.value = '';
             input.style.height = 'auto';
+            resetViewport();
         }
 
         function createMessageBubble(role) {
@@ -236,7 +266,6 @@
             `;
             messageList.appendChild(wrapper);
             
-            // Trigger animasi masuk
             setTimeout(() => {
                 wrapper.classList.remove('opacity-0', 'translate-y-2');
             }, 10);
@@ -326,6 +355,13 @@
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 onSend();
+            }
+        });
+
+        // Pastikan layout awal sesuai viewport saat ini
+        window.addEventListener('load', () => {
+            if (window.visualViewport) {
+                appContainer.style.height = `${window.visualViewport.height}px`;
             }
         });
     </script>
