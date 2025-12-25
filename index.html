@@ -1674,18 +1674,29 @@
     window.visualViewport.addEventListener('resize', () => {
         const currentHeight = window.visualViewport.height;
 
+        // Deteksi jika keyboard tertutup (tinggi viewport bertambah)
         if (currentHeight > lastHeight) {
-            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
-                document.activeElement.blur();
+            const activeEl = document.activeElement;
+            const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+
+            if (isInput) {
+                // 1. Paksa lepas fokus untuk meniru "Klik di Luar"
+                activeEl.blur();
             }
 
-            window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
+            // 2. Paksa reset koordinat layar ke titik 0,0
+            // Menggunakan requestAnimationFrame agar berjalan tepat setelah keyboard hilang
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
 
-            const settingsPage = document.getElementById('settings-page');
-            if (settingsPage && settingsPage.classList.contains('hidden')) {
-                scrollToBottom();
-            }
+                // 3. Pastikan fungsi scroll chat hanya jalan jika tidak di halaman pengaturan
+                const settingsPage = document.getElementById('settings-page');
+                if (settingsPage && settingsPage.classList.contains('hidden')) {
+                    scrollToBottom();
+                }
+            });
         }
         lastHeight = currentHeight;
     });
