@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
-    <title>AI ASISTEN</title>
+    <title>ASISTEN AI</title>
     
-    <!-- Meta PWA -->
+    <!-- Tetapan PWA & Meta Tag -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-title" content="AI ASISTEN">
+    <meta name="apple-mobile-web-app-title" content="ASISTEN AI">
     <link rel="apple-touch-icon" href="icon/icon-512.png">
     <link rel="icon" type="image/png" href="icon/icon-512.png">
 
-    <!-- Scripts -->
+    <!-- Skrip Luaran -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Reset & Anti-Rubber Band iOS */
+        /* Mengelakkan kesan rubber-band dan zoom pada iOS */
         html, body {
             margin: 0;
             padding: 0;
@@ -42,7 +42,7 @@
             position: relative;
         }
 
-        /* View Management */
+        /* Pengurusan Paparan */
         .view-container {
             position: absolute;
             inset: 0;
@@ -56,7 +56,7 @@
             flex-direction: column;
         }
 
-        /* Chat Layout (Kembali ke versi sempurna) */
+        /* Susun Atur Chat */
         header {
             flex: 0 0 auto;
             background: white;
@@ -83,7 +83,6 @@
             z-index: 100;
         }
 
-        /* Input Kapsul Grey 100 */
         .input-capsule {
             background-color: #f3f4f6;
             border-radius: 9999px;
@@ -107,7 +106,7 @@
             color: #1f2937;
         }
 
-        /* Markdown Styling */
+        /* Gaya Markdown */
         .prose pre {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -116,7 +115,7 @@
             font-size: 0.8em;
         }
 
-        /* Animasi */
+        /* Animasi Paparan */
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -132,13 +131,27 @@
         @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
 
         * { -webkit-tap-highlight-color: transparent; }
+        button i { pointer-events: none; }
+
+        /* Modal Log Keluar Custom */
+        #logout-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #logout-modal.active { display: flex; }
     </style>
 </head>
 <body>
 
     <div id="app-root">
 
-        <!-- 1. HALAMAN AUTH -->
+        <!-- 1. PAPARAN AUTH -->
         <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
             <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
                 <div class="text-center mb-8">
@@ -146,33 +159,33 @@
                         <i data-lucide="sparkles" class="w-7 h-7"></i>
                     </div>
                     <h2 id="auth-title" class="text-2xl font-bold text-slate-800">Selamat Datang</h2>
-                    <p id="auth-subtitle" class="text-slate-400 text-sm mt-1">Masuk untuk mulai mengobrol</p>
+                    <p id="auth-subtitle" class="text-slate-400 text-sm mt-1">Log masuk untuk bermula</p>
                 </div>
 
                 <form id="auth-form" class="space-y-4">
                     <div>
-                        <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Email</label>
-                        <input type="email" id="auth-email" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="nama@email.com">
+                        <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Emel</label>
+                        <input type="email" id="auth-email" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="nama@emel.com">
                     </div>
                     <div>
-                        <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Password</label>
+                        <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Kata Laluan</label>
                         <input type="password" id="auth-password" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="••••••••">
                     </div>
                     
                     <button type="submit" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                        <span>Masuk</span>
+                        <span>Log Masuk</span>
                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </button>
                 </form>
 
                 <div class="mt-8 text-center">
-                    <button id="toggle-auth" class="text-indigo-600 text-xs font-semibold hover:underline">Belum punya akun? Daftar</button>
+                    <button id="toggle-auth" class="text-indigo-600 text-xs font-semibold hover:underline">Tiada akaun? Daftar sekarang</button>
                 </div>
                 <p id="auth-error" class="text-red-500 text-[10px] text-center mt-4 hidden"></p>
             </div>
         </div>
 
-        <!-- 2. HALAMAN CHAT -->
+        <!-- 2. PAPARAN CHAT -->
         <div id="chat-view" class="view-container">
             <header class="px-5 py-2.5 flex justify-between items-center shadow-sm">
                 <div class="flex items-center gap-3">
@@ -180,18 +193,18 @@
                         <i data-lucide="sparkles" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-gray-800 text-xs tracking-tighter uppercase leading-none">AI ASISTEN</h1>
+                        <h1 class="font-bold text-gray-800 text-xs tracking-tighter uppercase leading-none">ASISTEN AI</h1>
                         <div class="flex items-center gap-1 mt-0.5">
                             <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                             <span class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Gemini 3 Flash</span>
                         </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-1">
-                    <button onpointerdown="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform">
+                <div class="flex items-center gap-3"> 
+                    <button onclick="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform relative z-20" title="Kosongkan Chat">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                     </button>
-                    <button onpointerdown="handleLogout()" class="p-2 text-gray-400 active:scale-90 transition-transform">
+                    <button onclick="openLogoutModal()" class="p-2 text-gray-400 active:scale-90 transition-transform relative z-20" title="Log Keluar">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -202,8 +215,8 @@
                     <div class="w-12 h-12 bg-white border border-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                         <i data-lucide="bot" class="w-6 h-6 text-indigo-500"></i>
                     </div>
-                    <h2 class="text-lg font-semibold text-gray-800">Ada yang bisa saya bantu?</h2>
-                    <p class="text-gray-400 text-[10px] px-8 uppercase tracking-widest font-bold leading-relaxed">Pencarian Google Aktif</p>
+                    <h2 class="text-lg font-semibold text-gray-800">Ada apa-apa yang boleh saya bantu?</h2>
+                    <p class="text-gray-400 text-[10px] px-8 uppercase tracking-widest font-bold leading-relaxed">Carian Google Aktif</p>
                 </div>
                 <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4"></div>
             </main>
@@ -214,7 +227,7 @@
                         <textarea 
                             id="chat-input"
                             rows="1"
-                            placeholder="Tulis pesan ke AI Asisten..."
+                            placeholder="Tulis mesej kepada Asisten AI..."
                             oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
                         ></textarea>
                         <button 
@@ -229,9 +242,22 @@
             </footer>
         </div>
 
+        <!-- 3. MODAL LOG KELUAR -->
+        <div id="logout-modal">
+            <div class="bg-white rounded-3xl p-6 w-full max-w-xs text-center space-y-4 shadow-2xl">
+                <h3 class="font-bold text-slate-800">Log Keluar?</h3>
+                <p class="text-slate-500 text-sm">Adakah anda pasti mahu menamatkan sesi ini?</p>
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <button onclick="closeLogoutModal()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-semibold text-sm">Batal</button>
+                    <button onclick="handleLogout()" class="py-3 bg-red-500 text-white rounded-xl font-semibold text-sm">Ya, Keluar</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
+        // KONFIGURASI SUPABASE
         const SUPABASE_URL = "https://eofuiyhnyyxrapxilank.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
         
@@ -246,11 +272,13 @@
         const input = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
         const authError = document.getElementById('auth-error');
+        const logoutModal = document.getElementById('logout-modal');
 
         let isLoginMode = true;
 
         lucide.createIcons();
 
+        // SEMAK SESI PENGGUNA
         async function checkSession() {
             try {
                 const { data: { session } } = await _supabase.auth.getSession();
@@ -271,9 +299,9 @@
 
         document.getElementById('toggle-auth').onclick = () => {
             isLoginMode = !isLoginMode;
-            document.getElementById('auth-title').innerText = isLoginMode ? "Selamat Datang" : "Buat Akun";
-            document.getElementById('auth-submit-btn').querySelector('span').innerText = isLoginMode ? "Masuk" : "Daftar";
-            document.getElementById('toggle-auth').innerText = isLoginMode ? "Belum punya akun? Daftar" : "Sudah punya akun? Masuk";
+            document.getElementById('auth-title').innerText = isLoginMode ? "Selamat Datang" : "Buat Akaun";
+            document.getElementById('auth-submit-btn').querySelector('span').innerText = isLoginMode ? "Log Masuk" : "Daftar";
+            document.getElementById('toggle-auth').innerText = isLoginMode ? "Tiada akaun? Daftar sekarang" : "Sudah ada akaun? Log masuk";
         };
 
         document.getElementById('auth-form').onsubmit = async (e) => {
@@ -286,16 +314,24 @@
                     ? await _supabase.auth.signInWithPassword({ email, password })
                     : await _supabase.auth.signUp({ email, password });
                 if (error) throw error;
-                if (!isLoginMode) alert("Daftar berhasil! Silakan masuk.");
+                if (!isLoginMode) alert("Pendaftaran berjaya! Sila log masuk.");
             } catch (err) {
                 authError.innerText = err.message;
                 authError.classList.remove('hidden');
             }
         };
 
+        // FUNGSI LOG KELUAR
+        function openLogoutModal() { logoutModal.classList.add('active'); }
+        function closeLogoutModal() { logoutModal.classList.remove('active'); }
+
         async function handleLogout() {
-            await _supabase.auth.signOut();
-            location.reload();
+            try {
+                await _supabase.auth.signOut();
+                window.location.reload();
+            } catch (e) {
+                console.error("Gagal log keluar", e);
+            }
         }
 
         _supabase.auth.onAuthStateChange((ev) => {
@@ -315,6 +351,7 @@
             window.scrollTo(0, 0);
         }
 
+        // CIPTA BUBBLE MESEJ
         function createBubble(role) {
             if (welcome) welcome.style.display = 'none';
             const isAI = role === 'assistant';
@@ -338,22 +375,34 @@
             return div.querySelector('.msg-content');
         }
 
+        // HANTAR MESEJ
         async function onSend(e) {
             if (e) e.preventDefault();
             const val = input.value.trim();
             if (!val || sendBtn.disabled) return;
-            input.blur(); input.value = ''; input.style.height = 'auto'; sendBtn.disabled = true;
-            const u = createBubble('user'); u.textContent = val;
-            const a = createBubble('assistant'); let resTxt = "";
+            
+            input.blur(); 
+            const u = createBubble('user'); 
+            if (u) u.textContent = val; // Memastikan 'u' tidak null
+            
+            input.value = ''; 
+            input.style.height = 'auto'; 
+            sendBtn.disabled = true;
+            
+            const a = createBubble('assistant'); 
+            let resTxt = "";
             try {
                 const res = await fetch(PROXY_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
                     body: JSON.stringify({ contents: [{ parts: [{ text: val }] }], tools: [{ google_search: {} }] })
                 });
+                
                 const reader = res.body.getReader();
                 const decoder = new TextDecoder();
-                a.innerHTML = ""; let buf = "";
+                if (a) a.innerHTML = ""; 
+                let buf = "";
+                
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
@@ -367,28 +416,40 @@
                         }
                         if (end !== -1) {
                             try {
-                                const json = JSON.parse(buf.substring(start, end + 1));
+                                const jsonStr = buf.substring(start, end + 1);
+                                const json = JSON.parse(jsonStr);
                                 resTxt += json.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                                a.innerHTML = marked.parse(resTxt);
+                                if (a) a.innerHTML = marked.parse(resTxt);
                                 scrollToBottom();
                             } catch (e) {}
-                            buf = buf.substring(end + 1); start = buf.indexOf('{');
+                            buf = buf.substring(end + 1); 
+                            start = buf.indexOf('{');
                         } else break;
                     }
                 }
-            } catch (err) { a.innerHTML = `<span class="text-red-500 text-xs">Error: ${err.message}</span>`;
-            } finally { sendBtn.disabled = false; scrollToBottom(); }
+            } catch (err) { 
+                if (a) a.innerHTML = `<span class="text-red-500 text-xs">Ralat: ${err.message}</span>`;
+            } finally { 
+                sendBtn.disabled = false; 
+                scrollToBottom(); 
+            }
         }
 
+        // KAWALAN SENTUHAN
         let lastTouch = 0;
         document.addEventListener('touchend', (e) => {
             const now = Date.now();
-            if (now - lastTouch <= 300 && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
+            if (now - lastTouch <= 300) {
+                if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+                    e.preventDefault();
+                }
+            }
             lastTouch = now;
         }, false);
 
         input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend(); } });
         input.addEventListener('blur', () => { window.scrollTo(0, 0); });
+        
         checkSession();
     </script>
 </body>
