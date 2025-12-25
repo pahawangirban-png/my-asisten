@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
   <title>AI ASISTEN</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -52,6 +52,19 @@
 	  opacity: 0;
 	  transition: opacity 0.3s ease-in-out;
 	}
+	
+	#settings-page {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
 	
 	.loaded {
 	  opacity: 1 !important;
@@ -1675,27 +1688,30 @@
         const currentHeight = window.visualViewport.height;
 
         if (currentHeight > lastHeight) {
-            if (document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                const activeEl = document.activeElement;
+            const activeEl = document.activeElement;
+            if (activeEl && (activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'INPUT')) {
                 activeEl.blur();
-                
-                window.scrollTo(0, 0);
-                document.body.style.height = '100.1%';
-                
-                setTimeout(() => {
-                    document.body.style.height = '100%';
-                    window.scrollTo(0, 0);
-                    
-                    const settingsPage = document.getElementById('settings-page');
-                    if (settingsPage && !settingsPage.classList.contains('hidden')) {
-                        settingsPage.style.display = 'none';
-                        settingsPage.offsetHeight;
-                        settingsPage.style.display = 'flex';
-                    } else {
-                        scrollToBottom();
-                    }
-                }, 30);
             }
+
+            setTimeout(() => {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+
+                const settingsPage = document.getElementById('settings-page');
+                const isSettingsVisible = settingsPage && !settingsPage.classList.contains('hidden');
+
+                if (isSettingsVisible) {
+                    const settingsHeader = settingsPage.querySelector('header');
+                    if (settingsHeader) {
+                        settingsHeader.scrollIntoView(true);
+                    }
+                    
+                    settingsPage.style.display = 'none';
+                    settingsPage.offsetHeight;
+                    settingsPage.style.display = 'flex';
+                }
+            }, 350);
         }
         lastHeight = currentHeight;
     });
