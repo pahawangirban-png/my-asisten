@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
   <title>AI ASISTEN</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -1670,22 +1670,34 @@
 			
 			    if (window.visualViewport) {
     let lastHeight = window.visualViewport.height;
+
     window.visualViewport.addEventListener('resize', () => {
-        if (window.visualViewport.height > lastHeight) {
-            window.scrollTo(0, 0);
-            
-            const settingsPage = document.getElementById('settings-page');
-            const isSettingsVisible = settingsPage && !settingsPage.classList.contains('hidden');
-            
-            if (isSettingsVisible) {
-                if (document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-                    document.activeElement.blur();
-                }
-            } else {
-                scrollToBottom();
+        const currentHeight = window.visualViewport.height;
+
+        if (currentHeight > lastHeight) {
+            if (document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
+                const activeEl = document.activeElement;
+                activeEl.blur();
+                
+                window.scrollTo(0, 0);
+                document.body.style.height = '100.1%';
+                
+                setTimeout(() => {
+                    document.body.style.height = '100%';
+                    window.scrollTo(0, 0);
+                    
+                    const settingsPage = document.getElementById('settings-page');
+                    if (settingsPage && !settingsPage.classList.contains('hidden')) {
+                        settingsPage.style.display = 'none';
+                        settingsPage.offsetHeight;
+                        settingsPage.style.display = 'flex';
+                    } else {
+                        scrollToBottom();
+                    }
+                }, 30);
             }
         }
-        lastHeight = window.visualViewport.height;
+        lastHeight = currentHeight;
     });
 }
 			    chatContainer.classList.add('loaded');
