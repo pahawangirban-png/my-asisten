@@ -2,9 +2,10 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AI ASISTEN</title>
     
+    <!-- Meta PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
@@ -18,60 +19,56 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Mencegah efek karet/bounce pada level body */
+        /* Reset & Anti-Rubber Band */
         html, body {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
-            position: fixed;
+            position: fixed; /* Kunci viewport */
             background-color: #ffffff;
             font-family: 'Inter', sans-serif;
-            -webkit-text-size-adjust: 100%;
             overscroll-behavior: none;
         }
 
-        /* Layout Utama menggunakan Flexbox */
-        #app-container {
+        /* Layout Utama */
+        #app-root {
             display: flex;
             flex-direction: column;
-            height: 100dvh; /* Tinggi viewport dinamis */
             width: 100%;
-            overflow: hidden;
-        }
-
-        /* Area Scroll Utama (Header + Messages) */
-        /* Dengan memasukkan header ke sini, area chat tidak akan terhimpit/gepeng saat keyboard muncul */
-        main {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            background-color: #fcfcfc;
-            display: flex;
-            flex-direction: column;
+            height: 100%; /* Dikontrol via VisualViewport */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         header {
-            flex: none;
+            flex: 0 0 auto;
             background: white;
             border-bottom: 1px solid #f1f5f9;
             padding-top: env(safe-area-inset-top, 0px);
-            position: sticky; /* Sticky di dalam scroll area */
-            top: 0;
-            z-index: 20;
+            z-index: 50;
+        }
+
+        main {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #fcfcfc;
+            overscroll-behavior-y: contain;
         }
 
         footer {
-            flex: none;
+            flex: 0 0 auto;
             background: white;
             border-top: 1px solid #f8fafc;
             padding: 12px 16px;
             padding-bottom: calc(env(safe-area-inset-bottom, 12px));
-            z-index: 30;
+            z-index: 50;
         }
 
-        /* Input Kapsul Grey 100 */
+        /* Kapsul Input Grey 100 */
         .input-capsule {
             background-color: #f3f4f6;
             border-radius: 9999px;
@@ -87,15 +84,11 @@
             box-shadow: none !important;
             resize: none;
             width: 100%;
-            padding: 10px 24px !important; /* Jarak kiri agar tidak mepet */
+            padding: 12px 28px !important; /* Padding kiri lebar agar placeholder rapi */
             font-size: 16px;
-            line-height: 1.5;
-            max-height: 120px;
+            line-height: 1.4;
+            max-height: 150px;
             color: #1f2937;
-        }
-
-        textarea::placeholder {
-            color: #9ca3af;
         }
 
         /* Animasi Typing */
@@ -108,64 +101,49 @@
         }
         .typing-dot:nth-child(2) { animation-delay: 0.2s; }
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes blink {
-            0%, 80%, 100% { opacity: 0.2; }
-            40% { opacity: 1; }
-        }
+        @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
 
-        /* Markdown Styling */
-        .prose pre {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            margin: 0.5rem 0;
-            font-size: 0.85em;
-        }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body>
 
-    <div id="app-container">
-        <!-- Main Content Area (Scrollable) -->
-        <main id="scroll-content">
-            <!-- Header (Inside Scroll for non-squashing UI) -->
-            <header class="px-5 py-3 flex justify-between items-center shadow-sm shadow-gray-50/50">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm">
-                        <i data-lucide="sparkles" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-gray-800 text-sm tracking-tight leading-none uppercase">AI ASISTEN</h1>
-                        <div class="flex items-center gap-1 mt-1">
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                            <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Gemini 3 Flash</span>
-                        </div>
+    <div id="app-root">
+        <!-- Header -->
+        <header class="px-5 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-gray-800 text-sm tracking-tight leading-none uppercase">AI ASISTEN</h1>
+                    <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Gemini 3 Flash</span>
                     </div>
                 </div>
-                <button onclick="clearChat()" class="p-2 text-gray-400 hover:text-indigo-600 active:scale-90 transition-all">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                </button>
-            </header>
-
-            <!-- Chat Content -->
-            <div class="flex-1 p-4">
-                <div id="welcome-screen" class="max-w-xl mx-auto text-center py-12 space-y-4">
-                    <div class="w-14 h-14 bg-white border border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-                        <i data-lucide="bot" class="w-7 h-7 text-indigo-500"></i>
-                    </div>
-                    <h2 class="text-xl font-semibold text-gray-800">Halo! Ada yang bisa saya bantu?</h2>
-                    <p class="text-gray-400 text-xs px-8 leading-relaxed">Asisten cerdas ini memiliki integrasi Google Search untuk jawaban akurat.</p>
-                </div>
-                <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-6"></div>
             </div>
+            <button onclick="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+        </header>
+
+        <!-- Area Chat -->
+        <main id="chat-scroller">
+            <div id="welcome-view" class="max-w-xl mx-auto text-center py-16 space-y-4">
+                <div class="w-14 h-14 bg-white border border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                    <i data-lucide="bot" class="w-7 h-7 text-indigo-500"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800">Halo! Ada yang bisa saya bantu?</h2>
+                <p class="text-gray-400 text-xs px-8 leading-relaxed">Asisten cerdas dengan integrasi Google Search.</p>
+            </div>
+            <div id="message-list" class="max-w-3xl mx-auto p-4 space-y-6"></div>
         </main>
 
-        <!-- Footer Input (Fixed at bottom) -->
+        <!-- Footer -->
         <footer>
             <div class="max-w-3xl mx-auto">
                 <div class="input-capsule">
@@ -173,13 +151,12 @@
                         id="chat-input"
                         rows="1"
                         placeholder="Tulis pesan ke AI Asisten..."
-                        oninput="handleAutoResize(this)"
-                        onblur="resetViewport()"
+                        oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
                     ></textarea>
                     <button 
                         id="send-btn"
                         onclick="onSend()"
-                        class="bg-indigo-600 text-white p-2.5 rounded-full flex-none active:scale-90 transition-transform disabled:opacity-50 shadow-md"
+                        class="bg-indigo-600 text-white p-2.5 rounded-full flex-none active:scale-90 transition-transform shadow-md"
                     >
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </button>
@@ -193,71 +170,61 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
         const ENDPOINT = `${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?model=gemini-3-flash-preview`;
 
-        const appContainer = document.getElementById('app-container');
-        const scrollArea = document.getElementById('scroll-content');
+        const appRoot = document.getElementById('app-root');
+        const scroller = document.getElementById('chat-scroller');
         const messageList = document.getElementById('message-list');
-        const welcome = document.getElementById('welcome-screen');
+        const welcome = document.getElementById('welcome-view');
         const input = document.getElementById('chat-input');
         const sendBtn = document.getElementById('send-btn');
 
         lucide.createIcons();
 
-        // Mengembalikan posisi layar saat keyboard ditutup manual
-        function resetViewport() {
-            window.scrollTo(0, 0);
-            setTimeout(() => {
-                if (window.visualViewport) {
-                    appContainer.style.height = `${window.visualViewport.height}px`;
-                }
+        // LOGIKA UTAMA: Penanganan Viewport & Keyboard
+        const updateViewport = () => {
+            if (window.visualViewport) {
+                // Set tinggi root sesuai visual viewport (area yang tidak tertutup keyboard)
+                appRoot.style.height = `${window.visualViewport.height}px`;
+                // Pastikan root tetap di paling atas (mengatasi ghost scroll iOS)
+                appRoot.style.top = `${window.visualViewport.offsetTop}px`;
                 scrollToBottom();
-            }, 100);
-        }
+            }
+        };
 
-        // Monitoring Visual Viewport untuk Keyboard Mobile
         if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
-                appContainer.style.height = `${window.visualViewport.height}px`;
-                if (document.activeElement === input) {
-                    scrollToBottom();
-                }
-            });
-            window.visualViewport.addEventListener('scroll', () => {
-                if (window.scrollY !== 0) window.scrollTo(0, 0);
-            });
+            window.visualViewport.addEventListener('resize', updateViewport);
+            window.visualViewport.addEventListener('scroll', updateViewport);
         }
 
-        function handleAutoResize(el) {
-            el.style.height = 'auto';
-            el.style.height = (el.scrollHeight) + 'px';
-        }
+        // Paksa reset saat input kehilangan fokus (keyboard ditutup manual)
+        input.addEventListener('blur', () => {
+            window.scrollTo(0, 0);
+            updateViewport();
+        });
 
         function scrollToBottom() {
             setTimeout(() => {
-                scrollArea.scrollTo({
-                    top: scrollArea.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 60);
+                scroller.scrollTop = scroller.scrollHeight;
+            }, 50);
         }
 
         function clearChat() {
             messageList.innerHTML = '';
-            if (welcome) welcome.style.display = 'block';
+            welcome.style.display = 'block';
             input.value = '';
             input.style.height = 'auto';
-            resetViewport();
+            updateViewport();
         }
 
-        function createMessageBubble(role) {
+        function createBubble(role) {
             if (welcome) welcome.style.display = 'none';
             const isAI = role === 'assistant';
-            const wrapper = document.createElement('div');
-            wrapper.className = `flex ${isAI ? 'justify-start' : 'justify-end'} w-full opacity-0 translate-y-2 transition-all duration-300 ease-out`;
+            const div = document.createElement('div');
+            div.className = `flex ${isAI ? 'justify-start' : 'justify-end'} fade-in w-full mb-2`;
             
-            wrapper.innerHTML = `
+            div.innerHTML = `
                 <div class="flex gap-3 max-w-[92%] ${isAI ? '' : 'flex-row-reverse'}">
                     <div class="w-7 h-7 flex-none rounded-lg flex items-center justify-center border ${isAI ? 'bg-white text-indigo-600' : 'bg-gray-200 text-gray-400'}">
-                        <i data-lucide="${isAI ? 'bot' : 'user'}" class="w-4 h-4"></i>
+                        <i data-lucide="${isAI ? 'bot' : 'user'}" class="w-3.5 h-3.5"></i>
                     </div>
                     <div class="px-5 py-3 rounded-2xl text-[15px] ${isAI ? 'bg-white border border-gray-100 shadow-sm text-gray-800' : 'bg-indigo-600 text-white shadow-sm'}">
                         <div class="prose prose-sm max-w-none msg-content">
@@ -266,15 +233,10 @@
                     </div>
                 </div>
             `;
-            messageList.appendChild(wrapper);
-            
-            setTimeout(() => {
-                wrapper.classList.remove('opacity-0', 'translate-y-2');
-            }, 10);
-
+            messageList.appendChild(div);
             lucide.createIcons();
             scrollToBottom();
-            return wrapper.querySelector('.msg-content');
+            return div.querySelector('.msg-content');
         }
 
         async function onSend() {
@@ -285,10 +247,10 @@
             input.style.height = 'auto';
             sendBtn.disabled = true;
 
-            const uContent = createMessageBubble('user');
-            uContent.textContent = val;
+            const u = createBubble('user');
+            u.textContent = val;
 
-            const aContent = createMessageBubble('assistant');
+            const a = createBubble('assistant');
             let resultText = "";
 
             try {
@@ -305,39 +267,28 @@
                     })
                 });
 
-                if (!res.ok) throw new Error("Gagal memuat respon AI.");
-
                 const reader = res.body.getReader();
                 const decoder = new TextDecoder();
-                aContent.innerHTML = "";
+                a.innerHTML = "";
                 let buffer = "";
 
                 while (true) {
                     const { value, done } = await reader.read();
                     if (done) break;
                     buffer += decoder.decode(value, { stream: true });
-
                     let start = buffer.indexOf('{');
                     while (start !== -1) {
-                        let depth = 0;
-                        let end = -1;
+                        let depth = 0, end = -1;
                         for (let i = start; i < buffer.length; i++) {
                             if (buffer[i] === '{') depth++;
-                            else if (buffer[i] === '}') {
-                                depth--;
-                                if (depth === 0) {
-                                    end = i;
-                                    break;
-                                }
-                            }
+                            else if (buffer[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
                         }
-
                         if (end !== -1) {
                             try {
                                 const json = JSON.parse(buffer.substring(start, end + 1));
                                 const part = json.candidates?.[0]?.content?.parts?.[0]?.text || "";
                                 resultText += part;
-                                aContent.innerHTML = marked.parse(resultText);
+                                a.innerHTML = marked.parse(resultText);
                                 scrollToBottom();
                             } catch (e) {}
                             buffer = buffer.substring(end + 1);
@@ -346,7 +297,7 @@
                     }
                 }
             } catch (err) {
-                aContent.innerHTML = `<span class="text-red-500 text-xs">Error: ${err.message}</span>`;
+                a.innerHTML = `<span class="text-red-500 text-xs">Error: ${err.message}</span>`;
             } finally {
                 sendBtn.disabled = false;
                 scrollToBottom();
@@ -360,12 +311,8 @@
             }
         });
 
-        // Setup awal saat halaman dimuat
-        window.addEventListener('load', () => {
-            if (window.visualViewport) {
-                appContainer.style.height = `${window.visualViewport.height}px`;
-            }
-        });
+        // Jalankan awal
+        updateViewport();
     </script>
 </body>
 </html>
