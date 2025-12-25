@@ -37,14 +37,13 @@
 	}
 	
 	body {
-	  height: 100dvh;
-	  width: 100%;
-	  overflow: hidden;
-	  position: fixed;
-	  overscroll-behavior: none;
-	  touch-action: none;
-	  -webkit-font-smoothing: antialiased;
-	}
+  height: 100dvh;
+  width: 100%;
+  overflow: hidden;
+  position: relative; /* Gunakan relative agar window bisa di-scroll reset */
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
 	
 	#chat-container {
 	  touch-action: pan-y;
@@ -350,28 +349,40 @@
             </div>
 
             <div class="bg-white rounded-3xl pt-5 pb-8 px-5 shadow-sm border border-gray-100">
-                <label class="block text-[14px] font-black text-gray-800 uppercase mb-5">Parameter AI</label>
-                <div class="space-y-4">
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Atur Kreativitas</label>
-                        <div class="relative w-full h-[24px] flex items-center">
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                                <span id="temp-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">0.7</span>
-                            </div>
-                            <input type="range" id="cfg-temp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('temp-val').innerText=this.value" class="custom-slider">
-                        </div>
-                    </div>
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Atur Token</label>
-                        <div class="relative w-full h-[24px] flex items-center">
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                                <span id="token-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">8192</span>
-                            </div>
-                            <input type="range" id="cfg-tokens" min="1024" max="8192" step="512" value="8192" oninput="document.getElementById('token-val').innerText=this.value" class="custom-slider">
-                        </div>
-                    </div>
+    <label class="block text-[14px] font-black text-gray-800 uppercase mb-5">Parameter AI</label>
+    <div class="space-y-4">
+        <div class="space-y-1.5">
+            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Atur Kreativitas</label>
+            <div class="relative w-full h-[24px] flex items-center">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                    <span id="temp-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">0.7</span>
                 </div>
+                <input type="range" id="cfg-temp" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('temp-val').innerText=this.value" class="custom-slider">
             </div>
+        </div>
+        <div class="space-y-1.5">
+            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Atur Token</label>
+            <div class="relative w-full h-[24px] flex items-center">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                    <span id="token-val" class="text-[10px] font-black text-gray-500 tracking-widest uppercase">8192</span>
+                </div>
+                <input type="range" id="cfg-tokens" min="1024" max="8192" step="512" value="8192" oninput="document.getElementById('token-val').innerText=this.value" class="custom-slider">
+            </div>
+        </div>
+        <div class="space-y-1.5">
+            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Thinking Level: <span id="thinking-text-val" class="normal-case">High</span></label>
+            <div class="relative w-full h-[24px] flex items-center">
+                <input type="range" id="cfg-thinking" min="0" max="2" step="1" value="2" oninput="updateThinkingLabel(this.value)" class="custom-slider">
+            </div>
+        </div>
+        <div class="space-y-1.5">
+            <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Media Res: <span id="media-res-text-val" class="normal-case">Medium</span></label>
+            <div class="relative w-full h-[24px] flex items-center">
+                <input type="range" id="cfg-media-res" min="0" max="3" step="1" value="1" oninput="updateMediaResLabel(this.value)" class="custom-slider">
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </main>
 </div>
@@ -1654,18 +1665,33 @@
         const currentHeight = window.visualViewport.height;
 
         if (currentHeight > lastHeight) {
+            // 1. Langsung cabut fokus agar kursor hilang
             if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
                 document.activeElement.blur();
             }
 
+            // 2. Paksa window kembali ke titik 0
             window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
+            
+            // 3. Kick layout khusus untuk iPad agar tidak nyangkut
+            requestAnimationFrame(() => {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
 
-            const settingsPage = document.getElementById('settings-page');
-            if (settingsPage && settingsPage.classList.contains('hidden')) {
-                scrollToBottom();
-            }
+                const settingsPage = document.getElementById('settings-page');
+                if (settingsPage && settingsPage.classList.contains('hidden')) {
+                    scrollToBottom();
+                } else {
+                    // Jika di halaman pengaturan, paksa repaint header
+                    const header = document.getElementById('settings-header');
+                    if (header) {
+                        header.style.display = 'none';
+                        header.offsetHeight; // Force reflow
+                        header.style.display = 'flex';
+                    }
+                }
+            });
         }
         lastHeight = currentHeight;
     });
@@ -1701,16 +1727,16 @@
 			}, { passive: false });
 			
 			document.body.addEventListener('touchmove', function(e) {
-			    const isScrollable = e.target.closest('#chat-container') ||
-			                         e.target.closest('#settings-page main') ||
-			                         e.target.closest('#model-options') ||
-			                         e.target.closest('#chat-history-list') ||
-			                         e.target.closest('#user-input');
-			
-			    if (!isScrollable) {
-			        e.preventDefault();
-			    }
-			}, { passive: false });
+    const isScrollable = e.target.closest('#chat-container') ||
+                         e.target.closest('#settings-page main') || // Pastikan ID ini sesuai (settings-main)
+                         e.target.closest('#model-options') ||
+                         e.target.closest('#chat-history-list') ||
+                         e.target.closest('#user-input');
+
+    if (!isScrollable) {
+        e.preventDefault();
+    }
+}, { passive: false });
 			
 			document.getElementById('btnStartVoice').onclick = async () => {
 			    const vModel = localStorage.getItem('custom_voice_name') || 'Kore';
