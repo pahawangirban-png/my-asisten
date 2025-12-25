@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Mencegah efek karet dan zoom secara total */
+        /* Mencegah efek karet secara total */
         html, body {
             margin: 0;
             padding: 0;
@@ -31,54 +31,53 @@
             font-family: 'Inter', sans-serif;
             -webkit-text-size-adjust: 100%;
             overscroll-behavior: none;
-            /* Mematikan double-tap to zoom di level browser */
-            touch-action: manipulation;
         }
 
-        /* Layout Utama dengan Grid */
+        /* Layout Utama dengan Flexbox yang lebih stabil */
         #app-root {
-            display: grid;
-            grid-template-rows: auto 1fr auto; 
-            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Menggunakan 100% dari body yang sudah 100% height */
             width: 100%;
             overflow: hidden;
         }
 
         header {
+            flex: 0 0 auto; /* Ukuran tetap */
             background: white;
             border-bottom: 1px solid #f1f5f9;
             padding-top: env(safe-area-inset-top, 0px);
             z-index: 100;
-            /* Memastikan header tidak menerima gesture zoom */
-            touch-action: none;
         }
 
-        /* Hanya area ini yang bisa di-scroll secara mandiri */
+        /* Area Chat: Fleksibel dan Scrollable */
         main {
+            flex: 1 1 auto;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             background-color: #fcfcfc;
             overscroll-behavior-y: contain;
             padding: 1rem;
-            touch-action: pan-y; /* Hanya izinkan scroll vertikal, bukan zoom */
+            position: relative;
         }
 
         footer {
+            flex: 0 0 auto; /* Ukuran tetap, tidak akan mengecil atau membesar liar */
             background: white;
             border-top: 1px solid #f8fafc;
             padding: 10px 16px;
+            /* Padding bawah disesuaikan agar tidak terlalu tinggi di iPhone */
             padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 5px);
             z-index: 100;
-            touch-action: none;
         }
 
-        /* Kapsul Input Grey 100 */
+        /* Kapsul Grey 100 */
         .input-capsule {
             background-color: #f3f4f6;
             border-radius: 9999px;
             display: flex;
             align-items: center;
-            padding: 3px 6px;
+            padding: 2px 4px;
             width: 100%;
         }
 
@@ -89,10 +88,11 @@
             box-shadow: none !important;
             resize: none;
             width: 100%;
-            padding: 10px 24px !important; 
-            font-size: 16px; /* 16px mencegah auto-zoom iOS saat fokus */
-            line-height: 1.5;
-            max-height: 100px;
+            padding: 10px 20px !important; 
+            font-size: 16px;
+            line-height: 1.4;
+            /* Batas tinggi agar tidak memakan setengah layar */
+            max-height: 80px; 
             color: #1f2937;
         }
 
@@ -121,10 +121,7 @@
         }
 
         /* Hilangkan highlight tap biru */
-        * { 
-            -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body>
@@ -174,7 +171,7 @@
                     <button 
                         id="send-btn"
                         onpointerdown="onSend(event)"
-                        class="bg-indigo-600 text-white p-2.5 rounded-full flex-none active:scale-90 transition-transform shadow-md"
+                        class="bg-indigo-600 text-white p-2 rounded-full flex-none active:scale-90 transition-transform shadow-md"
                     >
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </button>
@@ -196,13 +193,11 @@
 
         lucide.createIcons();
 
-        // SCRIP ANTI-DOUBLE TAP ZOOM (Native Feel)
+        // Anti-zoom ganda
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', (event) => {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault(); // Batalkan zoom jika tap kedua terlalu cepat
-            }
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
         }, false);
 
@@ -253,6 +248,7 @@
             const val = input.value.trim();
             if (!val || sendBtn.disabled) return;
 
+            // Tutup keyboard dan proses
             input.blur(); 
 
             input.value = '';
@@ -325,6 +321,7 @@
             }
         });
 
+        // Reset viewport scroll jika ada pergeseran aneh di iOS
         input.addEventListener('blur', () => {
             window.scrollTo(0, 0);
         });
