@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
     <title>AI ASISTEN</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,55 +18,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        body, html {
+        /* Mencegah efek karet (rubber-band) di iOS */
+        html, body {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden;
+            position: fixed; /* Kunci viewport */
             background-color: #ffffff;
             font-family: 'Inter', sans-serif;
             -webkit-text-size-adjust: 100%;
+            overscroll-behavior: none;
         }
 
+        /* Layout Grid Utama */
         #app-container {
-            display: flex;
-            flex-direction: column;
-            height: 100dvh; 
+            display: grid;
+            grid-template-rows: auto 1fr auto; /* Header, Chat (fleksibel), Footer */
+            height: 100dvh; /* Dynamic Viewport Height */
             width: 100%;
-            background-color: #ffffff;
+            overflow: hidden;
         }
 
         header {
-            flex: 0 0 auto;
             background: white;
             border-bottom: 1px solid #f1f5f9;
             padding-top: env(safe-area-inset-top, 0px);
+            z-index: 10;
         }
 
+        /* Area Chat dengan scroll mandiri */
         main {
-            flex: 1 1 auto;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
-            padding: 1rem;
             background-color: #fcfcfc;
+            overscroll-behavior-y: contain; /* Kunci scroll hanya di dalam area ini */
+            padding: 1.5rem 1rem;
         }
 
         footer {
-            flex: 0 0 auto;
             background: white;
             border-top: 1px solid #f8fafc;
             padding: 16px;
             padding-bottom: calc(env(safe-area-inset-bottom, 16px));
+            z-index: 10;
         }
 
-        /* Kontainer Kapsul Input */
+        /* Input Kapsul Grey 100 */
         .input-capsule {
-            background-color: #f3f4f6; /* Abu-abu 100 */
+            background-color: #f3f4f6;
             border-radius: 9999px;
             display: flex;
             align-items: center;
-            padding: 6px; 
+            padding: 4px 8px;
             width: 100%;
         }
 
@@ -77,20 +82,25 @@
             box-shadow: none !important;
             resize: none;
             width: 100%;
-            /* Padding ditingkatkan untuk memberikan jarak lebar dari kiri dan kanan */
-            padding: 12px 40px !important; 
+            /* Padding horizontal lebar agar placeholder tidak mepet */
+            padding: 12px 24px !important; 
             font-size: 16px;
             line-height: 1.5;
-            max-height: 150px;
-            color: #374151;
-            display: block;
+            max-height: 140px;
+            color: #1f2937;
         }
 
+        textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Hilangkan ring fokus */
         textarea:focus {
             outline: none;
             box-shadow: none;
         }
 
+        /* Animasi Typing */
         .typing-dot {
             width: 4px;
             height: 4px;
@@ -105,15 +115,17 @@
             40% { opacity: 1; }
         }
 
+        /* Markdown Styling */
         .prose pre {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             padding: 0.75rem;
             border-radius: 0.75rem;
-            overflow-x: auto;
+            margin: 0.5rem 0;
+            font-size: 0.85em;
         }
 
-        /* Menghilangkan highlight biru saat diklik pada mobile */
+        /* Hilangkan highlight biru di mobile */
         * {
             -webkit-tap-highlight-color: transparent;
         }
@@ -125,32 +137,32 @@
         <!-- Header -->
         <header class="px-5 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
+                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm">
                     <i data-lucide="sparkles" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-gray-800 text-sm tracking-tight">AI ASISTEN</h1>
-                    <div class="flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                    <h1 class="font-bold text-gray-800 text-sm tracking-tight leading-none uppercase">AI ASISTEN</h1>
+                    <div class="flex items-center gap-1 mt-1">
+                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                         <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Gemini 3 Flash</span>
                     </div>
                 </div>
             </div>
-            <button onclick="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform" title="Bersihkan Percakapan">
+            <button onclick="clearChat()" class="p-2 text-gray-400 hover:text-indigo-600 active:scale-90 transition-all" title="Reset">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             </button>
         </header>
 
-        <!-- Area Chat Utama -->
-        <main id="chat-window">
-            <div id="welcome" class="max-w-2xl mx-auto text-center py-12">
+        <!-- Chat Area -->
+        <main id="chat-scroll-area">
+            <div id="welcome-screen" class="max-w-xl mx-auto text-center py-12 space-y-4">
                 <div class="w-14 h-14 bg-white border border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
                     <i data-lucide="bot" class="w-7 h-7 text-indigo-500"></i>
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800">Ada yang bisa saya bantu?</h2>
-                <p class="text-gray-400 text-xs px-6 mt-2">Gunakan pencarian Google untuk data terkini.</p>
+                <h2 class="text-xl font-semibold text-gray-800">Halo! Ada yang bisa saya bantu?</h2>
+                <p class="text-gray-400 text-xs px-8 leading-relaxed">Asisten cerdas ini dilengkapi dengan integrasi Google Search untuk jawaban yang akurat.</p>
             </div>
-            <div id="chat-list" class="max-w-3xl mx-auto space-y-6 pb-4"></div>
+            <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-6"></div>
         </main>
 
         <!-- Footer Input -->
@@ -158,15 +170,15 @@
             <div class="max-w-3xl mx-auto">
                 <div class="input-capsule">
                     <textarea 
-                        id="user-chat-input"
+                        id="chat-input"
                         rows="1"
                         placeholder="Tulis pesan ke AI Asisten..."
                         oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
                     ></textarea>
                     <button 
-                        id="send-message-btn"
+                        id="send-btn"
                         onclick="onSend()"
-                        class="bg-indigo-600 text-white p-3 rounded-full flex-none active:scale-90 transition-transform disabled:opacity-50"
+                        class="bg-indigo-600 text-white p-2.5 rounded-full flex-none active:scale-90 transition-transform disabled:opacity-50 shadow-md"
                     >
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
                     </button>
@@ -180,49 +192,58 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
         const ENDPOINT = `${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?model=gemini-3-flash-preview`;
 
-        const chatWindow = document.getElementById('chat-window');
-        const chatList = document.getElementById('chat-list');
-        const welcome = document.getElementById('welcome');
-        const input = document.getElementById('user-chat-input');
-        const sendBtn = document.getElementById('send-message-btn');
+        const scrollArea = document.getElementById('chat-scroll-area');
+        const messageList = document.getElementById('message-list');
+        const welcome = document.getElementById('welcome-screen');
+        const input = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
 
         lucide.createIcons();
 
         function scrollToBottom() {
             setTimeout(() => {
-                chatWindow.scrollTop = chatWindow.scrollHeight;
+                scrollArea.scrollTo({
+                    top: scrollArea.scrollHeight,
+                    behavior: 'smooth'
+                });
             }, 50);
         }
 
         function clearChat() {
-            chatList.innerHTML = '';
+            messageList.innerHTML = '';
             if (welcome) welcome.style.display = 'block';
             input.value = '';
             input.style.height = 'auto';
         }
 
-        function createMsgBox(role) {
+        function createMessageBubble(role) {
             if (welcome) welcome.style.display = 'none';
             const isAI = role === 'assistant';
             const wrapper = document.createElement('div');
-            wrapper.className = `flex ${isAI ? 'justify-start' : 'justify-end'} w-full`;
+            wrapper.className = `flex ${isAI ? 'justify-start' : 'justify-end'} w-full opacity-0 translate-y-2 transition-all duration-300 ease-out`;
             
             wrapper.innerHTML = `
-                <div class="flex gap-3 max-w-[90%] ${isAI ? '' : 'flex-row-reverse'}">
-                    <div class="w-7 h-7 flex-none rounded-lg flex items-center justify-center border ${isAI ? 'bg-white text-indigo-600' : 'bg-gray-100 text-gray-400'}">
+                <div class="flex gap-3 max-w-[92%] ${isAI ? '' : 'flex-row-reverse'}">
+                    <div class="w-7 h-7 flex-none rounded-lg flex items-center justify-center border ${isAI ? 'bg-white text-indigo-600' : 'bg-gray-200 text-gray-400'}">
                         <i data-lucide="${isAI ? 'bot' : 'user'}" class="w-4 h-4"></i>
                     </div>
-                    <div class="px-5 py-3 rounded-2xl text-[15px] ${isAI ? 'bg-white border border-gray-100 shadow-sm text-gray-800' : 'bg-indigo-600 text-white'}">
-                        <div class="prose prose-sm max-w-none msg-body">
+                    <div class="px-5 py-3 rounded-2xl text-[15px] ${isAI ? 'bg-white border border-gray-100 shadow-sm text-gray-800' : 'bg-indigo-600 text-white shadow-sm'}">
+                        <div class="prose prose-sm max-w-none msg-content">
                             ${isAI ? '<div class="flex gap-1 py-1.5"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>' : ''}
                         </div>
                     </div>
                 </div>
             `;
-            chatList.appendChild(wrapper);
+            messageList.appendChild(wrapper);
+            
+            // Trigger animasi masuk
+            setTimeout(() => {
+                wrapper.classList.remove('opacity-0', 'translate-y-2');
+            }, 10);
+
             lucide.createIcons();
             scrollToBottom();
-            return wrapper.querySelector('.msg-body');
+            return wrapper.querySelector('.msg-content');
         }
 
         async function onSend() {
@@ -233,10 +254,10 @@
             input.style.height = 'auto';
             sendBtn.disabled = true;
 
-            const uBox = createMsgBox('user');
-            uBox.textContent = val;
+            const uContent = createMessageBubble('user');
+            uContent.textContent = val;
 
-            const aBox = createMsgBox('assistant');
+            const aContent = createMessageBubble('assistant');
             let resultText = "";
 
             try {
@@ -253,11 +274,11 @@
                     })
                 });
 
-                if (!res.ok) throw new Error("Gagal menghubungi server.");
+                if (!res.ok) throw new Error("Gagal memuat respon AI.");
 
                 const reader = res.body.getReader();
                 const decoder = new TextDecoder();
-                aBox.innerHTML = "";
+                aContent.innerHTML = "";
                 let buffer = "";
 
                 while (true) {
@@ -285,7 +306,7 @@
                                 const json = JSON.parse(buffer.substring(start, end + 1));
                                 const part = json.candidates?.[0]?.content?.parts?.[0]?.text || "";
                                 resultText += part;
-                                aBox.innerHTML = marked.parse(resultText);
+                                aContent.innerHTML = marked.parse(resultText);
                                 scrollToBottom();
                             } catch (e) {}
                             buffer = buffer.substring(end + 1);
@@ -294,7 +315,7 @@
                     }
                 }
             } catch (err) {
-                aBox.innerHTML = `<span class="text-red-500 text-xs">Error: ${err.message}</span>`;
+                aContent.innerHTML = `<span class="text-red-500 text-xs">Error: ${err.message}</span>`;
             } finally {
                 sendBtn.disabled = false;
                 scrollToBottom();
