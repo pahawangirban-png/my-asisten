@@ -166,11 +166,11 @@
                 <form id="auth-form" class="space-y-4">
                     <div>
                         <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Email</label>
-                        <input type="email" id="auth-email" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="nama@email.com">
+                        <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="nama@email.com">
                     </div>
                     <div>
                         <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Kata Sandi</label>
-                        <input type="password" id="auth-password" required class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="••••••••">
+                        <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="••••••••">
                     </div>
                     
                     <button type="submit" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
@@ -205,7 +205,7 @@
                     <button onclick="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform relative z-20" title="Bersihkan Chat">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                     </button>
-                    <button onclick="openLogoutModal()" class="p-2 text-gray-400 active:scale-90 transition-transform relative z-20" title="Keluar">
+                    <button onclick="handleLogout()" class="p-2 text-gray-400 active:scale-90 transition-transform relative z-20" title="Keluar">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
@@ -230,6 +230,7 @@
                             rows="1"
                             placeholder="Tulis pesan ke Asisten AI..."
                             oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
+                            onblur="window.scrollTo(0,0)"
                         ></textarea>
                         <button 
                             id="send-btn"
@@ -243,16 +244,9 @@
             </footer>
         </div>
 
-        <!-- 3. MODAL LOGOUT -->
+        <!-- 3. MODAL LOGOUT (DISEMBUNYIKAN KARENA LOGOUT LANGSUNG) -->
         <div id="logout-modal">
-            <div class="bg-white rounded-3xl p-6 w-full max-w-xs text-center space-y-4 shadow-2xl border border-slate-100">
-                <h3 class="font-bold text-slate-800">Keluar Sesi?</h3>
-                <p class="text-slate-500 text-sm">Anda harus masuk kembali untuk melanjutkan obrolan nanti.</p>
-                <div class="grid grid-cols-2 gap-3 pt-2">
-                    <button onclick="closeLogoutModal()" class="py-3 bg-slate-100 text-slate-600 rounded-xl font-semibold text-sm">Batal</button>
-                    <button onclick="handleLogout()" class="py-3 bg-red-500 text-white rounded-xl font-semibold text-sm">Ya, Keluar</button>
-                </div>
-            </div>
+            <!-- Modal ini bisa dihapus atau dibiarkan untuk penggunaan masa depan -->
         </div>
 
     </div>
@@ -322,20 +316,14 @@
             }
         };
 
-        // MANAJEMEN LOGOUT (DIPERBAIKI UNTUK PWA)
-        function openLogoutModal() { logoutModal.classList.add('active'); }
-        function closeLogoutModal() { logoutModal.classList.remove('active'); }
-
+        // MANAJEMEN LOGOUT (DIPERBAIKI: LANGSUNG KELUAR)
         async function handleLogout() {
-            closeLogoutModal(); // Tutup modal segera untuk mencegah "getaran"
             try {
                 const { error } = await _supabase.auth.signOut();
                 if (error) throw error;
-                // Alihkan tampilan secara manual daripada memuat ulang (reload) halaman
                 showView('auth');
             } catch (e) {
                 console.error("Gagal keluar", e);
-                // Jika gagal di PWA, coba paksa tampilan pindah
                 showView('auth');
             }
         }
@@ -418,7 +406,7 @@
                     let start = buf.indexOf('{');
                     while (start !== -1) {
                         let depth = 0, end = -1;
-                        for (let i = start; i < buf.length; i++) {
+                        for (let i = start; i < buffer.length; i++) {
                             if (buf[i] === '{') depth++;
                             else if (buf[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
                         }
@@ -456,7 +444,6 @@
         }, false);
 
         input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend(); } });
-        input.addEventListener('blur', () => { window.scrollTo(0, 0); });
         
         checkSession();
     </script>
