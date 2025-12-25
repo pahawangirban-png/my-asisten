@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <!-- interactive-widget=resizes-content memastikan footer tetap di atas keyboard secara otomatis -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
     <title>AI ASISTEN</title>
     
@@ -20,60 +19,60 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Mencegah efek karet (rubber-band) secara global */
+        /* Mencegah efek karet secara total */
         html, body {
             margin: 0;
             padding: 0;
+            height: 100%;
             width: 100%;
-            /* Menggunakan min-height agar konten bisa mendorong header keluar layar jika sempit */
-            min-height: 100%;
+            overflow: hidden;
+            position: fixed; 
             background-color: #ffffff;
             font-family: 'Inter', sans-serif;
             -webkit-text-size-adjust: 100%;
-            overscroll-behavior-y: none; /* Matikan bounce iOS */
+            overscroll-behavior: none;
         }
 
-        body {
-            display: flex;
-            flex-direction: column;
+        /* Layout Utama dengan Grid */
+        #app-root {
+            display: grid;
+            grid-template-rows: auto 1fr auto; /* Header (Auto), Chat (Fill), Footer (Auto) */
+            height: 100dvh;
+            width: 100%;
+            overflow: hidden;
         }
 
-        /* Header normal: Tidak fixed, agar bisa terdorong ke atas saat keyboard muncul */
         header {
-            flex: none;
             background: white;
             border-bottom: 1px solid #f1f5f9;
             padding-top: env(safe-area-inset-top, 0px);
-            z-index: 10;
+            z-index: 100;
         }
 
-        /* Area Chat fleksibel */
+        /* Hanya area ini yang bisa di-scroll */
         main {
-            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             background-color: #fcfcfc;
-            padding: 1.5rem 1rem;
+            overscroll-behavior-y: contain;
+            padding: 1rem;
         }
 
-        /* Footer TERKUNCI di bawah (Sticky) */
         footer {
-            flex: none;
-            position: sticky;
-            bottom: 0;
             background: white;
             border-top: 1px solid #f8fafc;
-            padding: 12px 16px;
-            /* Padding bawah aman untuk iPhone */
-            padding-bottom: calc(env(safe-area-inset-bottom, 12px) + 8px);
-            z-index: 50;
+            padding: 10px 16px;
+            padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 5px);
+            z-index: 100;
         }
 
-        /* Input Kapsul Grey 100 */
+        /* Kapsul Grey 100 */
         .input-capsule {
             background-color: #f3f4f6;
             border-radius: 9999px;
             display: flex;
             align-items: center;
-            padding: 4px;
+            padding: 3px 6px;
             width: 100%;
         }
 
@@ -84,22 +83,16 @@
             box-shadow: none !important;
             resize: none;
             width: 100%;
-            /* Jarak placeholder lebar dari kiri sesuai permintaan */
-            padding: 10px 32px !important; 
+            /* Padding horizontal besar agar placeholder tidak mepet */
+            padding: 10px 24px !important; 
             font-size: 16px;
             line-height: 1.5;
-            max-height: 120px;
+            max-height: 100px;
             color: #1f2937;
         }
 
         textarea::placeholder {
             color: #9ca3af;
-        }
-
-        /* Hilangkan ring fokus */
-        textarea:focus {
-            outline: none;
-            box-shadow: none;
         }
 
         /* Animasi Typing */
@@ -114,55 +107,53 @@
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
 
-        /* Markdown Styling */
         .prose pre {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             padding: 0.75rem;
             border-radius: 0.75rem;
-            margin: 0.5rem 0;
-            font-size: 0.85em;
+            font-size: 0.8em;
         }
 
-        /* Hilangkan tap highlight biru */
+        /* Hilangkan highlight tap */
         * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="min-h-[100dvh]">
+<body>
 
-    <div id="app-wrapper" class="flex flex-col min-h-[100dvh] w-full">
-        <!-- Header: Akan terdorong ke atas secara alami jika layar sempit -->
-        <header class="px-5 py-3 flex justify-between items-center">
+    <div id="app-root">
+        <!-- Header: Tetap di atas, tidak ikut scroll -->
+        <header class="px-5 py-2.5 flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-sm">
-                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-sm">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-gray-800 text-sm tracking-tight leading-none uppercase">AI ASISTEN</h1>
-                    <div class="flex items-center gap-1 mt-1">
+                    <h1 class="font-bold text-gray-800 text-xs tracking-tighter uppercase">AI ASISTEN</h1>
+                    <div class="flex items-center gap-1">
                         <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                        <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Gemini 3 Flash</span>
+                        <span class="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Gemini 3 Flash</span>
                     </div>
                 </div>
             </div>
-            <button onclick="clearChat()" class="p-2 text-gray-400 hover:text-indigo-600 active:scale-90 transition-all">
+            <button onpointerdown="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             </button>
         </header>
 
-        <!-- Area Chat -->
-        <main>
-            <div id="welcome-view" class="max-w-xl mx-auto text-center py-10 space-y-4">
-                <div class="w-14 h-14 bg-white border border-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
-                    <i data-lucide="bot" class="w-7 h-7 text-indigo-500"></i>
+        <!-- Area Chat: Scrollable -->
+        <main id="chat-scroller">
+            <div id="welcome-view" class="max-w-xl mx-auto text-center py-10 space-y-3">
+                <div class="w-12 h-12 bg-white border border-gray-100 rounded-xl flex items-center justify-center mx-auto shadow-sm">
+                    <i data-lucide="bot" class="w-6 h-6 text-indigo-500"></i>
                 </div>
-                <h2 class="text-xl font-semibold text-gray-800">Ada yang bisa saya bantu?</h2>
-                <p class="text-gray-400 text-xs px-8 leading-relaxed">Asisten cerdas ini memiliki integrasi Google Search untuk jawaban akurat.</p>
+                <h2 class="text-lg font-semibold text-gray-800">Ada yang bisa saya bantu?</h2>
+                <p class="text-gray-400 text-[10px] px-8 uppercase tracking-widest font-bold">Google Search Enabled</p>
             </div>
-            <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-6"></div>
+            <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4"></div>
         </main>
 
-        <!-- Footer: TERKUNCI DI BAWAH (Sticky) -->
+        <!-- Footer: Menempel di bawah (Sticky ke keyboard) -->
         <footer>
             <div class="max-w-3xl mx-auto">
                 <div class="input-capsule">
@@ -171,11 +162,11 @@
                         rows="1"
                         placeholder="Tulis pesan ke AI Asisten..."
                         oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
-                        onblur="window.scrollTo(0,0)" 
                     ></textarea>
+                    <!-- Menggunakan onpointerdown agar langsung terkirim tanpa 2x klik -->
                     <button 
                         id="send-btn"
-                        onclick="onSend()"
+                        onpointerdown="onSend()"
                         class="bg-indigo-600 text-white p-2.5 rounded-full flex-none active:scale-90 transition-transform shadow-md"
                     >
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
@@ -190,6 +181,7 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
         const ENDPOINT = `${SUPABASE_PROJECT_URL}/functions/v1/ai-proxy?model=gemini-3-flash-preview`;
 
+        const scroller = document.getElementById('chat-scroller');
         const messageList = document.getElementById('message-list');
         const welcome = document.getElementById('welcome-view');
         const input = document.getElementById('chat-input');
@@ -198,11 +190,12 @@
         lucide.createIcons();
 
         function scrollToBottom() {
-            // Menggunakan scroll global body agar footer sticky tetap terjaga
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
+            setTimeout(() => {
+                scroller.scrollTo({
+                    top: scroller.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 50);
         }
 
         function clearChat() {
@@ -210,21 +203,21 @@
             if (welcome) welcome.style.display = 'block';
             input.value = '';
             input.style.height = 'auto';
-            window.scrollTo(0, 0);
+            window.scrollTo(0,0);
         }
 
         function createBubble(role) {
             if (welcome) welcome.style.display = 'none';
             const isAI = role === 'assistant';
             const div = document.createElement('div');
-            div.className = `flex ${isAI ? 'justify-start' : 'justify-end'} w-full opacity-0 translate-y-2 transition-all duration-300 ease-out mb-2`;
+            div.className = `flex ${isAI ? 'justify-start' : 'justify-end'} w-full animate-in fade-in duration-300 mb-1`;
             
             div.innerHTML = `
-                <div class="flex gap-3 max-w-[92%] ${isAI ? '' : 'flex-row-reverse'}">
-                    <div class="w-7 h-7 flex-none rounded-lg flex items-center justify-center border ${isAI ? 'bg-white text-indigo-600' : 'bg-gray-200 text-gray-400'}">
+                <div class="flex gap-2.5 max-w-[92%] ${isAI ? '' : 'flex-row-reverse'}">
+                    <div class="w-7 h-7 flex-none rounded-lg flex items-center justify-center border ${isAI ? 'bg-white text-indigo-600' : 'bg-gray-100 text-gray-400'}">
                         <i data-lucide="${isAI ? 'bot' : 'user'}" class="w-3.5 h-3.5"></i>
                     </div>
-                    <div class="px-5 py-3 rounded-2xl text-[15px] ${isAI ? 'bg-white border border-gray-100 shadow-sm text-gray-800' : 'bg-indigo-600 text-white shadow-sm'}">
+                    <div class="px-4 py-2.5 rounded-2xl text-[15px] ${isAI ? 'bg-white border border-gray-100 shadow-sm text-gray-800' : 'bg-indigo-600 text-white shadow-sm'}">
                         <div class="prose prose-sm max-w-none msg-content">
                             ${isAI ? '<div class="flex gap-1 py-1.5"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>' : ''}
                         </div>
@@ -232,11 +225,6 @@
                 </div>
             `;
             messageList.appendChild(div);
-            
-            setTimeout(() => {
-                div.classList.remove('opacity-0', 'translate-y-2');
-            }, 10);
-
             lucide.createIcons();
             scrollToBottom();
             return div.querySelector('.msg-content');
@@ -245,6 +233,9 @@
         async function onSend() {
             const val = input.value.trim();
             if (!val || sendBtn.disabled) return;
+
+            // Fokus tetap di input agar keyboard tidak menutup otomatis (opsional)
+            // input.focus(); 
 
             input.value = '';
             input.style.height = 'auto';
@@ -307,6 +298,7 @@
             }
         }
 
+        // Support Enter key
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -314,9 +306,9 @@
             }
         });
 
-        // iOS Fix: Pastikan input kembali ke tempatnya saat keyboard ditutup manual
+        // Fix iOS scroll offset
         input.addEventListener('blur', () => {
-            window.scrollTo(0, 0);
+            window.scrollTo(0,0);
         });
     </script>
 </body>
