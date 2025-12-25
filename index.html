@@ -302,7 +302,7 @@
 	    </div>
 	</footer>
 
-    <div id="settings-page" class="hidden fixed inset-0 z-[100] bg-gray-50 w-full h-full overflow-hidden flex flex-col opacity-0 transition-opacity duration-200">
+    <div id="settings-page" class="hidden fixed top-0 left-0 w-full h-full z-[100] bg-gray-50 overflow-hidden flex flex-col">
         <header class="w-full bg-white/90 backdrop-blur-sm flex items-center justify-between h-20 px-6 relative z-[110] flex-shrink-0">
             <button onclick="toggleSettings(false)" class="text-gray-400 p-2"><i class="fa-solid fa-arrow-left text-xl"></i></button>
             <h1 class="absolute left-1/2 -translate-x-1/2 font-semibold text-xl text-gray-700 tracking-normal uppercase">Pengaturan</h1>
@@ -698,37 +698,33 @@
 			}
 			
 			function toggleSettings(show) {
-				const page = document.getElementById('settings-page');
-				if (show) {
-					page.classList.remove('hidden');
-					setTimeout(() => {
-						page.classList.remove('opacity-0');
-						document.getElementById('selected-model-text').innerText = localStorage.getItem('custom_model_name') || 'Gemini 3 Flash';
-						document.getElementById('selected-voice-text').innerText = localStorage.getItem('custom_voice_name') || 'Kore';
-						document.getElementById('cfg-sys-prompt').value = localStorage.getItem('custom_system_prompt') || '';
-						
-						const temp = localStorage.getItem('custom_temp') || '0.7';
-						document.getElementById('cfg-temp').value = temp;
-						document.getElementById('temp-val').innerText = temp;
-						
-						const tokens = localStorage.getItem('custom_tokens') || '8192';
-						document.getElementById('cfg-tokens').value = tokens;
-						document.getElementById('token-val').innerText = tokens;
-						
-						const thinkIdx = localStorage.getItem('custom_thinking_index') || '2';
-						document.getElementById('cfg-thinking').value = thinkIdx;
-						updateThinkingLabel(thinkIdx);
-			
-						const mediaIdx = localStorage.getItem('custom_media_res_index') || '1';
-						document.getElementById('cfg-media-res').value = mediaIdx;
-						updateMediaResLabel(mediaIdx);
-					}, 10);
-				} else {
-					page.classList.add('opacity-0');
-					setTimeout(() => page.classList.add('hidden'), 200);
-					closeAllDropdowns();
-				}
-			}
+    const page = document.getElementById('settings-page');
+    if (show) {
+        page.classList.remove('hidden');
+        document.getElementById('selected-model-text').innerText = localStorage.getItem('custom_model_name') || 'Gemini 3 Flash';
+        document.getElementById('selected-voice-text').innerText = localStorage.getItem('custom_voice_name') || 'Kore';
+        document.getElementById('cfg-sys-prompt').value = localStorage.getItem('custom_system_prompt') || '';
+        
+        const temp = localStorage.getItem('custom_temp') || '0.7';
+        document.getElementById('cfg-temp').value = temp;
+        document.getElementById('temp-val').innerText = temp;
+        
+        const tokens = localStorage.getItem('custom_tokens') || '8192';
+        document.getElementById('cfg-tokens').value = tokens;
+        document.getElementById('token-val').innerText = tokens;
+        
+        const thinkIdx = localStorage.getItem('custom_thinking_index') || '2';
+        document.getElementById('cfg-thinking').value = thinkIdx;
+        updateThinkingLabel(thinkIdx);
+
+        const mediaIdx = localStorage.getItem('custom_media_res_index') || '1';
+        document.getElementById('cfg-media-res').value = mediaIdx;
+        updateMediaResLabel(mediaIdx);
+    } else {
+        page.classList.add('hidden');
+        closeAllDropdowns();
+    }
+}
 			
 			async function sendMessage(text) {
 				const currentFiles = [...selectedFiles];
@@ -1674,26 +1670,26 @@
     window.visualViewport.addEventListener('resize', () => {
         const currentHeight = window.visualViewport.height;
 
-        // Deteksi jika keyboard tertutup (tinggi viewport bertambah)
         if (currentHeight > lastHeight) {
             const activeEl = document.activeElement;
-            const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
-
-            if (isInput) {
-                // 1. Paksa lepas fokus untuk meniru "Klik di Luar"
+            if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
                 activeEl.blur();
             }
 
-            // 2. Paksa reset koordinat layar ke titik 0,0
-            // Menggunakan requestAnimationFrame agar berjalan tepat setelah keyboard hilang
             requestAnimationFrame(() => {
                 window.scrollTo(0, 0);
                 document.documentElement.scrollTop = 0;
                 document.body.scrollTop = 0;
 
-                // 3. Pastikan fungsi scroll chat hanya jalan jika tidak di halaman pengaturan
                 const settingsPage = document.getElementById('settings-page');
-                if (settingsPage && settingsPage.classList.contains('hidden')) {
+                const isSettingsVisible = settingsPage && !settingsPage.classList.contains('hidden');
+
+                if (isSettingsVisible) {
+                    settingsPage.style.top = '-1px';
+                    setTimeout(() => {
+                        settingsPage.style.top = '0';
+                    }, 20);
+                } else {
                     scrollToBottom();
                 }
             });
