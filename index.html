@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Mencegah efek karet (bounce) secara total */
+        /* Mencegah efek karet dan zoom secara total */
         html, body {
             margin: 0;
             padding: 0;
@@ -31,6 +31,8 @@
             font-family: 'Inter', sans-serif;
             -webkit-text-size-adjust: 100%;
             overscroll-behavior: none;
+            /* Mematikan double-tap to zoom di level browser */
+            touch-action: manipulation;
         }
 
         /* Layout Utama dengan Grid */
@@ -47,6 +49,8 @@
             border-bottom: 1px solid #f1f5f9;
             padding-top: env(safe-area-inset-top, 0px);
             z-index: 100;
+            /* Memastikan header tidak menerima gesture zoom */
+            touch-action: none;
         }
 
         /* Hanya area ini yang bisa di-scroll secara mandiri */
@@ -56,6 +60,7 @@
             background-color: #fcfcfc;
             overscroll-behavior-y: contain;
             padding: 1rem;
+            touch-action: pan-y; /* Hanya izinkan scroll vertikal, bukan zoom */
         }
 
         footer {
@@ -64,6 +69,7 @@
             padding: 10px 16px;
             padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 5px);
             z-index: 100;
+            touch-action: none;
         }
 
         /* Kapsul Input Grey 100 */
@@ -83,9 +89,8 @@
             box-shadow: none !important;
             resize: none;
             width: 100%;
-            /* Padding horizontal besar agar placeholder tidak mepet kiri */
             padding: 10px 24px !important; 
-            font-size: 16px;
+            font-size: 16px; /* 16px mencegah auto-zoom iOS saat fokus */
             line-height: 1.5;
             max-height: 100px;
             color: #1f2937;
@@ -115,14 +120,17 @@
             font-size: 0.8em;
         }
 
-        /* Hilangkan highlight tap biru di mobile */
-        * { -webkit-tap-highlight-color: transparent; }
+        /* Hilangkan highlight tap biru */
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation;
+        }
     </style>
 </head>
 <body>
 
     <div id="app-root">
-        <!-- Header: Tetap di atas -->
+        <!-- Header -->
         <header class="px-5 py-2.5 flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-sm">
@@ -141,7 +149,7 @@
             </button>
         </header>
 
-        <!-- Area Chat: Scrollable -->
+        <!-- Area Chat -->
         <main id="chat-scroller">
             <div id="welcome-view" class="max-w-xl mx-auto text-center py-10 space-y-3">
                 <div class="w-12 h-12 bg-white border border-gray-100 rounded-xl flex items-center justify-center mx-auto shadow-sm">
@@ -153,7 +161,7 @@
             <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4"></div>
         </main>
 
-        <!-- Footer: Terkunci di bawah -->
+        <!-- Footer -->
         <footer>
             <div class="max-w-3xl mx-auto">
                 <div class="input-capsule">
@@ -163,7 +171,6 @@
                         placeholder="Tulis pesan ke AI Asisten..."
                         oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
                     ></textarea>
-                    <!-- Menggunakan onpointerdown untuk menghindari masalah 2x klik di iOS -->
                     <button 
                         id="send-btn"
                         onpointerdown="onSend(event)"
@@ -188,6 +195,16 @@
         const sendBtn = document.getElementById('send-btn');
 
         lucide.createIcons();
+
+        // SCRIP ANTI-DOUBLE TAP ZOOM (Native Feel)
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (event) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault(); // Batalkan zoom jika tap kedua terlalu cepat
+            }
+            lastTouchEnd = now;
+        }, false);
 
         function scrollToBottom() {
             setTimeout(() => {
@@ -236,7 +253,6 @@
             const val = input.value.trim();
             if (!val || sendBtn.disabled) return;
 
-            // FUNGSI UTAMA: Tutup keyboard DAN proses pesan sekaligus
             input.blur(); 
 
             input.value = '';
@@ -302,7 +318,6 @@
             }
         }
 
-        // Support Enter key
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -310,7 +325,6 @@
             }
         });
 
-        // Reset scroll saat keyboard tertutup manual
         input.addEventListener('blur', () => {
             window.scrollTo(0, 0);
         });
