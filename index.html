@@ -1670,17 +1670,21 @@
 			
 			    if (window.visualViewport) {
     let lastHeight = window.visualViewport.height;
+
     window.visualViewport.addEventListener('resize', () => {
         const currentHeight = window.visualViewport.height;
+
         if (currentHeight > lastHeight) {
             if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
                 document.activeElement.blur();
             }
+
             window.scrollTo(0, 0);
+            document.body.scrollTop = 0;
+
             const settingsPage = document.getElementById('settings-page');
-            if (settingsPage && !settingsPage.classList.contains('hidden')) {
-                const header = settingsPage.querySelector('header');
-                if (header) header.scrollIntoView(true);
+            if (settingsPage && settingsPage.classList.contains('hidden')) {
+                scrollToBottom();
             }
         }
         lastHeight = currentHeight;
