@@ -53,19 +53,17 @@
 	  transition: opacity 0.3s ease-in-out;
 	}
 	
-	#settings-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background-color: #f9fafb;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+	#settings-page:not(.hidden) {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 100 !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 	
 	.loaded {
@@ -1688,14 +1686,20 @@
 
     window.visualViewport.addEventListener('resize', () => {
         const currentHeight = window.visualViewport.height;
-
+        
+        // Hanya bertindak jika keyboard benar-benar tertutup (tinggi layar bertambah)
         if (currentHeight > lastHeight) {
-            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
-                document.activeElement.blur();
+            const activeEl = document.activeElement;
+            const isInput = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+            
+            if (isInput) {
+                activeEl.blur(); // Cabut fokus agar layout iPad reset
                 
-                window.scrollTo(0, 0);
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
+                // Reset posisi layar ke nol
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.documentElement.scrollTop = 0;
+                }, 50);
             }
         }
         lastHeight = currentHeight;
