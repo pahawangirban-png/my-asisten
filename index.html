@@ -138,37 +138,40 @@
 
     <div id="app-root">
 
-        <!-- 1. TAMPILAN AUTH -->
+        <!-- 1. TAMPILAN AUTH (Hanya Login Pribadi - Minimalis) -->
         <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
             <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
-                <div class="text-center mb-8">
-                    <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg shadow-indigo-200">
-                        <i data-lucide="sparkles" class="w-7 h-7"></i>
+                <div class="text-center mb-10">
+                    <!-- Icon Gembok tanpa background kotak -->
+                    <div class="flex items-center justify-center text-indigo-600 mx-auto mb-2">
+                        <i data-lucide="lock" class="w-12 h-12"></i>
                     </div>
-                    <h2 id="auth-title" class="text-2xl font-bold text-slate-800">Selamat Datang</h2>
-                    <p id="auth-subtitle" class="text-slate-400 text-sm mt-1">Masuk untuk memulai</p>
                 </div>
 
-                <form id="auth-form" class="space-y-4">
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Email</label>
-                        <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="nama@email.com">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest font-bold text-slate-400 ml-1">Kata Sandi</label>
-                        <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl px-5 py-3.5 text-sm focus:ring-0 outline-none" placeholder="••••••••">
+                <form id="auth-form" class="space-y-5">
+                    <!-- Input Email dengan Icon -->
+                    <div class="relative flex items-center">
+                        <div class="absolute left-5 text-slate-400">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </div>
+                        <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all" placeholder="Email">
                     </div>
                     
-                    <button type="submit" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-semibold py-4 rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                        <span>Masuk</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    <!-- Input Password dengan Icon -->
+                    <div class="relative flex items-center">
+                        <div class="absolute left-5 text-slate-400">
+                            <i data-lucide="key-round" class="w-4 h-4"></i>
+                        </div>
+                        <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all" placeholder="Kata Sandi">
+                    </div>
+                    
+                    <!-- Button MASUK tanpa icon panah -->
+                    <button type="submit" id="auth-submit-btn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest">
+                        <span>MASUK</span>
                     </button>
                 </form>
 
-                <div class="mt-8 text-center">
-                    <button id="toggle-auth" class="text-indigo-600 text-xs font-semibold hover:underline">Belum punya akun? Daftar</button>
-                </div>
-                <p id="auth-error" class="text-red-500 text-[10px] text-center mt-4 hidden"></p>
+                <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
             </div>
         </div>
 
@@ -249,8 +252,6 @@
         const sendBtn = document.getElementById('send-btn');
         const authError = document.getElementById('auth-error');
 
-        let isLoginMode = true;
-
         lucide.createIcons();
 
         // CEK SESI PENGGUNA
@@ -272,31 +273,23 @@
             lucide.createIcons();
         }
 
-        document.getElementById('toggle-auth').onclick = () => {
-            isLoginMode = !isLoginMode;
-            document.getElementById('auth-title').innerText = isLoginMode ? "Selamat Datang" : "Daftar Akun";
-            document.getElementById('auth-submit-btn').querySelector('span').innerText = isLoginMode ? "Masuk" : "Daftar";
-            document.getElementById('toggle-auth').innerText = isLoginMode ? "Belum punya akun? Daftar" : "Sudah punya akun? Masuk";
-        };
-
+        // PROSES LOGIN
         document.getElementById('auth-form').onsubmit = async (e) => {
             e.preventDefault();
             authError.classList.add('hidden');
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
+            
             try {
-                const { error } = isLoginMode 
-                    ? await _supabase.auth.signInWithPassword({ email, password })
-                    : await _supabase.auth.signUp({ email, password });
+                const { error } = await _supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
-                if (!isLoginMode) alert("Pendaftaran berhasil! Silakan masuk.");
             } catch (err) {
-                authError.innerText = err.message;
+                authError.innerText = "Akses ditolak. Periksa kredensial Anda.";
                 authError.classList.remove('hidden');
             }
         };
 
-        // MANAJEMEN LOGOUT (LANGSUNG KELUAR)
+        // LOGOUT LANGSUNG
         async function handleLogout() {
             try {
                 const { error } = await _supabase.auth.signOut();
@@ -325,7 +318,6 @@
             window.scrollTo(0, 0);
         }
 
-        // BUBBLE PESAN
         function createBubble(role) {
             if (welcome) welcome.style.display = 'none';
             const isAI = role === 'assistant';
@@ -349,7 +341,6 @@
             return div.querySelector('.msg-content');
         }
 
-        // KIRIM PESAN
         async function onSend(e) {
             if (e) e.preventDefault();
             const val = input.value.trim();
