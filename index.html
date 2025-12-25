@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>AI ASISTEN</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
@@ -54,16 +54,18 @@
 	}
 	
 	#settings-page {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    height: 100dvh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 	
 	.loaded {
@@ -1688,30 +1690,13 @@
         const currentHeight = window.visualViewport.height;
 
         if (currentHeight > lastHeight) {
-            const activeEl = document.activeElement;
-            if (activeEl && (activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'INPUT')) {
-                activeEl.blur();
-            }
-
-            setTimeout(() => {
+            if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) {
+                document.activeElement.blur();
+                
                 window.scrollTo(0, 0);
-                document.documentElement.scrollTop = 0;
                 document.body.scrollTop = 0;
-
-                const settingsPage = document.getElementById('settings-page');
-                const isSettingsVisible = settingsPage && !settingsPage.classList.contains('hidden');
-
-                if (isSettingsVisible) {
-                    const settingsHeader = settingsPage.querySelector('header');
-                    if (settingsHeader) {
-                        settingsHeader.scrollIntoView(true);
-                    }
-                    
-                    settingsPage.style.display = 'none';
-                    settingsPage.offsetHeight;
-                    settingsPage.style.display = 'flex';
-                }
-            }, 50);
+                document.documentElement.scrollTop = 0;
+            }
         }
         lastHeight = currentHeight;
     });
