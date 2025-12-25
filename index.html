@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Mencegah efek karet (bounce) secara total di iOS */
+        /* Mencegah efek karet (bounce) secara total */
         html, body {
             margin: 0;
             padding: 0;
@@ -36,7 +36,7 @@
         /* Layout Utama dengan Grid */
         #app-root {
             display: grid;
-            grid-template-rows: auto 1fr auto; /* Header (Auto), Chat (Fill), Footer (Auto) */
+            grid-template-rows: auto 1fr auto; 
             height: 100dvh;
             width: 100%;
             overflow: hidden;
@@ -95,7 +95,7 @@
             color: #9ca3af;
         }
 
-        /* Animasi Mengetik */
+        /* Animasi Typing */
         .typing-dot {
             width: 4px;
             height: 4px;
@@ -107,7 +107,6 @@
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes blink { 0%, 80%, 100% { opacity: 0.2; } 40% { opacity: 1; } }
 
-        /* Styling Kode di Markdown */
         .prose pre {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -123,7 +122,7 @@
 <body>
 
     <div id="app-root">
-        <!-- Header: Terkunci di atas -->
+        <!-- Header: Tetap di atas -->
         <header class="px-5 py-2.5 flex justify-between items-center shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-sm">
@@ -137,24 +136,24 @@
                     </div>
                 </div>
             </div>
-            <button onclick="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform">
+            <button onpointerdown="clearChat()" class="p-2 text-gray-400 active:scale-90 transition-transform">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             </button>
         </header>
 
-        <!-- Area Chat: Bisa di-scroll -->
+        <!-- Area Chat: Scrollable -->
         <main id="chat-scroller">
             <div id="welcome-view" class="max-w-xl mx-auto text-center py-10 space-y-3">
                 <div class="w-12 h-12 bg-white border border-gray-100 rounded-xl flex items-center justify-center mx-auto shadow-sm">
                     <i data-lucide="bot" class="w-6 h-6 text-indigo-500"></i>
                 </div>
                 <h2 class="text-lg font-semibold text-gray-800">Ada yang bisa saya bantu?</h2>
-                <p class="text-gray-400 text-[10px] px-8 uppercase tracking-widest font-bold leading-relaxed">Dilengkapi integrasi Google Search untuk jawaban akurat.</p>
+                <p class="text-gray-400 text-[10px] px-8 uppercase tracking-widest font-bold leading-relaxed">Google Search Grounding Aktif</p>
             </div>
             <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4"></div>
         </main>
 
-        <!-- Footer: Terkunci di bawah (Menempel di keyboard) -->
+        <!-- Footer: Terkunci di bawah -->
         <footer>
             <div class="max-w-3xl mx-auto">
                 <div class="input-capsule">
@@ -164,9 +163,10 @@
                         placeholder="Tulis pesan ke AI Asisten..."
                         oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';"
                     ></textarea>
+                    <!-- Menggunakan onpointerdown untuk menghindari masalah 2x klik di iOS -->
                     <button 
                         id="send-btn"
-                        onclick="onSend()"
+                        onpointerdown="onSend(event)"
                         class="bg-indigo-600 text-white p-2.5 rounded-full flex-none active:scale-90 transition-transform shadow-md"
                     >
                         <i data-lucide="arrow-right" class="w-5 h-5"></i>
@@ -230,11 +230,13 @@
             return div.querySelector('.msg-content');
         }
 
-        async function onSend() {
+        async function onSend(event) {
+            if (event) event.preventDefault();
+            
             const val = input.value.trim();
             if (!val || sendBtn.disabled) return;
 
-            // FUNGSI UTAMA: Menutup keyboard secara otomatis
+            // FUNGSI UTAMA: Tutup keyboard DAN proses pesan sekaligus
             input.blur(); 
 
             input.value = '';
@@ -300,7 +302,7 @@
             }
         }
 
-        // Mendukung tombol Enter untuk mengirim
+        // Support Enter key
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -308,7 +310,7 @@
             }
         });
 
-        // Pastikan scroll reset saat keyboard ditutup manual
+        // Reset scroll saat keyboard tertutup manual
         input.addEventListener('blur', () => {
             window.scrollTo(0, 0);
         });
