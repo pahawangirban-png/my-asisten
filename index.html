@@ -310,36 +310,26 @@
 	            </div>
 	        </header>
 	
-	        <main id="chat-scroller">
-	            <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4"></div>
-	        </main>
-	
-	        <footer style="background-color: #fcfcfc;">
-	            <div class="max-w-3xl mx-auto">
-	                <div id="capsule-container" class="input-capsule">
-	                    <button onclick="alert('Fitur upload segera hadir')" class="w-11 h-11 flex items-center justify-center text-gray-500 active:scale-90 transition-transform flex-none ml-1">
-	                        <i data-lucide="plus" stroke-width="2.5" class="w-6 h-6 text-gray-400"></i>
-	                    </button>
-	                    <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." class="text-base font-medium placeholder:font-medium placeholder:text-gray-400" oninput="
-	                        this.style.height = 'auto'; 
-	                        this.style.height = (this.scrollHeight) + 'px';
-	                        const container = document.getElementById('capsule-container');
-	                        if(this.scrollHeight > 48) { 
-	                            container.style.borderRadius = '24px'; 
-	                            container.style.alignItems = 'flex-end';
-	                            this.style.marginBottom = '4px';
-	                        } else { 
-	                            container.style.borderRadius = '999px'; 
-	                            container.style.alignItems = 'center';
-	                            this.style.marginBottom = '0px';
-	                        }
-	                    " onblur="window.scrollTo(0,0)"></textarea>
-	                    <button id="send-btn" onpointerdown="onSend(event)" class="bg-gray-500 text-white w-11 h-11 rounded-full flex items-center justify-center flex-none active:scale-90 transition-transform shadow-md">
-	                        <i data-lucide="arrow-right" stroke-width="2.5" class="w-5 h-5"></i>
-	                    </button>
-	                </div>
-	            </div>
-	        </footer>
+	     <main id="chat-scroller" class="flex-1 overflow-y-auto">
+		    <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4 pt-4 px-2"></div>
+		</main>
+		
+		<footer class="bg-[#fcfcfc] shrink-0">
+		    <div class="max-w-3xl mx-auto w-full px-2">
+		        <div id="file-preview-container" class="grid grid-cols-4 gap-2 mb-3"></div>
+		        
+		        <div id="capsule-container" class="input-capsule w-full">
+		            <input type="file" id="file-input" multiple accept="image/*,application/pdf" class="hidden" onchange="handleFileSelect(event)">
+		            <button onclick="document.getElementById('file-input').click()" class="w-11 h-11 flex items-center justify-center text-gray-500 flex-none ml-1">
+		                <i data-lucide="plus" stroke-width="2.5" class="w-6 h-6 text-gray-400"></i>
+		            </button>
+		            <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." class="text-base font-medium" oninput="adjustInput(this)"></textarea>
+		            <button id="send-btn" onclick="onSend()" class="bg-gray-600 text-white w-11 h-11 rounded-full flex items-center justify-center flex-none shadow-md">
+		                <i data-lucide="arrow-right" stroke-width="2.5" class="w-5 h-5"></i>
+		            </button>
+		        </div>
+		    </div>
+		</footer>
 	    </div>
 	
 	    <div id="settings-view" class="view-container bg-white">
@@ -559,20 +549,112 @@
 	    return div.querySelector('.msg-content');
 	}
 
+	let pendingFiles = [];
+
+	function formatBytes(bytes, decimals = 2) {
+	    if (bytes === 0) return '0 Bytes';
+	    const k = 1024;
+	    const dm = decimals < 0 ? 0 : decimals;
+	    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+	    const i = Math.floor(Math.log(bytes) / Math.log(k));
+	    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+	}
+	
+	async function handleFileSelect(event) {
+	    const files = Array.from(event.target.files);
+	    if (pendingFiles.length + files.length > 4) {
+	        alert("Maksimal 4 file dalam satu pengiriman.");
+	        return;
+	    }
+	
+	    for (const file of files) {
+	        const base64 = await convertToBase64(file);
+	        pendingFiles.push({
+	            name: file.name,
+	            size: formatBytes(file.size),
+	            type: file.type,
+	            base64: base64.split(',')[1],
+	            mime: file.type
+	        });
+	    }
+	    renderPreviews();
+	    event.target.value = '';
+	}
+	
+	function convertToBase64(file) {
+	    return new Promise((resolve, reject) => {
+	        const reader = new FileReader();
+	        reader.readAsDataURL(file);
+	        reader.onload = () => resolve(reader.result);
+	        reader.onerror = error => reject(error);
+	    });
+	}
+	
+	function removeFile(index) {
+	    pendingFiles.splice(index, 1);
+	    renderPreviews();
+	}
+	
+	function renderPreviews() {
+	    const container = document.getElementById('file-preview-container');
+	    container.innerHTML = '';
+	    
+	    pendingFiles.forEach((file, index) => {
+	        const isImage = file.type.startsWith('image/');
+	        const visual = isImage 
+	            ? `<img src="data:${file.mime};base64,${file.base64}" class="w-11 h-11 object-cover rounded-lg shadow-sm">`
+	            : `<div class="w-11 h-11 bg-white/60 rounded-xl flex items-center justify-center text-gray-500 shadow-sm"><i data-lucide="file-text" class="w-6 h-6"></i></div>`;
+	        
+	        const card = document.createElement('div');
+	        
+	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center relative fade-in w-full min-h-[60px] border-none";
+	        card.innerHTML = `
+	            <div class="shrink-0 mr-3">${visual}</div>
+	            <div class="overflow-hidden flex-1 leading-tight">
+	                <p class="text-[11px] font-bold text-gray-700 truncate uppercase tracking-tight">${file.name}</p>
+	                <p class="text-[9px] text-gray-400 font-medium">${file.size}</p>
+	            </div>
+	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none">
+	                <svg fill="#000000" viewBox="0 0 24 24" class="w-full h-full" version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg">
+	                    <g><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></g>
+	                </svg>
+	            </button>`;
+	        container.appendChild(card);
+	    });
+	    lucide.createIcons();
+	}
+	
 	async function onSend(e) {
 	    if (e) e.preventDefault();
 	    const val = input.value.trim();
-	    if (!val || sendBtn.disabled) return;
+	    
+	    if ((!val && pendingFiles.length === 0) || sendBtn.disabled) return;
 	    
 	    input.blur(); 
 	    const u = createBubble('user', false); 
-	    if (u) u.textContent = val;
 	    
-	    chatHistory.push({ role: "user", parts: [{ text: val }] });
+	    if (u) u.textContent = val || `${pendingFiles.length} file terlampir`;
+	    
+	    const parts = [];
+	    if (val) parts.push({ text: val });
+	    
+	    pendingFiles.forEach(f => {
+	        parts.push({
+	            inline_data: {
+	                mime_type: f.mime,
+	                data: f.base64
+	            }
+	        });
+	    });
+	    
+	    chatHistory.push({ role: "user", parts: parts });
 	    localStorage.setItem('chat_history', JSON.stringify(chatHistory));
 	
 	    input.value = ''; 
 	    input.style.height = 'auto'; 
+	    const currentFiles = [...pendingFiles];
+	    pendingFiles = [];
+	    renderPreviews();
 	    sendBtn.disabled = true;
 	    
 	    const a = createBubble('assistant', true); 
@@ -582,7 +664,11 @@
 	    try {
 	        const response = await fetch(PROXY_URL, {
 	            method: 'POST',
-	            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+	            headers: { 
+	                'Content-Type': 'application/json', 
+	                'apikey': SUPABASE_KEY, 
+	                'Authorization': `Bearer ${SUPABASE_KEY}` 
+	            },
 	            body: JSON.stringify({ 
 	                contents: chatHistory, 
 	                systemInstruction: { parts: [{ text: systemPrompt }] },
@@ -616,17 +702,16 @@
 	                        const json = JSON.parse(jsonStr);
 	                        const content = json.candidates?.[0]?.content?.parts?.[0]?.text;
 	                        if (content) {
-							    resTxt += content;
-							    if (a) {
-							        a.innerHTML = marked.parse(resTxt);
-							        // Trigger highlight dan icon setiap ada teks baru masuk
-							        a.querySelectorAll('pre code').forEach((block) => {
-							            hljs.highlightElement(block);
-							        });
-							        lucide.createIcons();
-							    }
-							    scrollToBottom();
-							}
+	                            resTxt += content;
+	                            if (a) {
+	                                a.innerHTML = marked.parse(resTxt);
+	                                a.querySelectorAll('pre code').forEach((block) => {
+	                                    hljs.highlightElement(block);
+	                                });
+	                                lucide.createIcons();
+	                            }
+	                            scrollToBottom();
+	                        }
 	                    } catch (e) {}
 	                    buf = buf.substring(end + 1); 
 	                    start = buf.indexOf('{');
@@ -642,6 +727,21 @@
 	    } finally { 
 	        sendBtn.disabled = false; 
 	        scrollToBottom(); 
+	    }
+	}
+	
+	function adjustInput(el) {
+	    el.style.height = 'auto'; 
+	    el.style.height = (el.scrollHeight) + 'px';
+	    const container = document.getElementById('capsule-container');
+	    if(el.scrollHeight > 48) { 
+	        container.style.borderRadius = '24px'; 
+	        container.style.alignItems = 'flex-end';
+	        el.style.marginBottom = '4px';
+	    } else { 
+	        container.style.borderRadius = '999px'; 
+	        container.style.alignItems = 'center';
+	        el.style.marginBottom = '0px';
 	    }
 	}
 
