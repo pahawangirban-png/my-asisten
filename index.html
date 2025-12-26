@@ -25,18 +25,21 @@
     
     <style>
         html, body {
-	    margin: 0;
-	    padding: 0;
-	    height: 100%;
-	    width: 100%;
-	    overflow: hidden;
-	    position: fixed; 
-	    background-color: #ffffff;
-	    font-family: 'Inter', sans-serif;
-	    -webkit-text-size-adjust: 100%;
-	    overscroll-behavior: none;
-	    touch-action: manipulation;
-	}
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed; 
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    /* Mematikan scaling teks otomatis */
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    overscroll-behavior: none;
+    /* Hanya izinkan pan/geser, matikan zoom cubit */
+    touch-action: pan-x pan-y;
+}
 	
 	#app-root {
 	    width: 100%;
@@ -71,14 +74,14 @@
 	    -webkit-overflow-scrolling: touch;
 	    background-color: #fcfcfc;
 	    overscroll-behavior-y: contain;
-	    padding: 1rem;
+	    padding: 1rem 1rem 12px 1rem; 
 	}
 	
 	footer {
 	    flex: 0 0 auto;
 	    background-color: #fcfcfc;
-	    padding: 12px 16px;
-	    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 25px);
+	    padding: 10px 16px; 
+	    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
 	    z-index: 100;
 	}
 	
@@ -310,22 +313,29 @@
 	            </div>
 	        </header>
 	
-	     <main id="chat-scroller" class="flex-1 overflow-y-auto">
-		    <div id="message-list" class="max-w-3xl mx-auto space-y-6 pb-4 pt-4 px-2"></div>
+	     <main id="chat-scroller">
+		    <div id="message-list" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
 		</main>
 		
-		<footer class="bg-[#fcfcfc] shrink-0">
-		    <div class="max-w-3xl mx-auto w-full px-2">
+		<footer style="background-color: #fcfcfc;">
+		    <div class="max-w-3xl mx-auto">
 		        <div id="file-preview-container" class="grid grid-cols-4 gap-2 mb-3"></div>
 		        
-		        <div id="capsule-container" class="input-capsule w-full">
+		        <div id="capsule-container" class="input-capsule">
 		            <input type="file" id="file-input" multiple accept="image/*,application/pdf" class="hidden" onchange="handleFileSelect(event)">
-		            <button onclick="document.getElementById('file-input').click()" class="w-11 h-11 flex items-center justify-center text-gray-500 flex-none ml-1">
-		                <i data-lucide="plus" stroke-width="2.5" class="w-6 h-6 text-gray-400"></i>
+		            
+		            <button onclick="document.getElementById('file-input').click()" class="w-11 h-11 flex items-center justify-center text-gray-500 active:scale-90 transition-transform flex-none ml-1">
+		                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7">
+		                    <path d="M16 12L12 8M12 8L8 12M12 8V16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+		                </svg>
 		            </button>
-		            <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." class="text-base font-medium" oninput="adjustInput(this)"></textarea>
-		            <button id="send-btn" onclick="onSend()" class="bg-gray-600 text-white w-11 h-11 rounded-full flex items-center justify-center flex-none shadow-md">
-		                <i data-lucide="arrow-right" stroke-width="2.5" class="w-5 h-5"></i>
+		
+		            <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." class="text-base font-medium placeholder:font-medium placeholder:text-gray-400" oninput="adjustInput(this)"></textarea>
+		
+		            <button id="send-btn" onclick="onSend()" class="text-gray-700 w-11 h-11 flex items-center justify-center flex-none active:scale-90 transition-transform">
+		                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor">
+		                    <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
+		                </svg>
 		            </button>
 		        </div>
 		    </div>
@@ -449,9 +459,9 @@
 	            bubble.querySelectorAll('pre code').forEach((block) => {
 	                hljs.highlightElement(block);
 	            });
-				lucide.createIcons();
 	        }
 	    });
+	    lucide.createIcons();
 	    scrollToBottom();
 	}
 
@@ -507,8 +517,13 @@
     });
 
     function scrollToBottom() {
-        setTimeout(() => { scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' }); }, 50);
-    }
+	    setTimeout(() => { 
+	        scroller.scrollTo({ 
+	            top: scroller.scrollHeight, 
+	            behavior: 'smooth' 
+	        }); 
+	    }, 30);
+	}
 
     function clearChat() {
         chatHistory = [];
@@ -529,7 +544,7 @@
 	    const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 	
 	    const div = document.createElement('div');
-	    div.className = "w-full animate-in fade-in duration-300 mb-6";
+	    div.className = "w-full animate-in fade-in duration-300 mb-4";
 	    
 	    div.innerHTML = `
 	        <div class="w-full bg-gray-100 rounded-2xl px-5 py-4 text-slate-800">
@@ -601,21 +616,30 @@
 	    
 	    pendingFiles.forEach((file, index) => {
 	        const isImage = file.type.startsWith('image/');
-	        const visual = isImage 
-	            ? `<img src="data:${file.mime};base64,${file.base64}" class="w-11 h-11 object-cover rounded-lg shadow-sm">`
-	            : `<div class="w-11 h-11 bg-white/60 rounded-xl flex items-center justify-center text-gray-500 shadow-sm"><i data-lucide="file-text" class="w-6 h-6"></i></div>`;
+	        
+	        let visual;
+	        if (isImage) {
+	            visual = `<img src="data:${file.mime};base64,${file.base64}" class="w-10 h-10 object-cover rounded-lg shadow-sm">`;
+	        } else {
+	            visual = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-10 h-10 drop-shadow-sm">
+	                        <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#DC2626"/>
+	                        <path d="M14 2L20 8H14V2Z" fill="#FCA5A5"/> 
+	                        <text x="12" y="16.5" text-anchor="middle" fill="white" font-size="6.5" font-weight="900" font-family="sans-serif" letter-spacing="-0.5px">PDF</text>
+	                      </svg>`;
+	        }
 	        
 	        const card = document.createElement('div');
-	        
-	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center relative fade-in w-full min-h-[60px] border-none";
+	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center relative fade-in w-full min-h-[64px] border-none";
 	        card.innerHTML = `
 	            <div class="shrink-0 mr-3">${visual}</div>
-	            <div class="overflow-hidden flex-1 leading-tight">
-	                <p class="text-[11px] font-bold text-gray-700 truncate uppercase tracking-tight">${file.name}</p>
-	                <p class="text-[9px] text-gray-400 font-medium">${file.size}</p>
+	            
+	            <div class="overflow-hidden flex-1 flex flex-col justify-center min-h-[40px] leading-snug">
+	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase tracking-tight">${file.name}</p>
+	                <p class="text-[11px] text-gray-400 font-medium">${file.size}</p>
 	            </div>
+	            
 	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none">
-	                <svg fill="#000000" viewBox="0 0 24 24" class="w-full h-full" version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg">
+	                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full" version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg">
 	                    <g><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></g>
 	                </svg>
 	            </button>`;
@@ -627,41 +651,67 @@
 	async function onSend(e) {
 	    if (e) e.preventDefault();
 	    const val = input.value.trim();
-	    
 	    if ((!val && pendingFiles.length === 0) || sendBtn.disabled) return;
-	    
-	    input.blur(); 
-	    const u = createBubble('user', false); 
-	    
-	    if (u) u.textContent = val || `${pendingFiles.length} file terlampir`;
-	    
-	    const parts = [];
-	    if (val) parts.push({ text: val });
-	    
-	    pendingFiles.forEach(f => {
-	        parts.push({
-	            inline_data: {
-	                mime_type: f.mime,
-	                data: f.base64
-	            }
-	        });
-	    });
-	    
-	    chatHistory.push({ role: "user", parts: parts });
-	    localStorage.setItem('chat_history', JSON.stringify(chatHistory));
 	
-	    input.value = ''; 
-	    input.style.height = 'auto'; 
-	    const currentFiles = [...pendingFiles];
+	    const filesToSend = [...pendingFiles];
+	    let filesHtml = '';
+	    let storageHtml = '';
+	
+	    if (filesToSend.length > 0) {
+	        const gridClass = 'grid grid-cols-4 gap-2 mb-3';
+	        filesHtml = `<div class="${gridClass}">`;
+	        storageHtml = `<div class="${gridClass}">`;
+	        
+	        filesToSend.forEach(file => {
+	            const isImage = file.type.startsWith('image/');
+	            const iconPdf = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-10 h-10 drop-shadow-sm"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#DC2626"/><path d="M14 2L20 8H14V2Z" fill="#FCA5A5"/><text x="12" y="16.5" text-anchor="middle" fill="white" font-size="6.5" font-weight="900" font-family="sans-serif" letter-spacing="-0.5px">PDF</text></svg>`;
+	            const iconImg = `<div class="w-10 h-10 bg-gray-300 rounded-lg flex items-center justify-center text-gray-400"><i data-lucide="image" class="w-6 h-6"></i></div>`;
+	            
+	            const visualFull = isImage ? `<img src="data:${file.mime};base64,${file.base64}" class="w-10 h-10 object-cover rounded-lg shadow-sm">` : iconPdf;
+	            const visualSaved = isImage ? iconImg : iconPdf;
+	
+	            const card = (v) => `
+	                <div class="bg-gray-200 rounded-2xl p-3 flex items-center relative w-full min-h-[64px] border-none shadow-sm fade-in">
+	                    <div class="shrink-0 mr-3">${v}</div>
+	                    <div class="overflow-hidden flex-1 flex flex-col justify-center min-h-[40px] leading-snug">
+	                        <p class="text-[13px] font-bold text-gray-700 truncate uppercase tracking-tight">${file.name}</p>
+	                        <p class="text-[11px] text-gray-400 font-medium">${file.size}</p>
+	                    </div>
+	                </div>`;
+	
+	            filesHtml += card(visualFull);
+	            storageHtml += card(visualSaved);
+	        });
+	        filesHtml += '</div>';
+	        storageHtml += '</div>';
+	    }
+	
+	    input.blur();
+	    const u = createBubble('user', false);
+	    u.innerHTML = filesHtml + (val ? marked.parse(val) : '');
+	
+	    chatHistory.push({ role: "user", parts: [{ text: storageHtml + (val ? val : "") }] });
+	
+	    input.value = '';
+	    input.style.height = 'auto';
 	    pendingFiles = [];
 	    renderPreviews();
 	    sendBtn.disabled = true;
-	    
-	    const a = createBubble('assistant', true); 
+	
+	    try { localStorage.setItem('chat_history', JSON.stringify(chatHistory)); } catch (e) {}
+	
+	    const a = createBubble('assistant', true);
 	    let resTxt = "";
 	    const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy?model=${currentModel}`;
 	
 	    try {
+	        const payloadContents = JSON.parse(JSON.stringify(chatHistory));
+	        const currentParts = [{ text: val || "Analisis lampiran ini." }];
+	        filesToSend.forEach(f => {
+	            currentParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
+	        });
+	        payloadContents[payloadContents.length - 1].parts = currentParts;
+	
 	        const response = await fetch(PROXY_URL, {
 	            method: 'POST',
 	            headers: { 
@@ -670,18 +720,18 @@
 	                'Authorization': `Bearer ${SUPABASE_KEY}` 
 	            },
 	            body: JSON.stringify({ 
-	                contents: chatHistory, 
+	                contents: payloadContents, 
 	                systemInstruction: { parts: [{ text: systemPrompt }] },
 	                tools: [{ google_search: {} }] 
 	            })
 	        });
-	        
-	        if (!response.body) throw new Error("Gagal membaca respons.");
+	
+	        if (!response.body) throw new Error("Gagal.");
 	        const reader = response.body.getReader();
 	        const decoder = new TextDecoder();
 	        if (a) a.innerHTML = ""; 
 	        let buf = "";
-	        
+	
 	        while (true) {
 	            const { value, done } = await reader.read();
 	            if (done) break;
@@ -691,30 +741,23 @@
 	                let depth = 0, end = -1;
 	                for (let i = start; i < buf.length; i++) {
 	                    if (buf[i] === '{') depth++;
-	                    else if (buf[i] === '}') { 
-	                        depth--; 
-	                        if (depth === 0) { end = i; break; } 
-	                    }
+	                    else if (buf[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
 	                }
 	                if (end !== -1) {
 	                    try {
-	                        const jsonStr = buf.substring(start, end + 1);
-	                        const json = JSON.parse(jsonStr);
+	                        const json = JSON.parse(buf.substring(start, end + 1));
 	                        const content = json.candidates?.[0]?.content?.parts?.[0]?.text;
 	                        if (content) {
 	                            resTxt += content;
 	                            if (a) {
 	                                a.innerHTML = marked.parse(resTxt);
-	                                a.querySelectorAll('pre code').forEach((block) => {
-	                                    hljs.highlightElement(block);
-	                                });
+	                                a.querySelectorAll('pre code').forEach((b) => hljs.highlightElement(b));
 	                                lucide.createIcons();
 	                            }
 	                            scrollToBottom();
 	                        }
 	                    } catch (e) {}
-	                    buf = buf.substring(end + 1); 
-	                    start = buf.indexOf('{');
+	                    buf = buf.substring(end + 1); start = buf.indexOf('{');
 	                } else break;
 	            }
 	        }
@@ -722,12 +765,9 @@
 	            chatHistory.push({ role: "model", parts: [{ text: resTxt }] });
 	            localStorage.setItem('chat_history', JSON.stringify(chatHistory));
 	        }
-	    } catch (err) { 
+	    } catch (err) {
 	        if (a) a.innerHTML = `<span class="text-red-500 text-xs">Galat: ${err.message}</span>`;
-	    } finally { 
-	        sendBtn.disabled = false; 
-	        scrollToBottom(); 
-	    }
+	    } finally { sendBtn.disabled = false; scrollToBottom(); }
 	}
 	
 	function adjustInput(el) {
@@ -760,6 +800,61 @@
     
     initUI();
     checkSession();
+	
+	// Hard Lock untuk mencegah overscroll/bounce
+scroller.addEventListener('scroll', () => {
+    const top = scroller.scrollTop;
+    const totalScroll = scroller.scrollHeight;
+    const currentScroll = top + scroller.offsetHeight;
+
+    // Jika menyentuh paling atas, kunci di 1px agar tidak bounce
+    if (top === 0) {
+        scroller.scrollTop = 1;
+    } 
+    // Jika menyentuh paling bawah, kunci di 1px sebelum batas
+    else if (currentScroll === totalScroll) {
+        scroller.scrollTop = top - 1;
+    }
+});
+
+// Pencegahan tarikan pada level sentuhan (Touch Move)
+scroller.addEventListener('touchstart', () => {
+    const top = scroller.scrollTop;
+    const totalScroll = scroller.scrollHeight;
+    const currentScroll = top + scroller.offsetHeight;
+
+    if (top === 0) {
+        scroller.scrollTop = 1;
+    } else if (currentScroll === totalScroll) {
+        scroller.scrollTop = top - 1;
+    }
+});
+
+// 1. Matikan Pinch-to-Zoom (Multi-touch)
+document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// 2. Matikan Gesture Zoom khusus Safari
+document.addEventListener('gesturestart', (e) => {
+    e.preventDefault();
+});
+
+// 3. Matikan Zoom via Keyboard (Ctrl + / Ctrl -)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+    }
+});
+
+// 4. Matikan Zoom via Mouse Wheel + Ctrl
+document.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+        e.preventDefault();
+    }
+}, { passive: false });
 </script>
 </body>
 </html>
