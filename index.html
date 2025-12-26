@@ -20,6 +20,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/a11y-light.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     
     <style>
         html, body {
@@ -135,50 +137,102 @@
 	    border-collapse: collapse; 
 	    margin: 1rem 0; 
 	    font-size: 0.9em; 
-	    display: table !important; 
+	    display: block !important;
+	    overflow-x: auto !important;
+	    background-color: transparent !important;
 	}
 	
-	.prose th, .prose td { 
+	.prose thead:has(th:empty), 
+	.prose thead tr:first-child:empty {
+	    display: none !important;
+	}
+	
+	.prose th { 
+	    background-color: #f9fafb !important;
+	    font-weight: 600; 
 	    border: 1px solid #e2e8f0; 
 	    padding: 8px 12px; 
 	    text-align: left; 
 	}
 	
-	.prose th { 
-	    background-color: #f8fafc; 
-	    font-weight: 600; 
+	.prose th:empty, .prose thead:empty {
+	    display: none !important;
 	}
 	
-	.prose tr:nth-child(even) { 
-	    background-color: #f9fafb; 
+	.prose td { 
+	    border: 1px solid #e2e8f0; 
+	    padding: 8px 12px; 
+	    text-align: left; 
+	    background-color: transparent !important;
+	}
+	
+	.prose tr, .prose tr:nth-child(even) { 
+	    background-color: transparent !important; 
+	}
+	
+	.code-container {
+	    margin: 1.5rem 0;
+	    border: none !important;
+	    border-radius: 0.75rem;
+	    overflow: hidden;
+	    background-color: #ffffff;
+	}
+	
+	.code-header {
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	    padding: 0.5rem 1rem;
+	    background-color: #f9fafb;
+	    border-bottom: 4px solid #f3f4f6 !important;
+	}
+	
+	.code-header span {
+	    font-size: 12px !important;
+	    font-weight: 700;
+	    color: #94a3b8;
+	    text-transform: uppercase;
+	    letter-spacing: 0.05em;
+	}
+	
+	.code-header button {
+	    background: none !important;
+	    border: none !important;
+	    padding: 0 !important;
+	    cursor: pointer;
+	    display: flex;
+	    align-items: center;
+	    justify-content: center;
 	}
 	
 	.prose pre {
-	    background-color: #1e293b !important;
-	    color: #e2e8f0 !important;
-	    padding: 1.25rem !important;
-	    border-radius: 0.75rem !important;
-	    overflow-x: auto !important;
-	    margin: 1rem 0 !important;
-	    font-family: 'Consolas', 'Monaco', monospace !important;
-	    line-height: 1.6 !important;
-	    position: relative;
-	}
-	
-	.prose :not(pre) > code {
-	    background-color: #f1f5f9 !important;
-	    color: #e11d48 !important;
-	    padding: 0.2rem 0.4rem !important;
-	    border-radius: 0.4rem !important;
-	    font-size: 0.9em !important;
-	    font-weight: 600 !important;
+	    background-color: #f8fafc !important;
+	    padding: 0 !important;
+	    margin: 0 !important;
+	    border: none !important;
 	}
 	
 	.prose pre code {
 	    background-color: transparent !important;
-	    padding: 0 !important;
+	    display: block !important;
+	    padding: 1.2rem !important;
+	    font-size: 0.9em !important;
+	    color: unset !important;
+	    font-family: 'Consolas', 'Monaco', monospace !important;
+	}
+	
+	.prose :not(pre) > code {
+	    background-color: #e5e7eb !important;
+	    color: #1f2937 !important;
+	    padding: 0.2rem 0.4rem !important;
+	    border-radius: 0.4rem !important;
+	    font-size: 0.9em !important;
+	    font-weight: 400 !important;
+	}
+	
+	.hljs {
+	    background: transparent !important;
 	    color: inherit !important;
-	    font-size: 0.85em !important;
 	}
 	
 	.fade-in { 
@@ -191,8 +245,8 @@
 	}
 	
 	.typing-dot {
-	    width: 4px;
-	    height: 4px;
+	    width: 6px;
+	    height: 6px;
 	    background: #6366f1;
 	    border-radius: 50%;
 	    animation: blink 1.4s infinite both;
@@ -280,7 +334,7 @@
 	                            this.style.marginBottom = '0px';
 	                        }
 	                    " onblur="window.scrollTo(0,0)"></textarea>
-	                    <button id="send-btn" onpointerdown="onSend(event)" class="bg-gray-600 text-white w-11 h-11 rounded-full flex items-center justify-center flex-none active:scale-90 transition-transform shadow-md">
+	                    <button id="send-btn" onpointerdown="onSend(event)" class="bg-gray-500 text-white w-11 h-11 rounded-full flex items-center justify-center flex-none active:scale-90 transition-transform shadow-md">
 	                        <i data-lucide="arrow-right" stroke-width="2.5" class="w-5 h-5"></i>
 	                    </button>
 	                </div>
@@ -344,6 +398,47 @@
     let currentModel = localStorage.getItem('ai_model') || 'gemini-3-flash';
     let systemPrompt = localStorage.getItem('system_prompt') || 'Anda adalah asisten AI yang cerdas menggunakan model Gemini 3.';
     let chatHistory = JSON.parse(localStorage.getItem('chat_history')) || [];
+	
+	function escapeHTML(str) {
+	    const p = document.createElement('p');
+	    p.textContent = str;
+	    return p.innerHTML;
+	}
+	
+	const renderer = new marked.Renderer();
+	renderer.code = function(token) {
+	    const code = token.text || "";
+	    const language = token.lang || 'plaintext';
+	    
+	    return `
+	        <div class="code-container">
+	            <div class="code-header">
+	                <span>${language}</span>
+	                <button onclick="copyToClipboard(this)">
+	                    <i data-lucide="copy" class="w-[14px] h-[14px] text-gray-400"></i>
+	                </button>
+	            </div>
+	            <pre><code class="hljs language-${language}">${escapeHTML(code)}</code></pre>
+	        </div>
+	    `;
+	};
+	marked.setOptions({ renderer: renderer, langPrefix: 'hljs language-' });
+	
+	async function copyToClipboard(btn) {
+	    const container = btn.closest('.code-container');
+	    const text = container.querySelector('code').innerText;
+	    try {
+	        await navigator.clipboard.writeText(text);
+	        btn.innerHTML = '<i data-lucide="check" class="w-[14px] h-[14px] text-green-500"></i>';
+	        lucide.createIcons();
+	        setTimeout(() => {
+	            btn.innerHTML = '<i data-lucide="copy" class="w-[14px] h-[14px] text-gray-400"></i>';
+	            lucide.createIcons();
+	        }, 2000);
+	    } catch (err) {
+	        console.error('Gagal menyalin:', err);
+	    }
+	}
 
     function initUI() {
         settingsModel.value = currentModel;
@@ -352,15 +447,23 @@
         loadSavedChat();
     }
 
-    function loadSavedChat() {
-        messageList.innerHTML = '';
-        chatHistory.forEach(msg => {
-            const role = msg.role === 'model' ? 'assistant' : 'user';
-            const bubble = createBubble(role, false);
-            bubble.innerHTML = marked.parse(msg.parts[0].text);
-        });
-        scrollToBottom();
-    }
+	function loadSavedChat() {
+	    messageList.innerHTML = '';
+	    chatHistory.forEach(msg => {
+	        const role = msg.role === 'model' ? 'assistant' : 'user';
+	        const bubble = createBubble(role, false);
+	        
+	        if (msg.parts && msg.parts[0] && msg.parts[0].text) {
+	            bubble.innerHTML = marked.parse(msg.parts[0].text);
+	            
+	            bubble.querySelectorAll('pre code').forEach((block) => {
+	                hljs.highlightElement(block);
+	            });
+				lucide.createIcons();
+	        }
+	    });
+	    scrollToBottom();
+	}
 
     async function checkSession() {
         try {
@@ -441,8 +544,8 @@
 	    div.innerHTML = `
 	        <div class="w-full bg-gray-100 rounded-2xl px-5 py-4 text-slate-800">
 	            <div class="flex justify-between items-center pb-2 mb-3 border-b border-gray-200">
-	                <span class="text-[10px] font-bold uppercase tracking-widest text-gray-500">${roleName}</span>
-	                <span class="text-[10px] font-medium text-gray-400">${timeStr}</span>
+	                <span class="text-[11px] font-bold uppercase tracking-widest text-gray-500">${roleName}</span>
+	                <span class="text-[11px] font-medium text-gray-400">${timeStr}</span>
 	            </div>
 	            <div class="prose prose-sm max-w-none msg-content text-base leading-relaxed font-medium">
 	                ${isAI && showTyping ? '<div class="flex gap-1 py-1.5"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>' : ''}
@@ -456,7 +559,7 @@
 	    return div.querySelector('.msg-content');
 	}
 
-    async function onSend(e) {
+	async function onSend(e) {
 	    if (e) e.preventDefault();
 	    const val = input.value.trim();
 	    if (!val || sendBtn.disabled) return;
@@ -474,7 +577,7 @@
 	    
 	    const a = createBubble('assistant', true); 
 	    let resTxt = "";
-	    const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy?model=gemini-2.5-flash-preview-09-2025`;
+	    const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy?model=${currentModel}`;
 	
 	    try {
 	        const response = await fetch(PROXY_URL, {
@@ -511,13 +614,19 @@
 	                    try {
 	                        const jsonStr = buf.substring(start, end + 1);
 	                        const json = JSON.parse(jsonStr);
-	                        // Perbaikan: Mendefinisikan variabel content dari JSON
 	                        const content = json.candidates?.[0]?.content?.parts?.[0]?.text;
 	                        if (content) {
-	                            resTxt += content;
-	                            if (a) a.innerHTML = marked.parse(resTxt);
-	                            scrollToBottom();
-	                        }
+							    resTxt += content;
+							    if (a) {
+							        a.innerHTML = marked.parse(resTxt);
+							        // Trigger highlight dan icon setiap ada teks baru masuk
+							        a.querySelectorAll('pre code').forEach((block) => {
+							            hljs.highlightElement(block);
+							        });
+							        lucide.createIcons();
+							    }
+							    scrollToBottom();
+							}
 	                    } catch (e) {}
 	                    buf = buf.substring(end + 1); 
 	                    start = buf.indexOf('{');
