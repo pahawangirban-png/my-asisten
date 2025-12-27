@@ -297,15 +297,15 @@
 	    </div>
 	
 	    <div id="chat-view" class="view-container">
-	        <header class="h-14 px-4 flex justify-end items-center bg-white shrink-0 border-b border-gray-100">
+	        <header class="h-16 px-6 flex justify-end items-center bg-white shrink-0 border-b border-gray-100">
     <div class="flex items-center gap-1"> 
-        <button onclick="clearChat()" class="p-2 text-gray-500 active:scale-90 transition-transform">
+        <button onclick="clearChat()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
             <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
         </button>
-        <button onclick="showView('settings')" class="p-2 text-gray-500 active:scale-90 transition-transform">
+        <button onclick="showView('settings')" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
             <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
         </button>
-        <button onclick="handleLogout()" class="p-2 text-gray-500 active:scale-90 transition-transform">
+        <button onclick="handleLogout()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
             <i data-lucide="log-out" stroke-width="2.5" class="w-5 h-5"></i>
         </button>
     </div>
@@ -341,11 +341,11 @@
 	    </div>
 	
 	    <div id="settings-view" class="view-container bg-white">
-    <header class="h-14 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
-    <button onclick="showView('chat')" class="p-2 -ml-2 text-gray-500 active:scale-90 transition-transform">
+    <header class="h-16 px-6 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
+    <button onclick="showView('chat')" class="p-2.5 -ml-3 text-gray-500 active:scale-90 transition-transform">
         <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
     </button>
-    <button onclick="saveSettings()" class="bg-gray-800 text-gray-50 font-bold px-5 py-1.5 rounded-xl text-xs tracking-tighter active:scale-95 transition-all">
+    <button onclick="saveSettings()" class="bg-gray-800 text-gray-50 font-bold px-6 py-2 rounded-xl text-sm tracking-tighter active:scale-95 transition-all">
         SIMPAN
     </button>
 </header>
