@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	
     <title>ASISTEN AI - GEMINI 3</title>
     
@@ -24,22 +24,20 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     
     <style>
-        html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    position: fixed; 
-    background-color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    /* Mematikan scaling teks otomatis */
-    -webkit-text-size-adjust: none;
-    text-size-adjust: none;
-    overscroll-behavior: none;
-    /* Hanya izinkan pan/geser, matikan zoom cubit */
-    touch-action: pan-x pan-y;
-}
+     html, body {
+	    margin: 0;
+	    padding: 0;
+	    height: 100%;
+	    width: 100%;
+	    overflow: hidden;
+	    position: fixed; 
+	    background-color: #ffffff;
+	    font-family: 'Inter', sans-serif;
+	    -webkit-text-size-adjust: none;
+	    text-size-adjust: none;
+	    overscroll-behavior: none;
+	    touch-action: pan-x pan-y;
+	}
 	
 	#app-root {
 	    width: 100%;
@@ -61,14 +59,12 @@
 	}
 	
 	header {
-    flex: 0 0 auto;
-    background: white;
-    border-bottom: 1px solid #f1f5f9;
-    /* Gunakan padding untuk safe area tanpa menambah tinggi total secara berlebihan */
-    padding-top: env(safe-area-inset-top, 0px);
-    z-index: 100;
-    box-sizing: content-box; /* Memastikan h-14 dihitung di luar padding safe area */
-}
+	    flex: 0 0 auto;
+	    background: white;
+	    border-bottom: 1px solid #f1f5f9;
+	    padding-top: env(safe-area-inset-top, 0px);
+	    z-index: 100;
+	}
 	
 	main {
 	    flex: 1 1 auto;
@@ -301,7 +297,7 @@
 	    </div>
 	
 	    <div id="chat-view" class="view-container">
-	        <header class="flex justify-end items-center bg-white shrink-0 border-b border-gray-100 px-4 h-14 md:h-16">
+	        <header class="h-14 px-4 flex justify-end items-center bg-white shrink-0 border-b border-gray-100">
     <div class="flex items-center gap-1"> 
         <button onclick="clearChat()" class="p-2 text-gray-500 active:scale-90 transition-transform">
             <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
@@ -345,14 +341,14 @@
 	    </div>
 	
 	    <div id="settings-view" class="view-container bg-white">
-    <header class="h-20 px-6 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
-        <button onclick="showView('chat')" class="p-2.5 -ml-3 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-        <button onclick="saveSettings()" class="bg-gray-800 text-gray-50 font-bold px-6 py-2 rounded-xl text-sm tracking-tighter active:scale-95 transition-all">
-            SIMPAN
-        </button>
-    </header>
+    <header class="h-14 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
+    <button onclick="showView('chat')" class="p-2 -ml-2 text-gray-500 active:scale-90 transition-transform">
+        <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
+    </button>
+    <button onclick="saveSettings()" class="bg-gray-800 text-gray-50 font-bold px-5 py-1.5 rounded-xl text-xs tracking-tighter active:scale-95 transition-all">
+        SIMPAN
+    </button>
+</header>
 
     <main id="settings-scroller" class="flex-1 overflow-y-auto bg-white">
         <div class="max-w-3xl mx-auto w-full px-4 pt-0 pb-4">
