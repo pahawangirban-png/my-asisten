@@ -23,6 +23,10 @@
 	<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+	<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <style>
      html, body {
@@ -280,47 +284,59 @@
 <body>
 	    <div id="app-root">
 	    <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
-	        <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
-	            <div class="text-center mb-10">
-	                <div class="flex items-center justify-center text-indigo-600 mx-auto mb-2">
-	                    <i data-lucide="lock" class="w-12 h-12"></i>
-	                </div>
-	            </div>
-	            <form id="auth-form" class="space-y-5">
-	                <div class="relative flex items-center">
-	                    <div class="absolute left-5 text-slate-400">
-	                        <i data-lucide="mail" class="w-4 h-4"></i>
-	                    </div>
-	                    <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all" placeholder="Email">
-	                </div>
-	                <div class="relative flex items-center">
-	                    <div class="absolute left-5 text-slate-400">
-	                        <i data-lucide="key-round" class="w-4 h-4"></i>
-	                    </div>
-	                    <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm focus:ring-2 focus:ring-indigo-500/10 outline-none transition-all" placeholder="Kata Sandi">
-	                </div>
-	                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase">
-	                    MASUK
-	                </button>
-	            </form>
-	            <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
-	        </div>
-	    </div>
+    <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center mx-auto mb-2">
+                <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
+            </div>
+        </div>
+
+        <form id="auth-form" class="space-y-5">
+            <div class="relative flex items-center">
+                <div class="absolute left-5 text-slate-400">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                </div>
+                <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" 
+                    class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-200 transition-all" 
+                    placeholder="Email">
+            </div>
+            
+            <div class="relative flex items-center">
+                <div class="absolute left-5 text-slate-400">
+                    <i data-lucide="key-round" class="w-4 h-4"></i>
+                </div>
+                <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" 
+                    class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-200 transition-all" 
+                    placeholder="Kata Sandi">
+            </div>
+            
+            <button type="submit" 
+                class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none">
+                MASUK
+            </button>
+        </form>
+        <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
+    </div>
+</div>
 	
 	    <div id="chat-view" class="view-container">
-	        <header class="h-16 px-6 flex justify-end items-center bg-white shrink-0 border-b border-gray-100">
-    <div class="flex items-center gap-1"> 
-        <button onclick="clearChat()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-        <button onclick="showView('settings')" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-        <button onclick="handleLogout()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="log-out" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-    </div>
-</header>
+	        <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 overflow-hidden">
+			    <div class="h-16 flex items-center py-0">
+			        <img src="icon/icon.png" alt="Logo" class="h-full w-auto object-contain block py-0">
+			    </div>
+			
+			    <div class="flex items-center gap-1"> 
+			        <button onclick="clearChat()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
+			            <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
+			        </button>
+			        <button onclick="showView('settings')" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
+			            <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
+			        </button>
+			        <button onclick="handleLogout()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
+			            <i data-lucide="log-out" stroke-width="2.5" class="w-5 h-5"></i>
+			        </button>
+			    </div>
+			</header>
 	
 	     <main id="chat-scroller">
 		    <div id="message-list" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
@@ -331,13 +347,15 @@
 		        <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3"></div>
 		        
 		        <div id="capsule-container" class="input-capsule">
-		            <input type="file" id="file-input" multiple accept="image/*,application/pdf" class="hidden" onchange="handleFileSelect(event)">
-		            
-		            <button onclick="document.getElementById('file-input').click()" class="w-11 h-11 flex items-center justify-center text-gray-300 active:scale-90 transition-transform flex-none ml-1">
-		                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7">
-		                    <path d="M16 12L12 8M12 8L8 12M12 8V16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-		                </svg>
-		            </button>
+				    <input type="file" id="file-input" multiple 
+				       accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx" 
+				       class="hidden" onchange="handleFileSelect(event)">
+    
+				    <button onclick="document.getElementById('file-input').click()" class="w-11 h-11 flex items-center justify-center text-gray-300 active:scale-90 transition-transform flex-none ml-1">
+				        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7">
+				            <path d="M16 12L12 8M12 8L8 12M12 8V16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+				        </svg>
+				    </button>
 		
 		            <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." class="text-base font-medium placeholder:font-medium placeholder:text-gray-400" oninput="adjustInput(this)"></textarea>
 		
@@ -349,7 +367,7 @@
 		        </div>
 		    </div>
 		</footer>
-	    </div>
+	</div>
 	
 	<div id="settings-view" class="view-container bg-white">
 	    <header class="h-16 px-6 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
@@ -363,28 +381,28 @@
 	            <div class="w-full bg-gray-100 rounded-2xl px-8 py-7 space-y-6 fade-in">
 	                
 	                <div class="space-y-2 pb-4 border-b border-gray-200">
-	                    <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
-	                    <div class="relative" id="custom-dropdown">
-	                        <button type="button" id="dropdown-trigger" class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
-	                            <span id="selected-model-text">Gemini 3 Flash</span>
-	                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
-	                        </button>
-	                        
-	                        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
-	                            <div class="flex flex-col">
-	                                <div class="dropdown-option py-2 px-4 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
-	                                    <span class="text-sm font-bold text-gray-800">Gemini 3 Flash</span>
-	                                </div>
-	                                <div class="dropdown-option py-2 px-4 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-pro-preview">
-	                                    <span class="text-sm font-bold text-gray-800">Gemini 3 Pro</span>
-	                                </div>
-	                                <div class="dropdown-option py-2 px-4 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
-	                                    <span class="text-sm font-bold text-gray-800">Gemini 3 Deep Think</span>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
+					    <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
+					    <div class="relative w-full" id="custom-dropdown">
+					        <button type="button" id="dropdown-trigger" class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+					            <span id="selected-model-text">Gemini 3 Flash</span>
+					            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
+					        </button>
+					        
+					        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
+					            <div class="flex flex-col">
+					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
+					                    <span class="text-sm font-bold text-gray-800">Gemini 3 Flash</span>
+					                </div>
+					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-pro-preview">
+					                    <span class="text-sm font-bold text-gray-800">Gemini 3 Pro</span>
+					                </div>
+					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
+					                    <span class="text-sm font-bold text-gray-800">Gemini 3 Deep Think</span>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+					</div>
 	                
 	                <div class="space-y-2 pb-4 border-b border-gray-200">
 	                    <div class="flex justify-between items-center ml-1">
@@ -608,31 +626,28 @@
 
 	async function loadSavedChat() {
 	    messageList.innerHTML = '';
-	    const iconPdf = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-10 h-10 drop-shadow-sm"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#DC2626"/><path d="M14 2L20 8H14V2Z" fill="#FCA5A5"/><text x="12" y="16.5" text-anchor="middle" fill="white" font-size="6.5" font-weight="900" font-family="sans-serif" letter-spacing="-0.5px">PDF</text></svg>`;
-	
 	    for (const msg of chatHistory) {
 	        const role = msg.role === 'model' ? 'assistant' : 'user';
 	        const bubble = createBubble(role, false);
-	        
 	        if (msg.parts && msg.parts[0] && msg.parts[0].text) {
 	            bubble.innerHTML = marked.parse(msg.parts[0].text);
-	            
 	            const placeholders = bubble.querySelectorAll('.file-placeholder');
-	            for (const ph of placeholders) {
-	                const fileId = ph.getAttribute('data-file-id');
-	                const fileData = await getFromLocal(fileId);
-	                if (fileData) {
-	                    if (fileData.mime.startsWith('image/')) {
-	                        ph.innerHTML = `<img src="data:${fileData.mime};base64,${fileData.base64}" class="w-10 h-10 object-cover rounded-lg shadow-sm">`;
-	                    } else {
-	                        ph.innerHTML = iconPdf;
-	                    }
-	                }
-	            }
-	            
-	            bubble.querySelectorAll('pre code').forEach((block) => {
-	                hljs.highlightElement(block);
-	            });
+	            // Ganti loop file-placeholder di dalam fungsi loadSavedChat
+for (const ph of placeholders) {
+    const fileId = ph.getAttribute('data-file-id');
+    const fileData = await getFromLocal(fileId);
+    if (fileData) {
+        ph.classList.remove('file-placeholder'); 
+        
+        if (fileData.mime.startsWith('image/')) {
+            ph.innerHTML = `<img src="data:${fileData.mime};base64,${fileData.base64}" class="w-full h-full object-cover rounded-lg">`;
+        } else {
+            const extension = fileData.name.split('.').pop().toLowerCase();
+            ph.innerHTML = getFileIcon(extension);
+        }
+    }
+}
+	            bubble.querySelectorAll('pre code').forEach((b) => hljs.highlightElement(b));
 	        }
 	    }
 	    lucide.createIcons();
@@ -687,7 +702,7 @@
 	            top: scroller.scrollHeight, 
 	            behavior: 'smooth' 
 	        }); 
-	    }, 20);
+	    }, 50);
 	}
 
     async function clearChat() {
@@ -705,7 +720,7 @@
 	    window.scrollTo(0, 0);
 	}
 
-	    function createBubble(role, showTyping = true) {
+	function createBubble(role, showTyping = true) {
 	    const isAI = role === 'assistant';
 	    const roleName = isAI ? '<span class="ai-gradient">AI ASISTEN</span>' : 'USER';
 	    const now = new Date();
@@ -749,15 +764,15 @@
 	        alert("Maksimal 4 file dalam satu pengiriman.");
 	        return;
 	    }
-	
-	    for (const file of files) {
+		    for (const file of files) {
 	        const base64 = await convertToBase64(file);
 	        pendingFiles.push({
 	            name: file.name,
 	            size: formatBytes(file.size),
 	            type: file.type,
 	            base64: base64.split(',')[1],
-	            mime: file.type
+	            mime: file.type,
+	            rawFile: file
 	        });
 	    }
 	    renderPreviews();
@@ -781,39 +796,70 @@
 	function renderPreviews() {
 	    const container = document.getElementById('file-preview-container');
 	    container.innerHTML = '';
-	    
 	    pendingFiles.forEach((file, index) => {
-	        const isImage = file.type.startsWith('image/');
-	        
-	        let visual;
-	        if (isImage) {
-	            visual = `<img src="data:${file.mime};base64,${file.base64}" class="w-9 h-9 object-cover rounded-lg shadow-sm">`;
-	        } else {
-	            visual = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-9 h-9 drop-shadow-sm">
-	                        <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#DC2626"/>
-	                        <path d="M14 2L20 8H14V2Z" fill="#FCA5A5"/> 
-	                        <text x="12" y="16.5" text-anchor="middle" fill="white" font-size="6.5" font-weight="900" font-family="sans-serif" letter-spacing="-0.5px">PDF</text>
-	                      </svg>`;
-	        }
+	        const ext = file.name.split('.').pop().toLowerCase();
+	        const visual = file.type.startsWith('image/') 
+	            ? `<img src="data:${file.mime};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
+	            : getFileIcon(ext);
 	        
 	        const card = document.createElement('div');
-	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center relative fade-in w-full min-h-[64px] border-none";
+	        // gap-2 horizontal rapat, p-3 seimbang, items-center untuk centering vertikal
+	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
 	        card.innerHTML = `
-	            <div class="shrink-0 mr-3">${visual}</div>
-	            
-	            <div class="overflow-hidden flex-1 flex flex-col justify-center min-h-[40px] leading-snug">
-	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase tracking-tight">${file.name}</p>
-	                <p class="text-[11px] text-gray-400 font-medium">${file.size}</p>
+	            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
+	                ${visual}
 	            </div>
-	            
-	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none">
-	                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full" version="1.2" baseProfile="tiny" xmlns="http://www.w3.org/2000/svg">
-	                    <g><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></g>
-	                </svg>
+	            <div class="flex-1 flex flex-col justify-center min-w-0">
+	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-tight m-0 p-0">${file.name}</p>
+	                <p class="text-[11px] text-gray-400 font-medium leading-tight m-0 p-0">${file.size}</p>
+	            </div>
+	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
+	                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
 	            </button>`;
 	        container.appendChild(card);
 	    });
-	    lucide.createIcons();
+	}
+	
+	function getFileIcon(extension) {
+	    const icons = {
+	        'pdf': 'pdf-file-icon.svg',
+	        'docx': 'docx-file-icon.svg',
+	        'xlsx': 'excel-file-icon.svg',
+	        'xls': 'excel-file-icon.svg',
+	        'pptx': 'ppt-file-icon.svg'
+	    };
+	    const iconFile = icons[extension] || 'default-file-icon.svg'; 
+	    return `<img src="icon/${iconFile}" class="w-7 h-7 object-contain">`;
+	}
+
+	async function extractTextFromOffice(file) {
+	    const ext = file.name.split('.').pop().toLowerCase();
+	    try {
+	        if (ext === 'docx') {
+	            const ab = await file.rawFile.arrayBuffer();
+	            const res = await mammoth.extractRawText({ arrayBuffer: ab });
+	            return `\n[FILE WORD: ${file.name}]\n${res.value}\n`;
+	        }
+	        if (['xlsx', 'xls'].includes(ext)) {
+	            const ab = await file.rawFile.arrayBuffer();
+	            const wb = XLSX.read(ab, { type: 'array' });
+	            const text = wb.SheetNames.map(n => `\n-- Sheet: ${n} --\n${XLSX.utils.sheet_to_csv(wb.Sheets[n])}`).join('');
+	            return `\n[FILE EXCEL: ${file.name}]\n${text}\n`;
+	        }
+	        if (ext === 'pptx') {
+	            const zip = new JSZip();
+	            const content = await zip.loadAsync(file.rawFile);
+	            let text = `\n[FILE POWERPOINT: ${file.name}]\n`;
+	            const slides = Object.keys(content.files).filter(n => n.startsWith("ppt/slides/slide") && n.endsWith(".xml")).sort();
+	            for (const f of slides) {
+	                const xml = await content.files[f].async("text");
+	                const nodes = new DOMParser().parseFromString(xml, "text/xml").getElementsByTagName("a:t");
+	                text += `\n[SLIDE]\n${Array.from(nodes).map(n => n.textContent).join(" ")}\n`;
+	            }
+	            return text;
+	        }
+	    } catch (e) { return `\n[Gagal membaca ${file.name}]\n`; }
+	    return '';
 	}
 	
 	async function onSend(e) {
@@ -822,47 +868,73 @@
 	    if ((!val && pendingFiles.length === 0) || sendBtn.disabled) return;
 	
 	    const filesToSend = [...pendingFiles];
-	    let filesHtml = '';
-	    let storageHtml = '';
+	    let officeTextContext = "";
+	    const apiParts = [];
 	    
-	    const iconPdf = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-9 h-9 drop-shadow-sm"><path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" fill="#DC2626"/><path d="M14 2L20 8H14V2Z" fill="#FCA5A5"/><text x="12" y="16.5" text-anchor="middle" fill="white" font-size="6.5" font-weight="900" font-family="sans-serif" letter-spacing="-0.5px">PDF</text></svg>`;
+	    // Variabel untuk menyimpan tampilan kartu di UI dan di Riwayat (Storage)
+	    let filesHtmlUI = `<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 mb-3">`;
+	    let filesHtmlStorage = `<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 mb-3">`;
 	
-	    if (filesToSend.length > 0) {
-	        const gridClass = 'grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 mb-3'; 
-	        filesHtml = `<div class="${gridClass}">`;
-	        storageHtml = `<div class="${gridClass}">`;
+	    // 1. PROSES FILE
+	    for (const f of filesToSend) {
+	        const ext = f.name.split('.').pop().toLowerCase();
 	        
-	        for (const file of filesToSend) {
-	            const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-	            const isImage = file.type.startsWith('image/');
-	            
-	            await saveToLocal(fileId, { mime: file.mime, base64: file.base64 });
+	        // Buat ID unik untuk setiap file agar bisa disimpan di IndexedDB
+	        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+	        
+	        // Simpan file asli ke IndexedDB (Penting untuk Reload)
+	        await saveToLocal(fileId, { mime: f.mime, base64: f.base64, name: f.name, size: f.size });
 	
-	            const visualFull = isImage ? `<img src="data:${file.mime};base64,${file.base64}" class="w-10 h-10 object-cover rounded-lg shadow-sm">` : iconPdf;
-	            const visualSaved = `<div id="${fileId}" class="file-placeholder w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center" data-file-id="${fileId}"></div>`;
+	        // Tampilan Visual untuk UI (Langsung Muncul)
+	        const visual = f.mime.startsWith('image/') 
+	            ? `<img src="data:${f.mime};base64,${f.base64}" class="w-9 h-9 object-cover rounded-lg shadow-sm">` 
+	            : getFileIcon(ext);
 	
-	            const card = (v) => `
-				    <div class="bg-gray-200 rounded-2xl p-3 flex items-center relative w-full min-h-[64px] border-none shadow-sm fade-in">
-				        <div class="shrink-0 mr-3">${v}</div>
-				        <div class="overflow-hidden flex-1 flex flex-col justify-center min-h-[40px] leading-tight">
-				            <div class="text-[13px] font-bold text-gray-700 truncate uppercase tracking-tight" style="margin:0 !important">${file.name}</div>
-				            <div class="text-[11px] text-gray-400 font-medium" style="margin:0 !important">${file.size}</div>
-				        </div>
-				    </div>`;
+	        // Penanda (Placeholder) untuk Riwayat (Storage)
+	        const placeholder = `<div class="file-placeholder w-9 h-9 flex items-center justify-center bg-gray-200 rounded-lg" data-file-id="${fileId}"></div>`;
 	
-	            filesHtml += card(visualFull);
-	            storageHtml += card(visualSaved);
+	        const cardTemplate = (v, isPlaceholder = false) => `
+    <div class="bg-gray-200 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none mb-2 fade-in">
+        <div class="${isPlaceholder ? 'file-placeholder' : ''} w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0" 
+             ${isPlaceholder ? `data-file-id="${fileId}"` : ''}>
+            ${v}
+        </div>
+        <div class="flex-1 flex flex-col justify-center min-w-0">
+            <div class="text-[13px] font-bold text-gray-700 truncate uppercase leading-tight" style="margin:0 !important; line-height: 1.2;">${f.name}</div>
+            <div class="text-[11px] text-gray-400 font-medium" style="margin:0 !important; line-height: 1.2;">${f.size}</div>
+        </div>
+    </div>`;
+	
+	        filesHtmlUI += cardTemplate(visual);
+	        filesHtmlStorage += cardTemplate(placeholder);
+	
+	        // Siapkan data untuk dikirim ke API Gemini
+	        if (f.mime.startsWith('image/') || ext === 'pdf') {
+	            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
+	        } else {
+	            officeTextContext += await extractTextFromOffice(f);
 	        }
-	        filesHtml += '</div>';
-	        storageHtml += '</div>';
 	    }
+	    
+	    filesHtmlUI += '</div>';
+	    filesHtmlStorage += '</div>';
 	
+	    // 2. GABUNGKAN PROMPT
+	    const finalPrompt = val + (officeTextContext ? "\n\nREFERENSI DOKUMEN:\n" + officeTextContext : "");
+	    apiParts.unshift({ text: finalPrompt || "Analisis lampiran ini." });
+	
+	    // 3. TAMPILKAN DI UI USER
 	    input.blur();
 	    const u = createBubble('user', false);
-	    u.innerHTML = filesHtml + (val ? marked.parse(val) : '');
+	    u.innerHTML = filesHtmlUI + (val ? marked.parse(val) : '');
 	
-	    chatHistory.push({ role: "user", parts: [{ text: storageHtml + (val ? val : "") }] });
-	    
+	    // 4. SIMPAN KE RIWAYAT (Gunakan filesHtmlStorage agar file bisa dimuat ulang)
+	    chatHistory.push({ 
+	        role: "user", 
+	        parts: [{ text: filesHtmlStorage + (val ? val : "") }] 
+	    });
+	
+	    // 5. BERSIHKAN INPUT
 	    input.value = '';
 	    input.style.height = 'auto';
 	    pendingFiles = [];
@@ -871,6 +943,7 @@
 	
 	    try { localStorage.setItem('chat_history', JSON.stringify(chatHistory)); } catch (e) {}
 	
+	    // 6. PROSES RESPON AI (Sama seperti sebelumnya)
 	    const a = createBubble('assistant', true);
 	    let resTxt = "";
 	    const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy?model=${currentModel}`;
@@ -878,11 +951,7 @@
 	    try {
 	        const payloadContents = JSON.parse(JSON.stringify(chatHistory));
 	        const lastIdx = payloadContents.length - 1;
-	        const currentParts = [{ text: val || "Analisis lampiran ini." }];
-	        filesToSend.forEach(f => {
-	            currentParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
-	        });
-	        payloadContents[lastIdx].parts = currentParts;
+	        payloadContents[lastIdx].parts = apiParts; // Gunakan apiParts yang berisi Base64
 	
 	        const response = await fetch(PROXY_URL, {
 	            method: 'POST',
@@ -893,11 +962,8 @@
 	            },
 	            body: JSON.stringify({ 
 	                contents: payloadContents, 
-	                systemInstruction: { parts: [{ text: systemPrompt + " (Tingkat Pemikiran: " + currentThinking + ")" }] },
-	                generationConfig: { 
-	                    temperature: 1, 
-	                    maxOutputTokens: maxTokens
-	                },
+	                systemInstruction: { parts: [{ text: systemPrompt }] },
+	                generationConfig: { temperature: 1, maxOutputTokens: maxTokens },
 	                tools: [{ google_search: {} }] 
 	            })
 	        });
@@ -933,12 +999,12 @@
 	                        if (parts) {
 	                            parts.forEach(part => {
 	                                if (part.text) {
-	                                    if (resTxt === "" && a) a.innerHTML = ""; 
+	                                    if (resTxt === "") a.innerHTML = ""; 
 	                                    resTxt += part.text;
 	                                }
 	                            });
 	                            
-	                            if (a && resTxt !== "") {
+	                            if (resTxt !== "") {
 	                                a.innerHTML = marked.parse(resTxt);
 	                                a.querySelectorAll('pre code').forEach((b) => hljs.highlightElement(b));
 	                                lucide.createIcons();
@@ -957,7 +1023,7 @@
 	            localStorage.setItem('chat_history', JSON.stringify(chatHistory));
 	        }
 	    } catch (err) {
-	        if (a) a.innerHTML = `<span class="text-red-500 text-xs font-bold">GALAT: ${err.message}</span>`;
+	        a.innerHTML = `<span class="text-red-500 text-xs font-bold">GALAT: ${err.message}</span>`;
 	    } finally { 
 	        sendBtn.disabled = false; 
 	        scrollToBottom(); 
