@@ -36,7 +36,7 @@
 	    width: 100%;
 	    overflow: hidden;
 	    position: fixed; 
-	    background-color: #000000;
+	    background-color: #ffffff;
 	    font-family: 'Inter', sans-serif;
 	    -webkit-text-size-adjust: none;
 	    text-size-adjust: none;
@@ -48,7 +48,6 @@
 	    width: 100%;
 	    height: 100%;
 	    position: relative;
-		background-color: #ffffff;
 	}
 	
 	.view-container {
@@ -286,22 +285,22 @@
 	}
 	
 	.download-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.5); /* Latar belakang gelap transparan */
-            backdrop-filter: blur(4px);
-            border-radius: 10px; /* Sudut lebih kecil */
-            padding: 6px; /* Padding lebih kecil */
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff; /* Warna ikon putih */
-            z-index: 10;
-            transition: all 0.2s ease;
-        }
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.4); /* Gelap transparan */
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 6px; /* Lebih kotak sedikit agar rapi */
+    padding: 4px; /* Padding lebih kecil */
+    cursor: pointer;
+    display: none !important; /* Tersembunyi default */
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
         .download-btn:hover {
             background: rgba(0, 0, 0, 0.7);
             transform: translateY(-2px);
@@ -784,28 +783,31 @@ document.addEventListener('click', function() {
 	                if (!ph) continue;
 	
 	                if (fInfo.isAI) {
-    const container = ph.closest('.ai-image-container') || ph.parentElement;
-    const imageUrl = `data:${fData.mime};base64,${fData.base64}`;
-    
-    container.className = "mt-2 w-full image-container";
-    container.style.position = "relative";
-    container.style.display = "inline-block";
-    container.onclick = function(e) {
-        e.stopPropagation();
-        this.classList.toggle('show-dl');
-    };
-    
-    container.innerHTML = `
-        <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
-        <button class="download-btn" onclick="event.stopPropagation(); downloadAIImage('${imageUrl}')" 
-            style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border-radius: 8px; padding: 6px; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
-                <path d="M9 4h6"/>
-            </svg>
-        </button>
-    `;
-} else {
+					    const container = ph.closest('.ai-image-container') || ph.parentElement;
+					    const imageUrl = `data:${fData.mime};base64,${fData.base64}`;
+					    
+					    // Samakan dengan renderImageToBubble agar konsisten
+					    container.className = "mt-2 w-full image-container";
+					    container.style.position = "relative";
+					    container.style.display = "inline-block";
+					    
+					    // Tambahkan fungsi klik untuk memunculkan ikon
+					    container.onclick = function(e) {
+					        e.stopPropagation();
+					        this.classList.toggle('show-dl');
+					    };
+					    
+						    container.innerHTML = `
+						        <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
+						        <button class="download-btn" onclick="event.stopPropagation(); downloadAIImage('${imageUrl}')" 
+						            style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border: none; border-radius: 6px; padding: 4px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
+						            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+						                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
+						                <path d="M9 4h6"/>
+						            </svg>
+						        </button>
+						    `;
+						} else {
 	                    if (fData.mime.startsWith('image/')) {
 	                        ph.innerHTML = `<img src="data:${fData.mime};base64,${fData.base64}" class="w-full h-full object-cover rounded-lg">`;
 	                    } else {
@@ -1071,21 +1073,18 @@ document.addEventListener('click', function() {
     
     const imageUrl = `data:${mime};base64,${b64}`;
     const wrapper = document.createElement('div');
-    
-    // Tambahkan class image-container dan fungsi toggle
     wrapper.className = "mt-2 w-full image-container";
     wrapper.style.position = "relative";
     wrapper.style.display = "inline-block";
     wrapper.onclick = function(e) {
-        e.stopPropagation(); // Agar tidak langsung tertutup oleh listener global
+        e.stopPropagation();
         this.classList.toggle('show-dl');
     };
 
     wrapper.innerHTML = `
         <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
-        <button class="download-btn" onclick="event.stopPropagation(); downloadAIImage('${imageUrl}')" 
-            style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); border-radius: 8px; padding: 6px; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button class="download-btn" onclick="event.stopPropagation(); downloadAIImage('${imageUrl}')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
                 <path d="M9 4h6"/>
             </svg>
