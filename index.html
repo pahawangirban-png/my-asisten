@@ -286,79 +286,74 @@
     </style>
 </head>
 <body>
-	    <div id="app-root">
-	   <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
-    <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
-        
-        <div class="text-center mb-10">
-    <div class="flex items-center justify-center mx-auto mb-1">
-        <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
-    </div>
-    
-    <div class="flex justify-center">
-        <span style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; line-height: 1;">
-            ARTIFICIAL INTELLIGENCE
-        </span>
-    </div>
-</div>
+   <div id="app-root">
+      <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
+         <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
 
-        <form id="auth-form" class="space-y-5">
-    <div class="relative flex items-center">
-        <div class="absolute left-5 text-slate-400">
-            <i data-lucide="mail" class="w-4 h-4"></i>
-        </div>
-        <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" 
-            class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none transition-all" 
-            placeholder="Email">
-    </div>
-    
-    <div class="relative flex items-center">
-        <div class="absolute left-5 text-slate-400">
-            <i data-lucide="key-round" class="w-4 h-4"></i>
-        </div>
-        <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" 
-            class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none transition-all" 
-            placeholder="Kata Sandi">
-    </div>
-    
-    <button type="submit" 
-        class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none">
-        MASUK
-    </button>
-</form>
-        <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
-    </div>
-</div>
-	
-	    <div id="chat-view" class="view-container">
-	       <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 overflow-hidden">
-    <div class="flex items-center h-full">
-        <img src="icon/icon.png" alt="Logo" class="h-14 w-auto object-contain block py-0">
-        
-        <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 4px; gap: 1px;">
-            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; background: linear-gradient(90deg, #2563eb 0%, #06b6d4 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AURA</span>
-            <span style="font-size: 8.5px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;">ARTIFICIAL INTELLIGENCE</span>
-        </div>
-    </div>
-    
-    <div class="flex items-center gap-1"> 
-        <button onclick="clearChat()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-        <button onclick="showView('settings')" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-        <button onclick="handleLogout()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-            <i data-lucide="log-out" stroke-width="2.5" class="w-5 h-5"></i>
-        </button>
-    </div>
-</header>
-	
-	     <main id="chat-scroller">
-		    <div id="message-list" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
-		</main>
-		
-		<footer style="background-color: #ffffff; padding: 6px 16px; padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 12px);">
+            <div class="text-center mb-10">
+               <div class="flex items-center justify-center mx-auto mb-1">
+                  <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
+               </div>
+
+               <div class="flex justify-center">
+                  <span style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; line-height: 1;">
+                     ARTIFICIAL INTELLIGENCE
+                  </span>
+               </div>
+            </div>
+
+            <form id="auth-form" class="space-y-5">
+               <div class="relative flex items-center">
+                  <div class="absolute left-5 text-slate-400">
+                     <i data-lucide="mail" class="w-4 h-4"></i>
+                  </div>
+                  <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none transition-all" placeholder="Email">
+               </div>
+
+               <div class="relative flex items-center">
+                  <div class="absolute left-5 text-slate-400">
+                     <i data-lucide="key-round" class="w-4 h-4"></i>
+                  </div>
+                  <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none transition-all" placeholder="Kata Sandi">
+               </div>
+
+               <button type="submit" class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none">
+                  MASUK
+               </button>
+            </form>
+            <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
+         </div>
+      </div>
+
+      <div id="chat-view" class="view-container">
+         <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 overflow-hidden">
+            <div class="flex items-center h-full">
+               <img src="icon/icon.png" alt="Logo" class="h-14 w-auto object-contain block py-0">
+
+               <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 4px; gap: 1px;">
+                  <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; background: linear-gradient(90deg, #2563eb 0%, #06b6d4 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AURA</span>
+                  <span style="font-size: 8.5px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;">ARTIFICIAL INTELLIGENCE</span>
+               </div>
+            </div>
+
+            <div class="flex items-center gap-1">
+               <button onclick="clearChat()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
+                  <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
+               </button>
+               <button onclick="showView('settings')" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
+                  <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
+               </button>
+               <button onclick="handleLogout()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
+                  <i data-lucide="log-out" stroke-width="2.5" class="w-5 h-5"></i>
+               </button>
+            </div>
+         </header>
+
+         <main id="chat-scroller">
+            <div id="message-list" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
+         </main>
+
+         <footer style="background-color: #ffffff; padding: 6px 16px; padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 16px);">
     <div style="max-width: 48rem; margin-left: auto; margin-right: auto;">
         <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2"></div>
         
@@ -388,88 +383,78 @@
                     style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px; border: none; transition: all 0.2s; cursor: pointer;">
                     <i data-lucide="image" style="width: 15px; height: 15px;"></i>
                 </button>
-                
-                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;">
-                    <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" style="width: 16px; height: 16px;">
-                        <path d="M20 5V3.799A.798.798 0 0 0 19.201 3H.801A.8.8 0 0 0 0 3.799V5h2v2H0v2h2v2H0v2h2v2H0v1.199A.8.8 0 0 0 .801 17h18.4a.8.8 0 0 0 .799-.801V15h-2v-2h2v-2h-2V9h2V7h-2V5h2zM8 13V7l5 3-5 3z"></path>
-                    </svg>
-                </div>
-
-                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 18px; height: 18px;">
-                        <path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path>
-                    </svg>
-                </div>
+                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg fill="currentColor" viewBox="0 0 20 20" style="width: 16px; height: 16px;"><path d="M20 5V3.799A.798.798 0 0 0 19.201 3H.801A.8.8 0 0 0 0 3.799V5h2v2H0v2h2v2H0v2h2v2H0v1.199A.8.8 0 0 0 .801 17h18.4a.8.8 0 0 0 .799-.801V15h-2v-2h2v-2h-2V9h2V7h-2V5h2zM8 13V7l5 3-5 3z"></path></svg></div>
+                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;"><path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path></svg></div>
             </div>
         </div>
     </div>
 </footer>
-	</div>
-	
-	<div id="settings-view" class="view-container bg-white">
-	    <header class="h-16 px-6 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
-	        <button onclick="saveSettings(); showView('chat')" class="p-2.5 -ml-3 text-gray-500 active:scale-90 transition-transform">
-	            <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
-	        </button>
-	    </header>
-	
-	    <main id="settings-scroller" class="flex-1 overflow-y-auto bg-white p-4">
-	        <div class="max-w-3xl mx-auto w-full">
-	            <div class="w-full bg-gray-100 rounded-2xl px-8 py-7 space-y-6 fade-in">
-	                
-	                <div class="space-y-2 pb-4 border-b border-gray-200">
-					    <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
-					    <div class="relative w-full" id="custom-dropdown">
-					        <button type="button" id="dropdown-trigger" class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
-					            <span id="selected-model-text">Gemini 3 Flash</span>
-					            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
-					        </button>
-					        
-					        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
-					            <div class="flex flex-col">
-					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
-					                    <span class="text-sm font-medium text-gray-800">Gemini 3 Flash</span>
-					                </div>
-					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-pro-preview">
-					                    <span class="text-sm font-medium text-gray-800">Gemini 3 Pro</span>
-					                </div>
-					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
-					                    <span class="text-sm font-medium text-gray-800">Gemini 3 Deep Think</span>
-					                </div>
-					            </div>
-					        </div>
-					    </div>
-					</div>
-	                
-	                <div class="space-y-2 pb-4 border-b border-gray-200">
-	                    <div class="flex justify-between items-center ml-1">
-	                        <label class="text-sm font-bold text-gray-800 uppercase">Tingkat Pemikiran</label>
-	                        <span id="label-thinking" class="hidden">MEDIUM</span>
-	                    </div>
-	                    <input type="range" id="settings-thinking" min="1" max="3" step="1" oninput="updateSliderLabels(); saveSettings()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-	                    <div class="flex justify-between text-[10px] text-gray-400 px-1 font-bold uppercase">
-	                        <span>LOW</span>
-	                        <span>MEDIUM</span>
-	                        <span>HIGH</span>
-	                    </div>
-	                </div>
-	
-	                <div class="space-y-2 pb-4 border-b border-gray-200">
-	                    <div class="flex justify-between items-center ml-1">
-	                        <label class="text-sm font-bold text-gray-800 uppercase">Batas Token</label>
-	                        <span id="label-tokens" class="text-sm font-bold text-indigo-600">65536</span>
-	                    </div>
-	                    <input type="range" id="settings-tokens" min="1024" max="65536" step="1024" oninput="updateSliderLabels(); saveSettings()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-	                </div>
-	
-	                <div class="space-y-2">
-	                    <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">System Instruksi</label>
-	                    <textarea id="settings-prompt" rows="4" oninput="saveSettings()" class="w-full bg-white border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
-	                </div>
-	            </div>
-	        </div>
-	    </main>
-	</div>
+      </div>
+
+      <div id="settings-view" class="view-container bg-white">
+         <header class="h-16 px-6 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
+            <button onclick="saveSettings(); showView('chat')" class="p-2.5 -ml-3 text-gray-500 active:scale-90 transition-transform">
+               <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
+            </button>
+         </header>
+
+         <main id="settings-scroller" class="flex-1 overflow-y-auto bg-white p-4">
+            <div class="max-w-3xl mx-auto w-full">
+               <div class="w-full bg-gray-100 rounded-2xl px-8 py-7 space-y-6 fade-in">
+
+                  <div class="space-y-2 pb-4 border-b border-gray-200">
+                     <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
+                     <div class="relative w-full" id="custom-dropdown">
+                        <button type="button" id="dropdown-trigger" class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+                           <span id="selected-model-text">Gemini 3 Flash</span>
+                           <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
+                        </button>
+
+                        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
+                           <div class="flex flex-col">
+                              <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
+                                 <span class="text-sm font-medium text-gray-800">Gemini 3 Flash</span>
+                              </div>
+                              <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-pro-preview">
+                                 <span class="text-sm font-medium text-gray-800">Gemini 3 Pro</span>
+                              </div>
+                              <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
+                                 <span class="text-sm font-medium text-gray-800">Gemini 3 Deep Think</span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="space-y-2 pb-4 border-b border-gray-200">
+                     <div class="flex justify-between items-center ml-1">
+                        <label class="text-sm font-bold text-gray-800 uppercase">Tingkat Pemikiran</label>
+                        <span id="label-thinking" class="hidden">MEDIUM</span>
+                     </div>
+                     <input type="range" id="settings-thinking" min="1" max="3" step="1" oninput="updateSliderLabels(); saveSettings()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                     <div class="flex justify-between text-[10px] text-gray-400 px-1 font-bold uppercase">
+                        <span>LOW</span>
+                        <span>MEDIUM</span>
+                        <span>HIGH</span>
+                     </div>
+                  </div>
+
+                  <div class="space-y-2 pb-4 border-b border-gray-200">
+                     <div class="flex justify-between items-center ml-1">
+                        <label class="text-sm font-bold text-gray-800 uppercase">Batas Token</label>
+                        <span id="label-tokens" class="text-sm font-bold text-indigo-600">65536</span>
+                     </div>
+                     <input type="range" id="settings-tokens" min="1024" max="65536" step="1024" oninput="updateSliderLabels(); saveSettings()" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                  </div>
+
+                  <div class="space-y-2">
+                     <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">System Instruksi</label>
+                     <textarea id="settings-prompt" rows="4" oninput="saveSettings()" class="w-full bg-white border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
+                  </div>
+               </div>
+            </div>
+         </main>
+      </div>
 <script>
     const SUPABASE_URL = "https://eofuiyhnyyxrapxilank.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
