@@ -971,53 +971,83 @@ document.addEventListener('click', function() {
     const files = Array.from(event.target.files);
     if (!files.length) return;
 
+    // Batasi jumlah file
     if (pendingFiles.length + files.length > 4) {
         alert("Maksimal 4 file dalam satu pengiriman.");
         event.target.value = '';
         return;
     }
 
-    for (const file of files) {
-        try {
-            const b64Data = await convertToBase64(file);
-            const nameParts = file.name ? file.name.split('.') : [];
-            const extension = nameParts.length > 1 ? nameParts.pop().toLowerCase() : '';
-            
-            let mimeType = file.type;
-            
-            // PERBAIKAN: Jika dari galeri iOS tipe sering kosong, kita asumsikan image/jpeg
-            // karena input ini memiliki accept="image/*"
-            if (!mimeType || mimeType === "") {
-                const imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
-                if (imgExts.includes(extension) || extension === "") {
-                    mimeType = 'image/jpeg';
-                }
-            }
+    try {
+        for (const file of files) {
+            // Validasi dasar: Lewati jika file rusak/kosong (Bug iOS 15.1)
+            if (!file || file.size === 0) continue;
 
-            pendingFiles.push({
-                name: file.name || `IMAGE_${Date.now()}.jpg`,
-                size: formatBytes(file.size),
-                type: mimeType || 'application/octet-stream',
-                base64: b64Data.split(',')[1],
-                mime: mimeType || 'application/octet-stream',
-                rawFile: file
-            });
-        } catch (e) {
-            console.error("Gagal membaca file:", e);
+            try {
+                // Gunakan pembacaan file dengan pengamanan
+                const b64Result = await convertToBase64(file);
+                if (!b64Result) continue;
+
+                // Deteksi ekstensi secara manual (lebih valid dari file.type pada iOS)
+                const extension = file.name ? file.name.split('.').pop().toLowerCase() : '';
+                let mimeType = file.type;
+
+                // Daftar ekstensi gambar yang didukung iOS
+                const imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
+                
+                // Jika tipe kosong (khas Galeri iOS), paksa jadi image/jpeg
+                if (!mimeType || mimeType === "") {
+                    if (imgExts.includes(extension) || extension === "") {
+                        mimeType = 'image/jpeg';
+                    }
+                }
+
+                pendingFiles.push({
+                    name: file.name || `IMG_${Date.now()}.${extension || 'jpg'}`,
+                    size: formatBytes(file.size),
+                    type: mimeType || 'application/octet-stream',
+                    base64: b64Result.split(',')[1],
+                    mime: mimeType || 'application/octet-stream',
+                    rawFile: file
+                });
+            } catch (innerError) {
+                console.error("Gagal memproses satu file:", innerError);
+            }
         }
+    } catch (globalError) {
+        console.error("Gagal menjalankan seleksi file:", globalError);
+    } finally {
+        // BAGIAN KRUSIAL: Reset input agar tombol kembali berfungsi di iOS
+        renderPreviews();
+        event.target.value = ''; 
+        // Pastikan tombol send tetap aktif jika tidak ada proses pengiriman
+        if (typeof sendBtn !== 'undefined') sendBtn.disabled = false;
     }
-    renderPreviews();
-    event.target.value = ''; 
 }
 	
 	function convertToBase64(file) {
-	    return new Promise((resolve, reject) => {
-	        const reader = new FileReader();
-	        reader.readAsDataURL(file);
-	        reader.onload = () => resolve(reader.result);
-	        reader.onerror = error => reject(error);
-	    });
-	}
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        // Timeout 10 detik jika iOS macet membaca file
+        const timeout = setTimeout(() => {
+            reader.abort();
+            reject(new Error("Timeout membaca file galeri"));
+        }, 10000);
+
+        reader.onload = () => {
+            clearTimeout(timeout);
+            resolve(reader.result);
+        };
+        
+        reader.onerror = (error) => {
+            clearTimeout(timeout);
+            reject(error);
+        };
+
+        reader.readAsDataURL(file);
+    });
+}
 	
 	function removeFile(index) {
 	    pendingFiles.splice(index, 1);
@@ -1029,30 +1059,25 @@ document.addEventListener('click', function() {
     container.innerHTML = '';
     
     pendingFiles.forEach((file, index) => {
-        const nameParts = file.name ? file.name.split('.') : [];
-        const ext = nameParts.length > 1 ? nameParts.pop().toLowerCase() : '';
-        
-        // PERBAIKAN: Deteksi gambar lebih kuat untuk galeri iOS
+        const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
         const isImage = (file.mime && file.mime.startsWith('image/')) || 
-                        ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext) ||
-                        (file.name && file.name.startsWith('IMAGE_'));
+                        ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext);
 
-        const visual = isImage 
+        // Jika data base64 ada, kita upayakan tampilkan sebagai gambar
+        const visual = (isImage && file.base64) 
             ? `<img src="data:${file.mime || 'image/jpeg'};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
             : getFileIcon(ext);
         
         const card = document.createElement('div');
         card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
         card.innerHTML = `
-            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
-                ${visual}
-            </div>
+            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
             <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
                 <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1 m-0 p-0">${file.name}</p>
                 <p class="text-[11px] text-gray-400 font-medium leading-none m-0 p-0">${file.size}</p>
             </div>
             <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
-                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
+                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-7 h-7"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
             </button>`;
         container.appendChild(card);
     });
