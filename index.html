@@ -968,25 +968,42 @@ document.addEventListener('click', function() {
 	}
 	
 	async function handleFileSelect(event) {
-	    const files = Array.from(event.target.files);
-	    if (pendingFiles.length + files.length > 4) {
-	        alert("Maksimal 4 file dalam satu pengiriman.");
-	        return;
-	    }
-		    for (const file of files) {
-	        const base64 = await convertToBase64(file);
-	        pendingFiles.push({
-	            name: file.name,
-	            size: formatBytes(file.size),
-	            type: file.type,
-	            base64: base64.split(',')[1],
-	            mime: file.type,
-	            rawFile: file
-	        });
-	    }
-	    renderPreviews();
-	    event.target.value = '';
-	}
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+
+    if (pendingFiles.length + files.length > 4) {
+        alert("Maksimal 4 file dalam satu pengiriman.");
+        event.target.value = '';
+        return;
+    }
+
+    for (const file of files) {
+        try {
+            const base64 = await convertToBase64(file);
+            
+            // Perbaikan untuk iOS Gallery: Cek ekstensi jika type kosong
+            let mimeType = file.type;
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (!mimeType && ['jpg', 'jpeg', 'png', 'gif', 'heic', 'heif', 'webp'].includes(extension)) {
+                mimeType = 'image/jpeg'; // Paksa ke image jika ekstensinya gambar
+            }
+
+            pendingFiles.push({
+                name: file.name || "File",
+                size: formatBytes(file.size),
+                type: mimeType || 'application/octet-stream',
+                base64: base64.split(',')[1],
+                mime: mimeType || 'application/octet-stream',
+                rawFile: file
+            });
+        } catch (e) {
+            console.error("Gagal membaca file:", e);
+        }
+    }
+    renderPreviews();
+    event.target.value = ''; // Penting agar bisa pilih file yang sama berkali-kali
+}
 	
 	function convertToBase64(file) {
 	    return new Promise((resolve, reject) => {
@@ -1003,30 +1020,36 @@ document.addEventListener('click', function() {
 	}
 	
 	function renderPreviews() {
-	    const container = document.getElementById('file-preview-container');
-	    container.innerHTML = '';
-	    pendingFiles.forEach((file, index) => {
-	        const ext = file.name.split('.').pop().toLowerCase();
-	        const visual = file.type.startsWith('image/') 
-	            ? `<img src="data:${file.mime};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
-	            : getFileIcon(ext);
-	        
-	        const card = document.createElement('div');
-	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
-	        card.innerHTML = `
-	            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
-	                ${visual}
-	            </div>
-	            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
-	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1 m-0 p-0">${file.name}</p>
-	                <p class="text-[11px] text-gray-400 font-medium leading-none m-0 p-0">${file.size}</p>
-	            </div>
-	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
-	                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
-	            </button>`;
-	        container.appendChild(card);
-	    });
-	}
+    const container = document.getElementById('file-preview-container');
+    container.innerHTML = '';
+    
+    pendingFiles.forEach((file, index) => {
+        const ext = file.name.split('.').pop().toLowerCase();
+        
+        // Logika deteksi gambar yang lebih kuat untuk iOS
+        const isImage = (file.mime && file.mime.startsWith('image/')) || 
+                        ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+
+        const visual = isImage 
+            ? `<img src="data:${file.mime || 'image/jpeg'};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
+            : getFileIcon(ext);
+        
+        const card = document.createElement('div');
+        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
+        card.innerHTML = `
+            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
+                ${visual}
+            </div>
+            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
+                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1 m-0 p-0">${file.name}</p>
+                <p class="text-[11px] text-gray-400 font-medium leading-none m-0 p-0">${file.size}</p>
+            </div>
+            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
+                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
+            </button>`;
+        container.appendChild(card);
+    });
+}
 	
 	function getFileIcon(extension) {
 	    const icons = {
