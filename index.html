@@ -978,32 +978,36 @@ document.addEventListener('click', function() {
     }
 
     for (const file of files) {
-        try {
-            // SOLUSI PROFESIONAL: Gunakan URL objek untuk PETINJAU (Preview)
-            // Ini bypass bug FileReader pada iOS 15.1
-            const previewUrl = URL.createObjectURL(file);
-            
-            // Simpan Base64 hanya untuk pengiriman ke AI (dilakukan di background)
-            const b64Full = await convertToBase64(file);
-            
-            let mimeType = file.type || 'image/jpeg'; // Fallback untuk galeri iOS
-            const extension = file.name ? file.name.split('.').pop().toLowerCase() : 'jpg';
+        // 1. BUAT PREVIEW INSTAN (Ini yang membuat gambar langsung muncul di iOS)
+        const previewUrl = URL.createObjectURL(file);
+        const fileId = 'pending_' + Date.now() + Math.random().toString(36).substr(2, 5);
+        
+        const extension = file.name ? file.name.split('.').pop().toLowerCase() : 'jpg';
+        const mimeType = file.type || 'image/jpeg';
 
-            pendingFiles.push({
-                name: file.name || `IMG_${Date.now()}.${extension}`,
-                size: formatBytes(file.size),
-                type: mimeType,
-                base64: b64Full.split(',')[1],
-                mime: mimeType,
-                preview: previewUrl, // Simpan URL objek untuk petinjau
-                rawFile: file
-            });
-        } catch (e) {
-            console.error("Gagal memproses file:", e);
-        }
+        // 2. MASUKKAN KE DAFTAR TANPA MENUNGGU BASE64
+        const fileObj = {
+            id: fileId,
+            name: file.name || "Image",
+            size: formatBytes(file.size),
+            type: mimeType,
+            mime: mimeType,
+            preview: previewUrl,
+            base64: null, // Masih kosong
+            rawFile: file
+        };
+        
+        pendingFiles.push(fileObj);
+        renderPreviews(); // Langsung tampilkan petinjau!
+
+        // 3. PROSES BASE64 DI BACKGROUND (Agar tidak memacetkan tombol)
+        convertToBase64(file).then(b64 => {
+            fileObj.base64 = b64.split(',')[1];
+        }).catch(err => console.error("Base64 gagal, tapi preview tetap ada", err));
     }
-    renderPreviews();
-    event.target.value = ''; // Reset input agar tidak macet
+    
+    // 4. RESET INPUT SEGERA (Agar tombol upload tidak mati)
+    event.target.value = '';
 }
 	
 	function convertToBase64(file) {
