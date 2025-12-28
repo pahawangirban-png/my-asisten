@@ -88,16 +88,6 @@
 	    z-index: 100;
 	}
 	
-	.input-capsule {
-	    background-color: #f3f4f6;
-	    border-radius: 999px;
-	    display: flex;
-	    align-items: center;
-	    padding: 4px 6px;
-	    width: 100%;
-	    transition: all 0.2s ease;
-	}
-	
 	#chat-input {
 	    background: transparent !important;
 	    border: none !important;
@@ -118,6 +108,18 @@
 	    margin-bottom: 0.5rem !important;
 	}
 	
+	.text-body-container > *:first-child {
+	    margin-top: 0 !important;
+	}
+	
+	.text-body-container > *:last-child {
+	    margin-bottom: 0 !important;
+	}
+	
+	.msg-content .grid {
+	    margin-bottom: 0 !important;
+	}
+
 	.prose h1, .prose h2, .prose h3 { 
 	    font-weight: 700; 
 	}
@@ -153,20 +155,20 @@
 	    display: none !important;
 	}
 	
-		.prose th { 
+	.prose th { 
 	    background-color: #f9fafb !important;
 	    font-weight: 600; 
 	    border: 1px solid #e2e8f0; 
 	    padding: 6px 10px !important; 
 	    text-align: left; 
-	    line-height: 1.3 !important;
+	    line-height: 1.8 !important;
 	}
 	
 	.prose td { 
 	    border: 1px solid #e2e8f0; 
 	    padding: 6px 10px !important; 
 	    text-align: left; 
-	    line-height: 1.3 !important;
+	    line-height: 1.8 !important;
 	    background-color: transparent !important;
 	}
 	
@@ -253,17 +255,6 @@
 	    to { opacity: 1; transform: translateY(0); } 
 	}
 	
-	.typing-dot {
-	    width: 6px;
-	    height: 6px;
-	    background: #6366f1;
-	    border-radius: 50%;
-	    animation: blink 1.4s infinite both;
-	}
-	
-	.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-	.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-	
 	@keyframes blink { 
 	    0%, 80%, 100% { opacity: 0.2; } 
 	    40% { opacity: 1; } 
@@ -274,50 +265,63 @@
 	}
 	
 	.ai-gradient {
-    background: linear-gradient(90deg, #2563eb, #06b6d4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-}
+	    background: linear-gradient(90deg, #2563eb, #06b6d4);
+	    -webkit-background-clip: text;
+	    -webkit-text-fill-color: transparent;
+	    display: inline-block;
+	}
+
+	@keyframes brush-stroke {
+	    0%, 100% { transform: rotate(0deg) translateX(0); }
+	    33% { transform: rotate(-20deg) translateX(-1px); }
+	    66% { transform: rotate(20deg) translateX(1px); }
+	}
+	
+	.animate-brush {
+	    display: inline-block;
+	    animation: brush-stroke 1s ease-in-out infinite;
+	    transform-origin: center;
+	    color: #6b7280;
+	}
     </style>
 </head>
 <body>
 	    <div id="app-root">
 	    <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
-    <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
-        <div class="text-center mb-10">
-            <div class="flex items-center justify-center mx-auto mb-2">
-                <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
-            </div>
-        </div>
-
-        <form id="auth-form" class="space-y-5">
-            <div class="relative flex items-center">
-                <div class="absolute left-5 text-slate-400">
-                    <i data-lucide="mail" class="w-4 h-4"></i>
-                </div>
-                <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" 
-                    class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-200 transition-all" 
-                    placeholder="Email">
-            </div>
-            
-            <div class="relative flex items-center">
-                <div class="absolute left-5 text-slate-400">
-                    <i data-lucide="key-round" class="w-4 h-4"></i>
-                </div>
-                <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" 
-                    class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-200 transition-all" 
-                    placeholder="Kata Sandi">
-            </div>
-            
-            <button type="submit" 
-                class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none">
-                MASUK
-            </button>
-        </form>
-        <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
-    </div>
-</div>
+		    <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
+		        <div class="text-center mb-10">
+		            <div class="flex items-center justify-center mx-auto mb-2">
+		                <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
+		            </div>
+		        </div>
+		
+		        <form id="auth-form" class="space-y-5">
+		            <div class="relative flex items-center">
+		                <div class="absolute left-5 text-slate-400">
+		                    <i data-lucide="mail" class="w-4 h-4"></i>
+		                </div>
+		                <input type="email" id="auth-email" required onblur="window.scrollTo(0,0)" 
+		                    class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-200 transition-all" 
+		                    placeholder="Email">
+		            </div>
+		            
+		            <div class="relative flex items-center">
+		                <div class="absolute left-5 text-slate-400">
+		                    <i data-lucide="key-round" class="w-4 h-4"></i>
+		                </div>
+		                <input type="password" id="auth-password" required onblur="window.scrollTo(0,0)" 
+		                    class="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-5 py-4 text-sm font-medium placeholder:font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-slate-200 transition-all" 
+		                    placeholder="Kata Sandi">
+		            </div>
+		            
+		            <button type="submit" 
+		                class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none">
+		                MASUK
+		            </button>
+		        </form>
+		        <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
+		    </div>
+		</div>
 	
 	    <div id="chat-view" class="view-container">
 	        <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 overflow-hidden">
@@ -342,31 +346,48 @@
 		    <div id="message-list" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
 		</main>
 		
-		<footer style="background-color: #ffffff;">
-		    <div class="max-w-3xl mx-auto">
-		        <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3"></div>
-		        
-		        <div id="capsule-container" class="input-capsule">
-				    <input type="file" id="file-input" multiple 
-				       accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx" 
-				       class="hidden" onchange="handleFileSelect(event)">
-    
-				    <button onclick="document.getElementById('file-input').click()" class="w-11 h-11 flex items-center justify-center text-gray-300 active:scale-90 transition-transform flex-none ml-1">
-				        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7">
-				            <path d="M16 12L12 8M12 8L8 12M12 8V16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-				        </svg>
-				    </button>
-		
-		            <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." class="text-base font-medium placeholder:font-medium placeholder:text-gray-400" oninput="adjustInput(this)"></textarea>
-		
-		            <button id="send-btn" onclick="onSend()" class="text-gray-700 w-11 h-11 flex items-center justify-center flex-none active:scale-90 transition-transform">
-		                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="currentColor">
-		                    <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
-		                </svg>
-		            </button>
-		        </div>
-		    </div>
-		</footer>
+		<footer style="background-color: #ffffff; padding: 8px 16px; padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 15px);">
+    <div style="max-width: 48rem; margin-left: auto; margin-right: auto;">
+        <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2"></div>
+        
+        <div id="capsule-container" style="background-color: #f3f4f6; border-radius: 24px; padding: 6px; transition: all 0.2s ease;">
+            
+            <div id="input-row-1" style="display: flex; align-items: center; gap: 4px; margin-bottom: 4px;">
+                <button onclick="document.getElementById('file-input').click()" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background: none; border: none; cursor: pointer;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 22px; height: 22px;">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+                <input type="file" id="file-input" multiple accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx" class="hidden" onchange="handleFileSelect(event)">
+
+                <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." oninput="adjustInput(this)"
+                    style="flex: 1; background: transparent; border: none; outline: none; resize: none; padding: 11px 4px; font-size: 16px; font-weight: 500; color: #1f2937; line-height: 1.2; min-height: 42px; display: block;"></textarea>
+
+                <button id="send-btn" onclick="onSend()" style="width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; color: #4b5563; background: none; border: none; cursor: pointer;">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 26px; height: 26px;" fill="currentColor">
+                        <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                <button id="btn-mode-image" onclick="toggleImageMode()" 
+                    style="height: 36px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 12px; border: none; transition: all 0.2s; cursor: pointer;">
+                    <i data-lucide="image" style="width: 16px; height: 16px;"></i>
+                </button>
+                
+                <div style="height: 36px; display: flex; align-items: center; justify-content: center; color: #d1d5db; background-color: #f9fafb; border-radius: 12px; opacity: 0.4;">
+                    <i data-lucide="video" style="width: 16px; height: 16px;"></i>
+                </div>
+
+                <div style="height: 36px; display: flex; align-items: center; justify-content: center; color: #d1d5db; background-color: #f9fafb; border-radius: 12px; opacity: 0.4;">
+                    <i data-lucide="mic" style="width: 16px; height: 16px;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 	</div>
 	
 	<div id="settings-view" class="view-container bg-white">
@@ -391,13 +412,13 @@
 					        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
 					            <div class="flex flex-col">
 					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
-					                    <span class="text-sm font-bold text-gray-800">Gemini 3 Flash</span>
+					                    <span class="text-sm font-medium text-gray-800">Gemini 3 Flash</span>
 					                </div>
 					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-pro-preview">
-					                    <span class="text-sm font-bold text-gray-800">Gemini 3 Pro</span>
+					                    <span class="text-sm font-medium text-gray-800">Gemini 3 Pro</span>
 					                </div>
 					                <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
-					                    <span class="text-sm font-bold text-gray-800">Gemini 3 Deep Think</span>
+					                    <span class="text-sm font-medium text-gray-800">Gemini 3 Deep Think</span>
 					                </div>
 					            </div>
 					        </div>
@@ -427,7 +448,7 @@
 	
 	                <div class="space-y-2">
 	                    <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">System Instruksi</label>
-	                    <textarea id="settings-prompt" rows="3" oninput="saveSettings()" class="w-full bg-white border-none rounded-2xl px-6 py-5 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
+	                    <textarea id="settings-prompt" rows="4" oninput="saveSettings()" class="w-full bg-white border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
 	                </div>
 	            </div>
 	        </div>
@@ -457,6 +478,8 @@
 	let currentThinking = localStorage.getItem('ai_thinking') || 'MEDIUM';
 	let maxTokens = parseInt(localStorage.getItem('ai_tokens')) || 65536;
 	
+	let pendingFiles = [];
+	
 	const settingsThinking = document.getElementById('settings-thinking');
 	const settingsTokens = document.getElementById('settings-tokens');
 	const labelThinking = document.getElementById('label-thinking');
@@ -472,6 +495,46 @@
 		
 	const DB_NAME = 'ChatStorage';
 	const STORE_NAME = 'files';
+	
+	let isImageMode = false;
+
+function toggleImageMode() {
+    isImageMode = !isImageMode;
+    const btn = document.getElementById('btn-mode-image');
+    const input = document.getElementById('chat-input');
+
+    if (isImageMode) {
+        // Mode Aktif: Ikon lebih pekat tanpa mengubah warna background utama
+        btn.style.color = "#1f2937";
+        btn.style.backgroundColor = "#e5e7eb"; // Sedikit lebih gelap saat aktif
+        input.placeholder = "Buat atau edit gambar...";
+    } else {
+        // Kembali ke Normal
+        btn.style.color = "#9ca3af";
+        btn.style.backgroundColor = "#f9fafb";
+        input.placeholder = "Tulis pesan...";
+    }
+}
+
+function adjustInput(el) {
+    el.style.height = 'auto'; 
+    const newHeight = el.scrollHeight;
+    el.style.height = newHeight + 'px';
+    
+    const container = document.getElementById('capsule-container');
+    const row1 = document.getElementById('input-row-1');
+    
+    if (container && row1) {
+        // Mengatur perataan vertikal baris pertama secara otomatis
+        if (newHeight > 45) {
+            row1.style.alignItems = "flex-end";
+            container.style.borderRadius = "20px";
+        } else {
+            row1.style.alignItems = "center";
+            container.style.borderRadius = "24px";
+        }
+    }
+}
 
 	function openDB() {
 	    return new Promise((resolve, reject) => {
@@ -626,28 +689,35 @@
 
 	async function loadSavedChat() {
 	    messageList.innerHTML = '';
+	    if (!chatHistory || chatHistory.length === 0) return;
+	
 	    for (const msg of chatHistory) {
 	        const role = msg.role === 'model' ? 'assistant' : 'user';
-	        const bubble = createBubble(role, false);
-	        if (msg.parts && msg.parts[0] && msg.parts[0].text) {
-	            bubble.innerHTML = marked.parse(msg.parts[0].text);
-	            const placeholders = bubble.querySelectorAll('.file-placeholder');
-	            // Ganti loop file-placeholder di dalam fungsi loadSavedChat
-for (const ph of placeholders) {
-    const fileId = ph.getAttribute('data-file-id');
-    const fileData = await getFromLocal(fileId);
-    if (fileData) {
-        ph.classList.remove('file-placeholder'); 
-        
-        if (fileData.mime.startsWith('image/')) {
-            ph.innerHTML = `<img src="data:${fileData.mime};base64,${fileData.base64}" class="w-full h-full object-cover rounded-lg">`;
-        } else {
-            const extension = fileData.name.split('.').pop().toLowerCase();
-            ph.innerHTML = getFileIcon(extension);
-        }
-    }
-}
-	            bubble.querySelectorAll('pre code').forEach((b) => hljs.highlightElement(b));
+	        let text = msg.parts?.[0]?.text || '';
+	        let files = msg._ui ? (msg._ui.filesForStorage || []) : [];
+	        if (msg._ui) text = msg._ui.val;
+	
+	        const bubble = createBubble(role, text, files, true, false);
+	
+	        if (files.length > 0) {
+	            for (const fInfo of files) {
+	                const fData = await getFromLocal(fInfo.fileId);
+	                if (!fData) continue;
+	                const ph = bubble.textElement.parentElement.querySelector(`[data-file-id="${fInfo.fileId}"]`);
+	                if (!ph) continue;
+	
+	                if (fInfo.isAI) {
+	                    const container = ph.closest('.ai-image-container') || ph.parentElement;
+	                    container.className = "mt-2 w-full block";
+	                    container.innerHTML = `<img src="data:${fData.mime};base64,${fData.base64}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">`;
+	                } else {
+	                    if (fData.mime.startsWith('image/')) {
+	                        ph.innerHTML = `<img src="data:${fData.mime};base64,${fData.base64}" class="w-full h-full object-cover rounded-lg">`;
+	                    } else {
+	                        ph.innerHTML = getFileIcon(fData.name.split('.').pop().toLowerCase());
+	                    }
+	                }
+	            }
 	        }
 	    }
 	    lucide.createIcons();
@@ -709,45 +779,83 @@ for (const ph of placeholders) {
 	    chatHistory = [];
 	    localStorage.removeItem('chat_history');
 	    await clearLocalDB();
+	    pendingFiles = [];
+	    renderPreviews();
 	    messageList.innerHTML = '';
 	    input.value = '';
-	    input.style.height = 'auto';
-	    const container = document.getElementById('capsule-container');
-	    if (container) {
-	        container.style.borderRadius = '999px'; 
-	        container.style.alignItems = 'center';
-	    }
+	    adjustInput(input);
 	    window.scrollTo(0, 0);
 	}
 
-	function createBubble(role, showTyping = true) {
-	    const isAI = role === 'assistant';
-	    const roleName = isAI ? '<span class="ai-gradient">AI ASISTEN</span>' : 'USER';
+	function createBubble(role, content = '', files = [], isPlaceholder = false, showTyping = false) {
+	    const isAI = role === 'assistant' || role === 'model';
+	    const roleLabel = isAI ? '<span class="ai-gradient">AI ASISTEN</span>' : 'USER';
 	    const now = new Date();
 	    const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-	
 	    const div = document.createElement('div');
 	    div.className = "w-full animate-in fade-in duration-300 mb-4";
-	    
+	
+	    let filesHtml = '';
+	    if (files && files.length > 0) {
+	        const aiFile = files.find(f => f.isAI);
+	        if (aiFile) {
+	            filesHtml = `
+	                <div class="mt-2 w-full ai-image-container">
+	                    <div class="file-placeholder w-full h-48 bg-gray-200 rounded-xl animate-pulse flex items-center justify-center" data-file-id="${aiFile.fileId}">
+	                        <i data-lucide="image" class="w-8 h-8 text-gray-400"></i>
+	                    </div>
+	                </div>`;
+	        } else {
+	            filesHtml = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">';
+	            files.forEach(f => {
+	                const ext = f.name.split('.').pop().toLowerCase();
+	                let visual = isPlaceholder 
+	                    ? `<div class="file-placeholder w-10 h-10 flex items-center justify-center bg-gray-200 rounded-lg" data-file-id="${f.fileId || ''}"></div>`
+	                    : (f.mime && f.mime.startsWith('image/')) 
+	                        ? `<img src="data:${f.mime};base64,${f.base64}" class="w-10 h-10 object-cover rounded-lg shadow-sm">` 
+	                        : getFileIcon(ext);
+	                filesHtml += `
+	                    <div class="bg-gray-200 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none">
+	                        <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
+	                        <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
+	                            <div class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1">${f.name}</div>
+	                            <div class="text-[11px] text-gray-400 font-medium leading-none">${f.size || ''}</div>
+	                        </div>
+	                    </div>`;
+	            });
+	            filesHtml += '</div>';
+	        }
+	    }
+	
 	    div.innerHTML = `
 	        <div class="w-full bg-gray-100 rounded-2xl px-5 pt-3 pb-5 text-slate-800">
-	            <div class="flex justify-between items-center pb-1 mb-1 border-b border-gray-200">
-	                <span class="text-[11px] font-bold uppercase tracking-widest">${roleName}</span>
+	            <div class="flex justify-between items-center pb-1 border-b border-gray-200">
+	                <span class="text-[11px] font-bold uppercase tracking-widest">${roleLabel}</span>
 	                <span class="text-[11px] font-medium text-gray-400">${timeStr}</span>
 	            </div>
-	            <div class="prose prose-sm max-w-none msg-content text-base leading-relaxed font-medium">
-	                ${isAI && showTyping ? '<div class="flex gap-1 py-1.5"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>' : ''}
+	            <div class="prose prose-sm max-w-none msg-content text-base leading-relaxed font-medium mt-1 space-y-1">
+	                ${filesHtml}
+	                <div class="text-body-container">${content ? marked.parse(content) : ''}</div>
+	                
+	                ${isAI && showTyping ? `
+	                <div class="typing-indicator flex items-end gap-0.5 pb-0.5 text-gray-500">
+	                    <span class="text-sm font-medium italic leading-none">thinking</span>
+	                    <span class="flex ml-0.5 leading-none mb-0.5">
+	                        <span style="animation: blink 1.4s infinite both; animation-delay: 0s;">.</span>
+	                        <span style="animation: blink 1.4s infinite both; animation-delay: 0.2s;">.</span>
+	                        <span style="animation: blink 1.4s infinite both; animation-delay: 0.4s;">.</span>
+	                    </span>
+	                </div>` : ''}
 	            </div>
 	        </div>
 	    `;
-	    
 	    messageList.appendChild(div);
+	    const bodyContainer = div.querySelector('.text-body-container');
+	    bodyContainer.querySelectorAll('pre code').forEach((b) => hljs.highlightElement(b));
 	    lucide.createIcons();
 	    scrollToBottom();
-	    return div.querySelector('.msg-content');
+	    return { textElement: bodyContainer, typingElement: div.querySelector('.typing-indicator') };
 	}
-
-	let pendingFiles = [];
 
 	function formatBytes(bytes, decimals = 2) {
 	    if (bytes === 0) return '0 Bytes';
@@ -803,15 +911,14 @@ for (const ph of placeholders) {
 	            : getFileIcon(ext);
 	        
 	        const card = document.createElement('div');
-	        // gap-2 horizontal rapat, p-3 seimbang, items-center untuk centering vertikal
 	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
 	        card.innerHTML = `
 	            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
 	                ${visual}
 	            </div>
-	            <div class="flex-1 flex flex-col justify-center min-w-0">
-	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-tight m-0 p-0">${file.name}</p>
-	                <p class="text-[11px] text-gray-400 font-medium leading-tight m-0 p-0">${file.size}</p>
+	            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
+	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1 m-0 p-0">${file.name}</p>
+	                <p class="text-[11px] text-gray-400 font-medium leading-none m-0 p-0">${file.size}</p>
 	            </div>
 	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
 	                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
@@ -862,98 +969,168 @@ for (const ph of placeholders) {
 	    return '';
 	}
 	
-	async function onSend(e) {
-	    if (e) e.preventDefault();
-	    const val = input.value.trim();
-	    if ((!val && pendingFiles.length === 0) || sendBtn.disabled) return;
+	function renderImageToBubble(targetId, b64, mime) {
+	    const el = document.getElementById(targetId);
+	    if (!el) return;
+	    el.innerHTML = '';
+	    const container = document.createElement('div');
+	    container.className = "mt-2 w-full"; 
+	    const img = document.createElement('img');
+	    img.src = `data:${mime};base64,${b64}`;
+	    img.className = "w-full h-auto rounded-xl shadow-md border border-gray-100 block";
+	    container.appendChild(img);
+	    el.appendChild(container);
+	    scrollToBottom();
+	}
 	
-	    const filesToSend = [...pendingFiles];
-	    let officeTextContext = "";
-	    const apiParts = [];
+	async function handleImageGeneration(prompt, imgObj = null) {
+	    const isEdit = prompt.toLowerCase().startsWith('/edit');
+	    const cleanPrompt = prompt.replace(/^\/(gambar|edit)\s+/i, '').trim();
+	    const imageModel = 'gemini-2.5-flash-image'; 
 	    
-	    // Variabel untuk menyimpan tampilan kartu di UI dan di Riwayat (Storage)
-	    let filesHtmlUI = `<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 mb-3">`;
-	    let filesHtmlStorage = `<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 mb-3">`;
+	    const aiBubble = createBubble('assistant', '', [], false, false); 
+	    const targetId = 'gen_' + Date.now();
+	    aiBubble.textElement.id = targetId;
+	    
+	    aiBubble.textElement.innerHTML = `
+	        <div class="flex items-center gap-1 py-0.5 text-gray-500">
+	            <span class="text-sm font-medium italic">${isEdit ? 'mengedit gambar' : 'membuat gambar'}</span>
+	            <div class="flex items-end mb-0.5">
+	                <svg viewBox="0 0 16 16" class="w-3 h-3 animate-brush" fill="currentColor">
+	                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+	                        <g transform="translate(0.000000, 1.000000)" fill="currentColor">
+	                            <path d="M15.172,3.244 C14.715,3.785 10.553,8.014 8.326,9.666 L7.413,8.799 C8.703,6.288 12.154,1.507 12.609,0.967 C13.204,0.263 14.646,-0.248 15.416,0.298 C16.428,1.014 15.766,2.538 15.172,3.244 Z"></path>
+	                            <path d="M6.607,9.702 C6.607,9.702 4.515,9.149 3.259,11.296 C2.004,13.443 0.808,12.708 0.27,12.524 C-0.268,12.34 1.526,14.794 2.363,14.794 C3.181,14.794 6.752,15.969 7.631,11.36 C7.649,11.259 7.703,9.877 6.607,9.702 L6.607,9.702 Z"></path>
+	                        </g>
+	                    </g>
+	                </svg>
+	                <span class="flex ml-0.5 leading-none">
+	                    <span style="animation: blink 1.4s infinite both; animation-delay: 0s;">.</span>
+	                    <span style="animation: blink 1.4s infinite both; animation-delay: 0.2s;">.</span>
+	                    <span style="animation: blink 1.4s infinite both; animation-delay: 0.4s;">.</span>
+	                </span>
+	            </div>
+	        </div>
+	    `;
+	    
+	    if (window.lucide) lucide.createIcons();
 	
-	    // 1. PROSES FILE
-	    for (const f of filesToSend) {
-	        const ext = f.name.split('.').pop().toLowerCase();
-	        
-	        // Buat ID unik untuk setiap file agar bisa disimpan di IndexedDB
-	        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-	        
-	        // Simpan file asli ke IndexedDB (Penting untuk Reload)
+	    try {
+	        const endpoint = `${SUPABASE_URL}/functions/v1/ai-proxy-v2?model=${imageModel}&action=generateContent`;
+	        const response = await fetch(endpoint, {
+	            method: 'POST',
+	            headers: { 
+	                'Content-Type': 'application/json', 
+	                'apikey': SUPABASE_KEY,
+	                'Authorization': `Bearer ${SUPABASE_KEY}` 
+	            },
+	            body: JSON.stringify({ 
+	                contents: [{ parts: imgObj ? [imgObj, { text: cleanPrompt }] : [{ text: cleanPrompt }] }],
+	                generationConfig: { response_modalities: ["IMAGE"] }
+	            })
+	        });
+	
+	        if (!response.ok) throw new Error('Gagal memproses permintaan gambar');
+	        const data = await response.json();
+	        const b64 = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+	
+	        if (b64) {
+	            const mime = 'image/jpeg';
+	            const imgId = 'ai_gen_' + Date.now();
+	            await saveToLocal(imgId, { mime, base64: b64, name: 'AI Generated', size: 'AI' });
+	            renderImageToBubble(targetId, b64, mime);
+	            chatHistory.push({ 
+	                role: "model", 
+	                parts: [{ text: `[IMAGE]: ${cleanPrompt}` }],
+	                _ui: { 
+	                    val: "", 
+	                    filesForStorage: [{ name: 'AI_Generated.jpg', size: 'AI', fileId: imgId, mime: mime, isAI: true }] 
+	                }
+	            });
+	            localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+	        } else {
+	            throw new Error('Respon tidak mengandung gambar');
+	        }
+	    } catch (e) {
+	        aiBubble.textElement.innerHTML = `<span class="text-red-500 font-bold text-xs uppercase tracking-tighter">GALAT: ${e.message}</span>`;
+	    } finally {
+	        sendBtn.disabled = false;
+	    }
+	}
+	
+	async function onSend(e) {
+    if (e) e.preventDefault();
+    const val = input.value.trim();
+    if (!val && pendingFiles.length === 0) return;
+
+    // LOGIKA MODE GAMBAR
+    if (isImageMode) {
+        let prefix = (pendingFiles.length > 0) ? '/edit ' : '/gambar ';
+        let promptWithCommand = prefix + val;
+        
+        createBubble('user', val || "Memproses gambar...", pendingFiles.map(f => ({ ...f })));
+        
+        let imgObj = null;
+        if (pendingFiles.length > 0) {
+            const firstImg = pendingFiles.find(f => f.mime.startsWith('image/'));
+            if (firstImg) {
+                imgObj = { inline_data: { mime_type: firstImg.mime, data: firstImg.base64 } };
+            }
+        }
+
+        // Reset input & mode
+        input.value = '';
+        adjustInput(input);
+        pendingFiles = [];
+        renderPreviews();
+        sendBtn.disabled = true;
+        
+        await handleImageGeneration(promptWithCommand, imgObj);
+        toggleImageMode(); // Matikan mode gambar otomatis setelah kirim
+        return;
+    }
+	
+	    const filesForUI = [];
+	    const filesForStorage = [];
+	    const apiParts = [];
+	    let officeTextContext = "";
+	
+	    for (const f of pendingFiles) {
+	        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
 	        await saveToLocal(fileId, { mime: f.mime, base64: f.base64, name: f.name, size: f.size });
-	
-	        // Tampilan Visual untuk UI (Langsung Muncul)
-	        const visual = f.mime.startsWith('image/') 
-	            ? `<img src="data:${f.mime};base64,${f.base64}" class="w-9 h-9 object-cover rounded-lg shadow-sm">` 
-	            : getFileIcon(ext);
-	
-	        // Penanda (Placeholder) untuk Riwayat (Storage)
-	        const placeholder = `<div class="file-placeholder w-9 h-9 flex items-center justify-center bg-gray-200 rounded-lg" data-file-id="${fileId}"></div>`;
-	
-	        const cardTemplate = (v, isPlaceholder = false) => `
-    <div class="bg-gray-200 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none mb-2 fade-in">
-        <div class="${isPlaceholder ? 'file-placeholder' : ''} w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0" 
-             ${isPlaceholder ? `data-file-id="${fileId}"` : ''}>
-            ${v}
-        </div>
-        <div class="flex-1 flex flex-col justify-center min-w-0">
-            <div class="text-[13px] font-bold text-gray-700 truncate uppercase leading-tight" style="margin:0 !important; line-height: 1.2;">${f.name}</div>
-            <div class="text-[11px] text-gray-400 font-medium" style="margin:0 !important; line-height: 1.2;">${f.size}</div>
-        </div>
-    </div>`;
-	
-	        filesHtmlUI += cardTemplate(visual);
-	        filesHtmlStorage += cardTemplate(placeholder);
-	
-	        // Siapkan data untuk dikirim ke API Gemini
+	        filesForUI.push({ ...f });
+	        filesForStorage.push({ name: f.name, size: f.size, fileId: fileId });
+	        const ext = f.name.split('.').pop().toLowerCase();
 	        if (f.mime.startsWith('image/') || ext === 'pdf') {
 	            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
 	        } else {
 	            officeTextContext += await extractTextFromOffice(f);
 	        }
 	    }
-	    
-	    filesHtmlUI += '</div>';
-	    filesHtmlStorage += '</div>';
 	
-	    // 2. GABUNGKAN PROMPT
-	    const finalPrompt = val + (officeTextContext ? "\n\nREFERENSI DOKUMEN:\n" + officeTextContext : "");
-	    apiParts.unshift({ text: finalPrompt || "Analisis lampiran ini." });
-	
-	    // 3. TAMPILKAN DI UI USER
-	    input.blur();
-	    const u = createBubble('user', false);
-	    u.innerHTML = filesHtmlUI + (val ? marked.parse(val) : '');
-	
-	    // 4. SIMPAN KE RIWAYAT (Gunakan filesHtmlStorage agar file bisa dimuat ulang)
+	    createBubble('user', val, filesForUI);
 	    chatHistory.push({ 
 	        role: "user", 
-	        parts: [{ text: filesHtmlStorage + (val ? val : "") }] 
+	        parts: [{ text: val || "Analisis lampiran ini." }], 
+	        _ui: { val, filesForStorage } 
 	    });
 	
-	    // 5. BERSIHKAN INPUT
+	    const currentTurnText = (val || "Analisis lampiran ini.") + (officeTextContext ? "\n\nREFERENSI KONTEKS:\n" + officeTextContext : "");
 	    input.value = '';
-	    input.style.height = 'auto';
+	    adjustInput(input);
 	    pendingFiles = [];
 	    renderPreviews();
 	    sendBtn.disabled = true;
 	
-	    try { localStorage.setItem('chat_history', JSON.stringify(chatHistory)); } catch (e) {}
-	
-	    // 6. PROSES RESPON AI (Sama seperti sebelumnya)
-	    const a = createBubble('assistant', true);
+	    const aiBubble = createBubble('assistant', '', [], false, true);
 	    let resTxt = "";
-	    const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy?model=${currentModel}`;
+	    const endpoint = `${SUPABASE_URL}/functions/v1/ai-proxy-v2?model=${currentModel}&action=streamGenerateContent&version=v1beta`;
 	
 	    try {
-	        const payloadContents = JSON.parse(JSON.stringify(chatHistory));
-	        const lastIdx = payloadContents.length - 1;
-	        payloadContents[lastIdx].parts = apiParts; // Gunakan apiParts yang berisi Base64
+	        const cleanContents = chatHistory.map(h => ({ role: h.role, parts: h.parts }));
+	        cleanContents[cleanContents.length - 1].parts = [...apiParts, { text: currentTurnText }];
 	
-	        const response = await fetch(PROXY_URL, {
+	        const response = await fetch(endpoint, {
 	            method: 'POST',
 	            headers: { 
 	                'Content-Type': 'application/json', 
@@ -961,88 +1138,78 @@ for (const ph of placeholders) {
 	                'Authorization': `Bearer ${SUPABASE_KEY}` 
 	            },
 	            body: JSON.stringify({ 
-	                contents: payloadContents, 
+	                contents: cleanContents, 
 	                systemInstruction: { parts: [{ text: systemPrompt }] },
-	                generationConfig: { temperature: 1, maxOutputTokens: maxTokens },
+	                generationConfig: { temperature: 1, maxOutputTokens: maxTokens, response_modalities: ["TEXT"] },
 	                tools: [{ google_search: {} }] 
 	            })
 	        });
 	
-	        if (!response.ok) throw new Error("Gagal terhubung ke API");
-	
+	        if (!response.ok) throw new Error("Gagal merespons dari Proxy");
 	        const reader = response.body.getReader();
 	        const decoder = new TextDecoder();
-	        let buf = "";
+	        let buffer = "";
 	
 	        while (true) {
 	            const { value, done } = await reader.read();
 	            if (done) break;
-	            buf += decoder.decode(value, { stream: true });
-	            
-	            let start = buf.indexOf('{');
+	            buffer += decoder.decode(value, { stream: true });
+	            let start = buffer.indexOf('{');
 	            while (start !== -1) {
 	                let depth = 0, end = -1;
-	                for (let i = start; i < buf.length; i++) {
-	                    if (buf[i] === '{') depth++;
-	                    else if (buf[i] === '}') { 
-	                        depth--; 
-	                        if (depth === 0) { end = i; break; } 
-	                    }
+	                for (let i = start; i < buffer.length; i++) {
+	                    if (buffer[i] === '{') depth++;
+	                    else if (buffer[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
 	                }
-	                
 	                if (end !== -1) {
 	                    try {
-	                        const jsonStr = buf.substring(start, end + 1);
-	                        const json = JSON.parse(jsonStr);
-	                        const parts = json.candidates?.[0]?.content?.parts;
-	                        
-	                        if (parts) {
-	                            parts.forEach(part => {
-	                                if (part.text) {
-	                                    if (resTxt === "") a.innerHTML = ""; 
-	                                    resTxt += part.text;
-	                                }
-	                            });
-	                            
-	                            if (resTxt !== "") {
-	                                a.innerHTML = marked.parse(resTxt);
-	                                a.querySelectorAll('pre code').forEach((b) => hljs.highlightElement(b));
-	                                lucide.createIcons();
-	                            }
-	                            scrollToBottom();
+	                        const json = JSON.parse(buffer.substring(start, end + 1));
+	                        const partText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+	                        if (partText) {
+	                            if (aiBubble.typingElement) { aiBubble.typingElement.remove(); aiBubble.typingElement = null; }
+	                            resTxt += partText;
+	                            aiBubble.textElement.innerHTML = marked.parse(resTxt);
+	                            aiBubble.textElement.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
 	                        }
 	                    } catch (e) {}
-	                    buf = buf.substring(end + 1); 
-	                    start = buf.indexOf('{');
+	                    buffer = buffer.substring(end + 1);
+	                    start = buffer.indexOf('{');
 	                } else break;
 	            }
+	            scrollToBottom();
 	        }
-	        
-	        if (resTxt) {
-	            chatHistory.push({ role: "model", parts: [{ text: resTxt }] });
-	            localStorage.setItem('chat_history', JSON.stringify(chatHistory));
-	        }
+	        chatHistory.push({ role: "model", parts: [{ text: resTxt }] });
+	        localStorage.setItem('chat_history', JSON.stringify(chatHistory));
 	    } catch (err) {
-	        a.innerHTML = `<span class="text-red-500 text-xs font-bold">GALAT: ${err.message}</span>`;
-	    } finally { 
-	        sendBtn.disabled = false; 
-	        scrollToBottom(); 
+	        aiBubble.textElement.innerHTML = `<span class="text-red-500 font-bold">GALAT: ${err.message}</span>`;
+	        if (aiBubble.typingElement) aiBubble.typingElement.remove();
+	    } finally {
+	        sendBtn.disabled = false;
+	        if (window.lucide) lucide.createIcons();
 	    }
 	}
 	
-	function adjustInput(el) {
-	    el.style.height = 'auto'; 
-	    el.style.height = (el.scrollHeight) + 'px';
-	    const container = document.getElementById('capsule-container');
-	    if(el.scrollHeight > 48) { 
-	        container.style.borderRadius = '24px'; 
-	        container.style.alignItems = 'flex-end';
-	        el.style.marginBottom = '4px';
-	    } else { 
-	        container.style.borderRadius = '999px'; 
-	        container.style.alignItems = 'center';
-	        el.style.marginBottom = '0px';
+	async function processPendingFiles() {
+	    const filesForUI = [];
+	    const filesForStorage = [];
+	    const apiParts = [];
+	    let officeTextContext = "";
+	
+	    for (const f of pendingFiles) {
+	        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+	        await saveToLocal(fileId, { mime: f.mime, base64: f.base64, name: f.name, size: f.size });
+	        
+	        filesForUI.push({ ...f });
+	        filesForStorage.push({ name: f.name, size: f.size, fileId: fileId });
+	        
+	        const ext = f.name.split('.').pop().toLowerCase();
+	        if (f.mime.startsWith('image/') || ext === 'pdf') {
+	            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
+	        } else {
+	            officeTextContext += await extractTextFromOffice(f);
+	        }
 	    }
+	    return { filesForUI, filesForStorage, apiParts, officeTextContext };
 	}
 
     let lastTouch = 0;
