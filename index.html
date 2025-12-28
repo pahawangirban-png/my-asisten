@@ -979,21 +979,26 @@ document.addEventListener('click', function() {
 
     for (const file of files) {
         try {
-            const base64 = await convertToBase64(file);
+            const b64Data = await convertToBase64(file);
+            const nameParts = file.name ? file.name.split('.') : [];
+            const extension = nameParts.length > 1 ? nameParts.pop().toLowerCase() : '';
             
-            // Perbaikan untuk iOS Gallery: Cek ekstensi jika type kosong
             let mimeType = file.type;
-            const extension = file.name.split('.').pop().toLowerCase();
             
-            if (!mimeType && ['jpg', 'jpeg', 'png', 'gif', 'heic', 'heif', 'webp'].includes(extension)) {
-                mimeType = 'image/jpeg'; // Paksa ke image jika ekstensinya gambar
+            // PERBAIKAN: Jika dari galeri iOS tipe sering kosong, kita asumsikan image/jpeg
+            // karena input ini memiliki accept="image/*"
+            if (!mimeType || mimeType === "") {
+                const imgExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'];
+                if (imgExts.includes(extension) || extension === "") {
+                    mimeType = 'image/jpeg';
+                }
             }
 
             pendingFiles.push({
-                name: file.name || "File",
+                name: file.name || `IMAGE_${Date.now()}.jpg`,
                 size: formatBytes(file.size),
                 type: mimeType || 'application/octet-stream',
-                base64: base64.split(',')[1],
+                base64: b64Data.split(',')[1],
                 mime: mimeType || 'application/octet-stream',
                 rawFile: file
             });
@@ -1002,7 +1007,7 @@ document.addEventListener('click', function() {
         }
     }
     renderPreviews();
-    event.target.value = ''; // Penting agar bisa pilih file yang sama berkali-kali
+    event.target.value = ''; 
 }
 	
 	function convertToBase64(file) {
@@ -1024,11 +1029,13 @@ document.addEventListener('click', function() {
     container.innerHTML = '';
     
     pendingFiles.forEach((file, index) => {
-        const ext = file.name.split('.').pop().toLowerCase();
+        const nameParts = file.name ? file.name.split('.') : [];
+        const ext = nameParts.length > 1 ? nameParts.pop().toLowerCase() : '';
         
-        // Logika deteksi gambar yang lebih kuat untuk iOS
+        // PERBAIKAN: Deteksi gambar lebih kuat untuk galeri iOS
         const isImage = (file.mime && file.mime.startsWith('image/')) || 
-                        ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext);
+                        ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext) ||
+                        (file.name && file.name.startsWith('IMAGE_'));
 
         const visual = isImage 
             ? `<img src="data:${file.mime || 'image/jpeg'};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
