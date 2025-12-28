@@ -283,6 +283,33 @@
 	    transform-origin: center;
 	    color: #6b7280;
 	}
+	
+	.download-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.5); /* Latar belakang gelap transparan */
+            backdrop-filter: blur(4px);
+            border-radius: 10px; /* Sudut lebih kecil */
+            padding: 6px; /* Padding lebih kecil */
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff; /* Warna ikon putih */
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+        .download-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .download-btn:active {
+            transform: scale(0.95);
+            background: rgba(0, 0, 0, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -354,41 +381,41 @@
          </main>
 
          <footer style="background-color: #ffffff; padding: 6px 16px; padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 16px);">
-    <div style="max-width: 48rem; margin-left: auto; margin-right: auto;">
-        <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2"></div>
-        
-        <div id="capsule-container" style="background-color: #f3f4f6; border-radius: 14px; padding: 4px; transition: all 0.2s ease; border: 1px solid transparent;">
-            
-            <div id="input-row-1" style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
-                <button onclick="document.getElementById('file-input').click()" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background: none; border: none; cursor: pointer; flex-shrink: 0;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                </button>
-                <input type="file" id="file-input" multiple accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx" class="hidden" onchange="handleFileSelect(event)">
-
-                <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." oninput="adjustInput(this)"
-                    style="flex: 1; background: transparent; border: none; outline: none; resize: none; padding: 10px 4px; font-size: 16px; font-weight: 500; color: #1f2937; line-height: 20px; min-height: 40px; display: block; overflow: hidden;"></textarea>
-
-                <button id="send-btn" onclick="onSend()" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #374151; background: none; border: none; cursor: pointer; flex-shrink: 0;">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;" fill="currentColor">
-                        <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
-                <button id="btn-mode-image" onclick="toggleImageMode()" 
-                    style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px; border: none; transition: all 0.2s; cursor: pointer;">
-                    <i data-lucide="image" style="width: 15px; height: 15px;"></i>
-                </button>
-                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg fill="currentColor" viewBox="0 0 20 20" style="width: 16px; height: 16px;"><path d="M20 5V3.799A.798.798 0 0 0 19.201 3H.801A.8.8 0 0 0 0 3.799V5h2v2H0v2h2v2H0v2h2v2H0v1.199A.8.8 0 0 0 .801 17h18.4a.8.8 0 0 0 .799-.801V15h-2v-2h2v-2h-2V9h2V7h-2V5h2zM8 13V7l5 3-5 3z"></path></svg></div>
-                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;"><path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path></svg></div>
-            </div>
-        </div>
-    </div>
-</footer>
+		    <div style="max-width: 48rem; margin-left: auto; margin-right: auto;">
+		        <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2"></div>
+		        
+		        <div id="capsule-container" style="background-color: #f3f4f6; border-radius: 14px; padding: 4px; transition: all 0.2s ease; border: 1px solid transparent;">
+		            
+		            <div id="input-row-1" style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
+		                <button onclick="document.getElementById('file-input').click()" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background: none; border: none; cursor: pointer; flex-shrink: 0;">
+		                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+		                        <line x1="12" y1="5" x2="12" y2="19"></line>
+		                        <line x1="5" y1="12" x2="19" y2="12"></line>
+		                    </svg>
+		                </button>
+		                <input type="file" id="file-input" multiple accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx" class="hidden" onchange="handleFileSelect(event)">
+		
+		                <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." oninput="adjustInput(this)"
+		                    style="flex: 1; background: transparent; border: none; outline: none; resize: none; padding: 10px 4px; font-size: 16px; font-weight: 500; color: #1f2937; line-height: 20px; min-height: 40px; display: block; overflow: hidden;"></textarea>
+		
+		                <button id="send-btn" onclick="onSend()" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #374151; background: none; border: none; cursor: pointer; flex-shrink: 0;">
+		                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;" fill="currentColor">
+		                        <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
+		                    </svg>
+		                </button>
+		            </div>
+		
+		            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
+		                <button id="btn-mode-image" onclick="toggleImageMode()" 
+		                    style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px; border: none; transition: all 0.2s; cursor: pointer;">
+		                    <i data-lucide="image" style="width: 15px; height: 15px;"></i>
+		                </button>
+		                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg fill="currentColor" viewBox="0 0 20 20" style="width: 16px; height: 16px;"><path d="M20 5V3.799A.798.798 0 0 0 19.201 3H.801A.8.8 0 0 0 0 3.799V5h2v2H0v2h2v2H0v2h2v2H0v1.199A.8.8 0 0 0 .801 17h18.4a.8.8 0 0 0 .799-.801V15h-2v-2h2v-2h-2V9h2V7h-2V5h2zM8 13V7l5 3-5 3z"></path></svg></div>
+		                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;"><path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path></svg></div>
+		            </div>
+		        </div>
+		    </div>
+		</footer>
       </div>
 
       <div id="settings-view" class="view-container bg-white">
@@ -541,6 +568,30 @@ function adjustInput(el) {
             container.style.borderRadius = "14px";
         }
     }
+}
+
+async function downloadAIImage(imageUrl) {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const fileName = `AURA-ART-${Date.now()}.png`;
+        const file = new File([blob], fileName, { type: blob.type });
+
+        if (isIOS && navigator.share) {
+            await navigator.share({ files: [file] });
+        } else {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+    } catch (e) { window.open(imageUrl, '_blank'); }
 }
 
 	function openDB() {
@@ -714,10 +765,25 @@ function adjustInput(el) {
 	                if (!ph) continue;
 	
 	                if (fInfo.isAI) {
-	                    const container = ph.closest('.ai-image-container') || ph.parentElement;
-	                    container.className = "mt-2 w-full block";
-	                    container.innerHTML = `<img src="data:${fData.mime};base64,${fData.base64}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">`;
-	                } else {
+    const container = ph.closest('.ai-image-container') || ph.parentElement;
+    const imageUrl = `data:${fData.mime};base64,${fData.base64}`;
+    
+    container.style.position = "relative";
+    container.style.display = "inline-block";
+    container.style.width = "100%";
+    container.className = "mt-2";
+    
+    container.innerHTML = `
+        <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
+        <button onclick="downloadAIImage('${imageUrl}')" 
+            style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border-radius: 8px; padding: 5px; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
+                <path d="M9 4h6"/>
+            </svg>
+        </button>
+    `;
+} else {
 	                    if (fData.mime.startsWith('image/')) {
 	                        ph.innerHTML = `<img src="data:${fData.mime};base64,${fData.base64}" class="w-full h-full object-cover rounded-lg">`;
 	                    } else {
@@ -977,18 +1043,33 @@ function adjustInput(el) {
 	}
 	
 	function renderImageToBubble(targetId, b64, mime) {
-	    const el = document.getElementById(targetId);
-	    if (!el) return;
-	    el.innerHTML = '';
-	    const container = document.createElement('div');
-	    container.className = "mt-2 w-full"; 
-	    const img = document.createElement('img');
-	    img.src = `data:${mime};base64,${b64}`;
-	    img.className = "w-full h-auto rounded-xl shadow-md border border-gray-100 block";
-	    container.appendChild(img);
-	    el.appendChild(container);
-	    scrollToBottom();
-	}
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    el.innerHTML = '';
+    
+    const imageUrl = `data:${mime};base64,${b64}`;
+    
+    // Wrapper dengan position relative untuk mengunci tombol di dalam gambar
+    const wrapper = document.createElement('div');
+    wrapper.style.position = "relative";
+    wrapper.style.display = "inline-block";
+    wrapper.style.width = "100%";
+    wrapper.className = "mt-2";
+
+    wrapper.innerHTML = `
+        <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
+        <button onclick="downloadAIImage('${imageUrl}')" 
+            style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border-radius: 8px; padding: 5px; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
+                <path d="M9 4h6"/>
+            </svg>
+        </button>
+    `;
+    
+    el.appendChild(wrapper);
+    scrollToBottom();
+}
 	
 	async function handleImageGeneration(prompt, imgObj = null) {
 	    const isEdit = prompt.toLowerCase().startsWith('/edit');
