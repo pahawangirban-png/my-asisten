@@ -968,71 +968,50 @@ document.addEventListener('click', function() {
 	}
 	
 	async function handleFileSelect(event) {
-    const files = Array.from(event.target.files);
-    if (!files.length) return;
-
-    if (pendingFiles.length + files.length > 4) {
-        alert("Maksimal 4 file.");
-        event.target.value = '';
-        return;
-    }
-
-    for (const file of files) {
-        // 1. BUAT PREVIEW INSTAN (Ini yang membuat gambar langsung muncul di iOS)
-        const previewUrl = URL.createObjectURL(file);
-        const fileId = 'pending_' + Date.now() + Math.random().toString(36).substr(2, 5);
-        
-        const extension = file.name ? file.name.split('.').pop().toLowerCase() : 'jpg';
-        const mimeType = file.type || 'image/jpeg';
-
-        // 2. MASUKKAN KE DAFTAR TANPA MENUNGGU BASE64
-        const fileObj = {
-            id: fileId,
-            name: file.name || "Image",
-            size: formatBytes(file.size),
-            type: mimeType,
-            mime: mimeType,
-            preview: previewUrl,
-            base64: null, // Masih kosong
-            rawFile: file
-        };
-        
-        pendingFiles.push(fileObj);
-        renderPreviews(); // Langsung tampilkan petinjau!
-
-        // 3. PROSES BASE64 DI BACKGROUND (Agar tidak memacetkan tombol)
-        convertToBase64(file).then(b64 => {
-            fileObj.base64 = b64.split(',')[1];
-        }).catch(err => console.error("Base64 gagal, tapi preview tetap ada", err));
-    }
-    
-    // 4. RESET INPUT SEGERA (Agar tombol upload tidak mati)
-    event.target.value = '';
-}
+	    const files = Array.from(event.target.files);
+	    if (!files.length) return;
+	
+	    if (pendingFiles.length + files.length > 4) {
+	        alert("Maksimal 4 file dalam satu pengiriman.");
+	        event.target.value = '';
+	        return;
+	    }
+	
+	    try {
+	        for (const file of files) {
+	            const base64 = await convertToBase64(file);
+	            
+	            let mimeType = file.type || '';
+	            const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
+	            if (!mimeType && ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext)) {
+	                mimeType = 'image/jpeg';
+	            }
+	
+	            pendingFiles.push({
+	                name: file.name || "Gambar",
+	                size: formatBytes(file.size),
+	                type: mimeType,
+	                base64: base64.split(',')[1],
+	                mime: mimeType,
+	                rawFile: file
+	            });
+	        }
+	    } catch (e) {
+	        console.error("Gagal membaca file:", e);
+	    } finally {
+	        renderPreviews();
+	        event.target.value = '';
+	    }
+	}
 	
 	function convertToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        
-        // Timeout 10 detik jika iOS macet membaca file
-        const timeout = setTimeout(() => {
-            reader.abort();
-            reject(new Error("Timeout membaca file galeri"));
-        }, 10000);
-
-        reader.onload = () => {
-            clearTimeout(timeout);
-            resolve(reader.result);
-        };
-        
-        reader.onerror = (error) => {
-            clearTimeout(timeout);
-            reject(error);
-        };
-
-        reader.readAsDataURL(file);
-    });
-}
+	    return new Promise((resolve, reject) => {
+	        const reader = new FileReader();
+	        reader.readAsDataURL(file);
+	        reader.onload = () => resolve(reader.result);
+	        reader.onerror = error => reject(error);
+	    });
+	}
 	
 	function removeFile(index) {
 	    pendingFiles.splice(index, 1);
@@ -1040,33 +1019,35 @@ document.addEventListener('click', function() {
 	}
 	
 	function renderPreviews() {
-    const container = document.getElementById('file-preview-container');
-    container.innerHTML = '';
-    
-    pendingFiles.forEach((file, index) => {
-        const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
-        const isImage = (file.mime && file.mime.startsWith('image/')) || 
-                        ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext);
-
-        // Gunakan URL preview jika ada, jika tidak pakai ikon file
-        const visual = (isImage && file.preview) 
-            ? `<img src="${file.preview}" class="w-full h-full object-cover rounded-lg">` 
-            : getFileIcon(ext);
-        
-        const card = document.createElement('div');
-        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
-        card.innerHTML = `
-            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
-            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
-                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1 m-0 p-0">${file.name}</p>
-                <p class="text-[11px] text-gray-400 font-medium leading-none m-0 p-0">${file.size}</p>
-            </div>
-            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
-                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
-            </button>`;
-        container.appendChild(card);
-    });
-}
+	    const container = document.getElementById('file-preview-container');
+	    container.innerHTML = '';
+	    
+	    pendingFiles.forEach((file, index) => {
+	        const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
+	      
+	        const isImage = (file.type && typeof file.type === 'string' && file.type.startsWith('image/')) || 
+	                        ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext);
+	
+	        const visual = isImage 
+	            ? `<img src="data:${file.mime || 'image/jpeg'};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
+	            : getFileIcon(ext);
+	        
+	        const card = document.createElement('div');
+	        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative fade-in w-full min-h-[64px] border-none";
+	        card.innerHTML = `
+	            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
+	                ${visual}
+	            </div>
+	            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
+	                <p class="text-[13px] font-bold text-gray-700 truncate uppercase leading-none mb-1 m-0 p-0">${file.name}</p>
+	                <p class="text-[11px] text-gray-400 font-medium leading-none m-0 p-0">${file.size}</p>
+	            </div>
+	            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
+	                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
+	            </button>`;
+	        container.appendChild(card);
+	    });
+	}
 	
 	function getFileIcon(extension) {
 	    const icons = {
