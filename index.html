@@ -783,31 +783,35 @@ document.addEventListener('click', function() {
 	                if (!ph) continue;
 	
 	                if (fInfo.isAI) {
-					    const container = ph.closest('.ai-image-container') || ph.parentElement;
-					    const imageUrl = `data:${fData.mime};base64,${fData.base64}`;
-					    
-					    // Samakan dengan renderImageToBubble agar konsisten
-					    container.className = "mt-2 w-full image-container";
-					    container.style.position = "relative";
-					    container.style.display = "inline-block";
-					    
-					    // Tambahkan fungsi klik untuk memunculkan ikon
-					    container.onclick = function(e) {
-					        e.stopPropagation();
-					        this.classList.toggle('show-dl');
-					    };
-					    
-						    container.innerHTML = `
-						        <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
-						        <button class="download-btn" onclick="event.stopPropagation(); downloadAIImage('${imageUrl}')" 
-						            style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border: none; border-radius: 6px; padding: 4px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 10;">
-						            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-						                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
-						                <path d="M9 4h6"/>
-						            </svg>
-						        </button>
-						    `;
-						} else {
+    const container = ph.closest('.ai-image-container') || ph.parentElement;
+    const imageUrl = `data:${fData.mime};base64,${fData.base64}`;
+    
+    container.className = "mt-2 w-full image-container";
+    container.style.position = "relative";
+    container.style.display = "inline-block";
+    
+    container.onclick = function(e) {
+        e.stopPropagation();
+        this.classList.toggle('show-dl');
+    };
+    
+    container.innerHTML = `
+        <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
+        <button class="download-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border: none; border-radius: 6px; padding: 4px; color: white; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
+                <path d="M9 4h6"/>
+            </svg>
+        </button>
+    `;
+
+    // Pasang fungsi download secara aman
+    const btn = container.querySelector('.download-btn');
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        downloadAIImage(imageUrl);
+    };
+} else {
 	                    if (fData.mime.startsWith('image/')) {
 	                        ph.innerHTML = `<img src="data:${fData.mime};base64,${fData.base64}" class="w-full h-full object-cover rounded-lg">`;
 	                    } else {
@@ -1076,20 +1080,30 @@ document.addEventListener('click', function() {
     wrapper.className = "mt-2 w-full image-container";
     wrapper.style.position = "relative";
     wrapper.style.display = "inline-block";
+
+    // Fungsi klik untuk munculkan tombol
     wrapper.onclick = function(e) {
         e.stopPropagation();
         this.classList.toggle('show-dl');
     };
 
+    // Struktur HTML tanpa atribut onclick yang panjang
     wrapper.innerHTML = `
         <img src="${imageUrl}" class="w-full h-auto rounded-xl shadow-md border border-gray-100 block">
-        <button class="download-btn" onclick="event.stopPropagation(); downloadAIImage('${imageUrl}')">
+        <button class="download-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border: none; border-radius: 6px; padding: 4px; color: white; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 10;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
                 <path d="M9 4h6"/>
             </svg>
         </button>
     `;
+    
+    // Pasang fungsi download secara aman via JavaScript
+    const btn = wrapper.querySelector('.download-btn');
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        downloadAIImage(imageUrl);
+    };
     
     el.appendChild(wrapper);
     scrollToBottom();
