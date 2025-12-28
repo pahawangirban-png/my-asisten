@@ -421,8 +421,18 @@
 		                    style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px; border: none; transition: all 0.2s; cursor: pointer;">
 		                    <i data-lucide="image" style="width: 15px; height: 15px;"></i>
 		                </button>
-		                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg fill="currentColor" viewBox="0 0 20 20" style="width: 16px; height: 16px;"><path d="M20 5V3.799A.798.798 0 0 0 19.201 3H.801A.8.8 0 0 0 0 3.799V5h2v2H0v2h2v2H0v2h2v2H0v1.199A.8.8 0 0 0 .801 17h18.4a.8.8 0 0 0 .799-.801V15h-2v-2h2v-2h-2V9h2V7h-2V5h2zM8 13V7l5 3-5 3z"></path></svg></div>
-		                <div style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px;"><svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;"><path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path></svg></div>
+		                <button id="btn-mode-video" onclick="toggleVideoMode()" 
+    style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px; border: none; transition: all 0.2s; cursor: pointer;">
+    <svg fill="currentColor" viewBox="0 0 20 20" style="width: 16px; height: 16px;">
+        <path d="M20 5V3.799A.798.798 0 0 0 19.201 3H.801A.8.8 0 0 0 0 3.799V5h2v2H0v2h2v2H0v2h2v2H0v1.199A.8.8 0 0 0 .801 17h18.4a.8.8 0 0 0 .799-.801V15h-2v-2h2v-2h-2V9h2V7h-2V5h2zM8 13V7l5 3-5 3z"></path>
+    </svg>
+</button>
+		                <button id="btn-mode-voice" onclick="openVoiceMode()" 
+    style="height: 32px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background-color: #f9fafb; border-radius: 10px; border: none; transition: all 0.2s; cursor: pointer;">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width: 18px; height: 18px;">
+        <path d="M12,3 C12.51285,3 12.9355092,3.38604429 12.9932725,3.88337975 L13,4 L13,20 C13,20.5523 12.5523,21 12,21 C11.48715,21 11.0644908,20.613973 11.0067275,20.1166239 L11,20 L11,4 C11,3.44772 11.4477,3 12,3 Z M8,6 C8.55228,6 9,6.44772 9,7 L9,17 C9,17.5523 8.55228,18 8,18 C7.44772,18 7,17.5523 7,17 L7,7 C7,6.44772 7.44772,6 8,6 Z M16,6 C16.5523,6 17,6.44772 17,7 L17,17 C17,17.5523 16.5523,18 16,18 C15.4477,18 15,17.5523 15,17 L15,7 C15,6.44772 15.4477,6 16,6 Z M4,9 C4.55228,9 5,9.44772 5,10 L5,14 C5,14.5523 4.55228,15 4,15 C3.44772,15 3,14.5523 3,14 L3,10 C3,9.44772 3.44772,9 4,9 Z M20,9 C20.51285,9 20.9355092,9.38604429 20.9932725,9.88337975 L21,10 L21,14 C21,14.5523 20.5523,15 20,15 C19.48715,15 19.0644908,14.613973 19.0067275,14.1166239 L19,14 L19,10 C19,9.44772 19.4477,9 20,9 Z"></path>
+    </svg>
+</button>
 		            </div>
 		        </div>
 		    </div>
@@ -463,6 +473,25 @@
                         </div>
                      </div>
                   </div>
+				  <div class="space-y-2 pb-4 border-b border-gray-200">
+   <label class="text-sm font-bold text-gray-800 ml-1 uppercase">Model Suara</label>
+   <div class="relative w-full" id="voice-dropdown">
+      <button type="button" id="voice-trigger" class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+         <span id="selected-voice-text">Kore</span>
+         <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="voice-icon"></i>
+      </button>
+
+      <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[120] fade-in">
+         <div class="flex flex-col max-h-48 overflow-y-auto custom-scroll">
+            <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Kore"><span class="text-sm font-medium text-gray-800">Kore (Default)</span></div>
+            <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Aoede"><span class="text-sm font-medium text-gray-800">Aoede</span></div>
+            <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Zephyr"><span class="text-sm font-medium text-gray-800">Zephyr</span></div>
+            <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Leda"><span class="text-sm font-medium text-gray-800">Leda</span></div>
+            <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="Fenrir"><span class="text-sm font-medium text-gray-800">Fenrir</span></div>
+         </div>
+      </div>
+   </div>
+</div>
 
                   <div class="space-y-2 pb-4 border-b border-gray-200">
                      <div class="flex justify-between items-center ml-1">
@@ -493,6 +522,47 @@
             </div>
          </main>
       </div>
+	 <div id="voice-overlay" class="fixed inset-0 bg-white z-[200] hidden flex-col transition-all duration-500" style="display: none;">
+    
+    <header class="h-16 px-6 flex justify-between items-center bg-white shrink-0 border-none">
+    <button id="btn-switch-cam" onclick="switchCamera()" class="p-2.5 text-gray-300 active:scale-90 transition-transform">
+        <i data-lucide="refresh-ccw" stroke-width="2.5" class="w-5 h-5"></i>
+    </button>
+
+    <div class="flex flex-col items-center">
+        <span class="text-[14px] font-bold tracking-[0.5em] text-slate-800 uppercase">LIVE VOICE</span>
+    </div>
+
+    <div class="flex items-center gap-1">
+        <button id="btn-screen-share" onclick="toggleScreenShare()" class="p-2.5 text-gray-300 active:scale-90 transition-transform">
+            <i data-lucide="monitor-up" stroke-width="2.5" class="w-5 h-5"></i>
+        </button>
+        <button id="btn-voice-cam" onclick="toggleVoiceCamera()" class="p-2.5 text-gray-300 active:scale-90 transition-transform">
+            <i data-lucide="video" stroke-width="2.5" class="w-5 h-5"></i>
+        </button>
+    </div>
+</header>
+    
+    <main id="voice-main-content" class="flex-1 flex items-center justify-center p-4 bg-white overflow-hidden">
+        <div id="voice-visual-box" class="relative w-full max-w-3xl h-full flex items-center justify-center">
+            <canvas id="voice-canvas" class="block"></canvas>
+            <video id="voice-large-video" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover rounded-[32px] bg-slate-900 border-none"></video>
+            
+            <canvas id="voice-frame-canvas" style="display:none;"></canvas>
+            <video id="voice-hidden-video" autoplay playsinline muted style="display:none;"></video>
+        </div>
+    </main>
+    
+    <footer class="flex-none bg-white border-none px-4 py-4" style="padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);">
+        <div class="max-w-3xl mx-auto flex flex-col items-center gap-4">
+            <div id="voice-timer" class="text-slate-400 font-mono text-sm tracking-[0.3em] font-bold">00:00:00</div>
+            
+            <button onclick="closeVoiceMode()" class="w-14 h-14 bg-red-50 text-red-500 rounded-full flex items-center justify-center border border-red-100 active:scale-90 transition-all">
+                <i data-lucide="phone-off" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </footer>
+</div>
 <script>
     const SUPABASE_URL = "https://eofuiyhnyyxrapxilank.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
@@ -519,6 +589,8 @@
 	
 	let pendingFiles = [];
 	
+	let currentVoice = localStorage.getItem('v_voice') || 'Kore';
+	
 	const settingsThinking = document.getElementById('settings-thinking');
 	const settingsTokens = document.getElementById('settings-tokens');
 	const labelThinking = document.getElementById('label-thinking');
@@ -537,22 +609,580 @@
 	
 	let isImageMode = false;
 
+	let isVideoMode = false;
+	
+	// Tambahkan di bagian atas variabel global suara (Baris ~315)
+let voiceWs, voiceInCtx, voiceOutCtx, voiceAnalyser, aiAnalyser, voiceDataArray, voiceStream;
+let isAISpeaking = false;
+let voiceNextTime = 0;
+let voiceTimerInterval; // Variabel baru untuk stopwatch
+
+// Tambahkan Variabel Global Baru
+let voiceCamStream, voiceCamInterval;
+let isVoiceCamOn = false;
+// Tambahkan di bagian variabel global suara
+let facingMode = 'user'; // 'user' untuk kamera depan, 'environment' untuk kamera belakang
+
+// Variabel Global Baru untuk Screen Share
+let voiceScreenStream;
+let isScreenSharing = false;
+
+async function toggleScreenShare() {
+    const btn = document.getElementById('btn-screen-share');
+    const largeVid = document.getElementById('voice-large-video');
+    const voiceCanvas = document.getElementById('voice-canvas');
+
+    // 1. Cek apakah browser mendukung Screen Share
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        alert("Fitur Bagi Layar tidak didukung di perangkat ini (biasanya di HP). Silakan gunakan PC/Laptop.");
+        return;
+    }
+
+    if (!isScreenSharing) {
+        try {
+            // 2. Meminta izin rekam layar
+            voiceScreenStream = await navigator.mediaDevices.getDisplayMedia({
+                video: { 
+                    cursor: "always",
+                    displaySurface: "monitor" // Mengoptimalkan penangkapan layar penuh
+                },
+                audio: false
+            });
+
+            // Handle jika user menekan "Stop Sharing" di bar navigasi bawaan browser
+            voiceScreenStream.getVideoTracks()[0].onended = () => stopScreenShare();
+
+            largeVid.srcObject = voiceScreenStream;
+            document.getElementById('voice-hidden-video').srcObject = voiceScreenStream;
+
+            voiceCanvas.style.display = 'none';
+            largeVid.classList.remove('hidden');
+
+            isScreenSharing = true;
+            btn.classList.replace('text-gray-300', 'text-indigo-600');
+            
+            // Matikan kamera agar tidak tabrakan
+            if (isVoiceCamOn) stopVoiceCamera();
+
+            if (voiceCamInterval) clearInterval(voiceCamInterval);
+            voiceCamInterval = setInterval(sendVoiceFrame, 1000);
+            
+        } catch (e) {
+            // Perbaikan tampilan error agar tidak muncul "{}"
+            console.error("Detail Error:", e);
+            if (e.name === 'NotAllowedError') {
+                alert("Izin ditolak: Anda membatalkan permintaan bagi layar.");
+            } else {
+                alert("Gagal berbagi layar: " + (e.message || "Kesalahan tidak dikenal"));
+            }
+        }
+    } else {
+        stopScreenShare();
+    }
+}
+
+function stopScreenShare() {
+    if (voiceScreenStream) {
+        voiceScreenStream.getTracks().forEach(t => t.stop());
+        voiceScreenStream = null;
+    }
+    clearInterval(voiceCamInterval);
+    isScreenSharing = false;
+
+    // Kembalikan ke Bola
+    document.getElementById('voice-canvas').style.display = 'block';
+    document.getElementById('voice-large-video').classList.add('hidden');
+    
+    const btn = document.getElementById('btn-screen-share');
+    btn.classList.replace('text-indigo-600', 'text-gray-300');
+    
+    resizeVoiceCanvas();
+    startVoiceVisualizer();
+}
+
+// Fungsi untuk Switch Kamera
+async function switchCamera() {
+    if (!isVoiceCamOn) return; // Jangan switch jika kamera belum menyala
+    
+    // Tukar mode
+    facingMode = (facingMode === 'user') ? 'environment' : 'user';
+    
+    // Matikan stream lama
+    if (voiceCamStream) {
+        voiceCamStream.getTracks().forEach(t => t.stop());
+    }
+    
+    // Jalankan ulang kamera dengan mode baru
+    isVoiceCamOn = false; 
+    await toggleVoiceCamera();
+}
+
+// Perbarui Fungsi toggleVoiceCamera agar mendukung facingMode
+async function toggleVoiceCamera() {
+    const btn = document.getElementById('btn-voice-cam');
+    const largeVid = document.getElementById('voice-large-video');
+    const voiceCanvas = document.getElementById('voice-canvas');
+
+    if (!isVoiceCamOn) {
+        try {
+            voiceCamStream = await navigator.mediaDevices.getUserMedia({
+                video: { 
+                    facingMode: facingMode, // Menggunakan variabel facingMode
+                    width: { ideal: 1280 }, 
+                    height: { ideal: 720 } 
+                }
+            });
+            
+            largeVid.srcObject = voiceCamStream;
+            document.getElementById('voice-hidden-video').srcObject = voiceCamStream;
+            
+            voiceCanvas.style.display = 'none';
+            largeVid.classList.remove('hidden');
+            
+            isVoiceCamOn = true;
+            btn.classList.replace('text-gray-300', 'text-blue-600');
+            
+            if (voiceCamInterval) clearInterval(voiceCamInterval);
+            voiceCamInterval = setInterval(sendVoiceFrame, 1000);
+        } catch (e) {
+            alert("Gagal mengakses kamera: " + e.message);
+        }
+    } else {
+        stopVoiceCamera();
+    }
+}
+
+function openVoiceMode() {
+    const overlay = document.getElementById('voice-overlay');
+    overlay.style.display = 'flex'; // Aktifkan display
+    overlay.classList.remove('hidden');
+    
+    setTimeout(() => {
+        resizeVoiceCanvas();
+        initVoiceSession();
+    }, 150);
+    
+    if (window.lucide) lucide.createIcons();
+}
+
+function stopVoiceCamera() {
+    if (voiceCamStream) {
+        voiceCamStream.getTracks().forEach(t => t.stop());
+    }
+    clearInterval(voiceCamInterval);
+    isVoiceCamOn = false;
+    
+    // Kembalikan ke Bola di Baris 2
+    document.getElementById('voice-canvas').style.display = 'block';
+    document.getElementById('voice-large-video').classList.add('hidden');
+    
+    resizeVoiceCanvas();
+    startVoiceVisualizer();
+    
+    const btn = document.getElementById('btn-voice-cam');
+    btn.classList.replace('text-blue-600', 'text-slate-300');
+}
+
+function sendVoiceFrame() {
+    if (voiceWs && voiceWs.readyState === WebSocket.OPEN && isVoiceCamOn) {
+        const vid = document.getElementById('voice-large-video');
+        const canvas = document.getElementById('voice-frame-canvas');
+        
+        if (vid.videoWidth > 0) {
+            canvas.width = vid.videoWidth;
+            canvas.height = vid.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(vid, 0, 0);
+            
+            // Kualitas 0.5 (Seimbang antara jelas dan cepat)
+            const base64 = canvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+            
+            voiceWs.send(JSON.stringify({
+                type: 'image',
+                data: { mimeType: "image/jpeg", data: base64 }
+            }));
+        }
+    }
+}
+
+// Fungsi Mulai Sesi (Diperbarui)
+async function initVoiceSession() {
+    const historyContext = chatHistory.map(h => `${h.role}: ${h.parts[0].text}`).slice(-5).join('\n');
+    const fullPrompt = `${systemPrompt}\n\nKONTEKS: Kamu sedang dalam panggilan suara. Kamu bisa melihat gambar dari kamera user jika ia menyalakannya. Berikan respon singkat dan natural berdasarkan apa yang kamu lihat atau dengar.\n\nRIWAYAT:\n${historyContext}`;
+    // ... sisa kode initVoiceSession ...
+
+    try {
+        voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
+        
+        voiceWs.onopen = () => {
+            // Jalankan Stopwatch saat mulai terhubung
+            startVoiceTimer();
+            
+            voiceWs.send(JSON.stringify({
+                type: 'setup',
+                config: {
+                    responseModalities: ['AUDIO'],
+                    speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: currentVoice } } },
+                    systemInstruction: fullPrompt,
+                    tools: [{ googleSearch: {} }]
+                }
+            }));
+        };
+
+        voiceWs.onmessage = (e) => {
+            const res = JSON.parse(e.data);
+            if (res.type === 'gemini_msg') {
+                const audio = res.data.serverContent?.modelTurn?.parts?.[0]?.inlineData;
+                if (audio) {
+                    isAISpeaking = true;
+                    playVoiceAudio(audio.data);
+                }
+            }
+        };
+
+        await initVoiceAudio();
+        startVoiceVisualizer();
+    } catch (err) { console.error("Voice Error:", err); }
+}
+
+// FUNGSI PEMBANTU: Logika Penghitung Waktu
+function startVoiceTimer() {
+    let seconds = 0;
+    const timerEl = document.getElementById('voice-timer');
+    clearInterval(voiceTimerInterval);
+    
+    voiceTimerInterval = setInterval(() => {
+        seconds++;
+        const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
+        const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+        const secs = (seconds % 60).toString().padStart(2, '0');
+        timerEl.innerText = `${hrs}:${mins}:${secs}`;
+    }, 1000);
+}
+
+async function initVoiceAudio() {
+    voiceInCtx = new AudioContext({ sampleRate: 16000 });
+    voiceOutCtx = new AudioContext({ sampleRate: 24000 });
+    
+    aiAnalyser = voiceOutCtx.createAnalyser();
+    aiAnalyser.fftSize = 1024; // Lebih detail
+    aiAnalyser.smoothingTimeConstant = 0.5; // Lebih halus
+    
+    voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const source = voiceInCtx.createMediaStreamSource(voiceStream);
+    
+    voiceAnalyser = voiceInCtx.createAnalyser();
+    voiceAnalyser.fftSize = 1024; // Lebih detail
+    voiceAnalyser.smoothingTimeConstant = 0.5; // Lebih halus
+    
+    voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
+    source.connect(voiceAnalyser);
+
+    await voiceInCtx.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
+        class P extends AudioWorkletProcessor {
+            process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; }
+        }; registerProcessor('p', P);`));
+
+    const node = new AudioWorkletNode(voiceInCtx, 'p');
+    node.port.onmessage = (e) => {
+        if (voiceWs && voiceWs.readyState === WebSocket.OPEN && !isAISpeaking) {
+            const int16 = new Int16Array(e.data.length);
+            for (let i = 0; i < e.data.length; i++) int16[i] = e.data[i] * 0x7FFF;
+            voiceWs.send(JSON.stringify({ 
+                type: 'audio', 
+                data: { data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))), mimeType: 'audio/pcm;rate=16000' } 
+            }));
+        }
+    };
+    source.connect(node);
+}
+
+function resizeVoiceCanvas() {
+    const canvas = document.getElementById('voice-canvas');
+    const container = document.getElementById('voice-visual-box');
+    if (!canvas || !container) return;
+    
+    const rect = container.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    
+    // Canvas mengikuti lebar lega container (max-w-3xl)
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    
+    // Resolusi internal canvas
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+}
+
+function startVoiceVisualizer() {
+    const canvas = document.getElementById('voice-canvas');
+    const ctx = canvas.getContext('2d');
+    let currentVol = 0;
+
+    function draw() {
+        if (document.getElementById('voice-overlay').style.display === 'none' || 
+            canvas.style.display === 'none') return;
+        
+        requestAnimationFrame(draw);
+        const w = canvas.width, h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+
+        let vocalEnergy = 0;
+        const activeAnalyser = isAISpeaking ? aiAnalyser : voiceAnalyser;
+        
+        if (activeAnalyser) {
+            activeAnalyser.getByteFrequencyData(voiceDataArray);
+            let sum = 0;
+            for (let i = 15; i < 100; i++) sum += voiceDataArray[i];
+            vocalEnergy = sum / 85;
+        }
+
+        currentVol += (vocalEnergy - currentVol) * 0.15;
+        const safeVol = currentVol < 20 ? 0 : currentVol - 20;
+        
+        // JAMINAN BULAT: Ambil sisi terpendek area lega
+        const minDim = Math.min(w, h);
+        const centerX = w / 2;
+        const centerY = h / 2;
+        const baseRadius = minDim / 4.8;
+        const maxRadius = (minDim / 2) * 0.9; 
+        
+        let dynamicRadius = baseRadius + (safeVol * 1.5);
+        if (dynamicRadius > maxRadius) dynamicRadius = maxRadius;
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, dynamicRadius, 0, Math.PI * 2);
+        const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, dynamicRadius);
+        gradient.addColorStop(0, '#1e293b');
+        gradient.addColorStop(1, '#0f172a');
+        ctx.fillStyle = gradient;
+        
+        if (safeVol > 0) {
+            ctx.shadowBlur = 12 + (safeVol * 0.3);
+            ctx.shadowColor = 'rgba(37, 99, 235, 0.2)'; 
+        }
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    }
+    draw();
+}
+
+function closeVoiceMode() {
+    const overlay = document.getElementById('voice-overlay');
+    
+    if (voiceWs) { voiceWs.close(); voiceWs = null; }
+    
+    // Matikan Kamera & Bagi Layar
+    stopVoiceCamera();
+    stopScreenShare();
+
+    if (voiceStream) {
+        voiceStream.getTracks().forEach(track => track.stop());
+        voiceStream = null;
+    }
+
+    clearInterval(voiceTimerInterval);
+    document.getElementById('voice-timer').innerText = "00:00:00";
+    
+    overlay.style.display = 'none';
+    overlay.classList.add('hidden');
+    showView('chat');
+    
+    if (voiceInCtx) voiceInCtx.close();
+    if (voiceOutCtx) voiceOutCtx.close();
+}
+
+function playVoiceAudio(base64) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const int16 = new Int16Array(bytes.buffer);
+    const buf = voiceOutCtx.createBuffer(1, int16.length, 24000);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < int16.length; i++) data[i] = int16[i] / 32768.0;
+    
+    const source = voiceOutCtx.createBufferSource();
+    source.buffer = buf;
+    
+    // Sambungkan ke aiAnalyser agar visualisasi akurat sesuai suara AI
+    source.connect(aiAnalyser);
+    source.connect(voiceOutCtx.destination);
+    
+    const now = voiceOutCtx.currentTime;
+    if (voiceNextTime < now) voiceNextTime = now;
+    source.start(voiceNextTime);
+    voiceNextTime += buf.duration;
+    source.onended = () => { if (voiceOutCtx.currentTime >= voiceNextTime - 0.1) isAISpeaking = false; };
+}
+	
+const VEO_PROXY = "https://aura-veo-api-408925499207.asia-southeast2.run.app"; // Endpoint dari veo3.html
+
+function toggleVideoMode() {
+    // Jika mode gambar sedang aktif, matikan dulu
+    if (!isVideoMode && isImageMode) {
+        isImageMode = false;
+        resetButtonUI('btn-mode-image');
+    }
+
+    isVideoMode = !isVideoMode;
+    const btn = document.getElementById('btn-mode-video');
+    const input = document.getElementById('chat-input');
+
+    if (isVideoMode) {
+        setActiveStyle(btn);
+        input.placeholder = "Deskripsikan gerakan video...";
+    } else {
+        resetButtonUI('btn-mode-video');
+        input.placeholder = "Tulis pesan...";
+    }
+}
+
+function setActiveStyle(btn) {
+    btn.style.color = "#1f2937";
+    btn.style.backgroundColor = "#ffffff";
+    btn.style.boxShadow = "0 1px 2px rgba(0,0,0,0.06)";
+}
+
+function resetButtonUI(btnId) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.color = "#9ca3af";
+    btn.style.backgroundColor = "#f9fafb";
+    btn.style.boxShadow = "none";
+}
+
+async function handleVideoGeneration(prompt, imageObj = null) {
+    const aiBubble = createBubble('assistant', '', [], false, false);
+    const targetId = 'video_' + Date.now();
+    aiBubble.textElement.id = targetId;
+    
+    // Tampilan awal yang sederhana
+    aiBubble.textElement.innerHTML = `
+        <div class="flex items-center gap-2 py-1">
+            <span id="status-text-${targetId}" class="text-sm font-medium text-gray-500 italic">Membuat video... (0s)</span>
+            <div class="flex items-end mb-1">
+                <span class="flex leading-none text-gray-400">
+                    <span style="animation: blink 1.4s infinite both; animation-delay: 0s;">.</span>
+                    <span style="animation: blink 1.4s infinite both; animation-delay: 0.2s;">.</span>
+                    <span style="animation: blink 1.4s infinite both; animation-delay: 0.4s;">.</span>
+                </span>
+            </div>
+        </div>
+    `;
+
+    try {
+        let instance = { prompt: prompt };
+        if (imageObj) {
+            instance.image = { bytesBase64Encoded: imageObj.inline_data.data, mimeType: imageObj.inline_data.mime_type };
+        }
+
+        const res = await fetch(`${VEO_PROXY}/api/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: "veo-3.1-generate-preview",
+                instances: [instance],
+                parameters: { sampleCount: 1, aspectRatio: "16:9" }
+            })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error?.message || "Gagal memanggil AI Video.");
+
+        // Mulai polling dengan targetId
+        startVideoPolling(data.name, targetId);
+
+    } catch (e) {
+        aiBubble.textElement.innerHTML = `<span class="text-red-500 font-bold text-xs uppercase">GALAT VIDEO: ${e.message}</span>`;
+    } finally {
+        sendBtn.disabled = false;
+    }
+}
+
+function startVideoPolling(fullName, targetId) {
+    const statusEl = document.getElementById(`status-text-${targetId}`);
+    let startTime = Date.now();
+    
+    const pollInterval = setInterval(async () => {
+        try {
+            const elapsed = Math.round((Date.now() - startTime) / 1000);
+            
+            // Update timer di belakang teks "Membuat video..."
+            if (statusEl) statusEl.innerText = `Membuat video... (${elapsed}s)`;
+
+            const res = await fetch(`${VEO_PROXY}/api/status?name=${encodeURIComponent(fullName)}`);
+            const data = await res.json();
+
+            if (data.error) {
+                const container = document.getElementById(targetId);
+                container.innerHTML = `<div class="text-red-500 text-xs">Error: ${data.error.message}</div>`;
+                clearInterval(pollInterval);
+                return;
+            }
+
+            if (data.done) {
+                clearInterval(pollInterval);
+                const videoUri = data.response?.generateVideoResponse?.generatedSamples?.[0]?.video?.uri;
+                
+                if (videoUri) {
+                    if (statusEl) statusEl.innerText = "Video selesai, menyimpan...";
+                    
+                    const resp = await fetch(videoUri);
+                    const blob = await resp.blob();
+                    const reader = new FileReader();
+                    
+                    reader.onloadend = async () => {
+                        const base64Video = reader.result.split(',')[1];
+                        const videoId = 'vid_gen_' + Date.now();
+                        const mime = "video/mp4";
+
+                        await saveToLocal(videoId, { 
+                            mime: mime, base64: base64Video, name: 'AI-Video.mp4', size: formatBytes(blob.size) 
+                        });
+
+                        renderVideoToBubble(targetId, base64Video, mime);
+
+                        chatHistory.push({ 
+                            role: "model", 
+                            parts: [{ text: `[VIDEO GENERATED]` }],
+                            _ui: { 
+                                val: "", 
+                                filesForStorage: [{ 
+                                    name: 'AURA-VIDEO.mp4', size: formatBytes(blob.size), 
+                                    fileId: videoId, mime: mime, isVideo: true, isAI: true 
+                                }] 
+                            }
+                        });
+                        localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+                    };
+                    reader.readAsDataURL(blob);
+                } else {
+                    const container = document.getElementById(targetId);
+                    container.innerHTML = `<div class="text-yellow-600 text-xs">Render selesai, tapi diblokir filter keamanan.</div>`;
+                }
+            }
+        } catch (e) { 
+            console.error("Polling error:", e); 
+        }
+    }, 5000); // Poll setiap 5 detik sesuai instruksi Google Cloud Run
+}
+	
 	function toggleImageMode() {
+    // Jika mode video sedang aktif, matikan dulu tanpa animasi ganda
+    if (!isImageMode && isVideoMode) {
+        isVideoMode = false;
+        resetButtonUI('btn-mode-video');
+    }
+
     isImageMode = !isImageMode;
     const btn = document.getElementById('btn-mode-image');
     const input = document.getElementById('chat-input');
 
     if (isImageMode) {
-        // Mode Gambar Aktif: Terlihat terangkat dengan background putih
-        btn.style.color = "#1f2937";
-        btn.style.backgroundColor = "#ffffff";
-        btn.style.boxShadow = "0 1px 2px rgba(0,0,0,0.06)";
+        setActiveStyle(btn);
         input.placeholder = "Buat atau edit gambar...";
     } else {
-        // Kembali ke Normal: Sama dengan background tombol lainnya
-        btn.style.color = "#9ca3af";
-        btn.style.backgroundColor = "#f9fafb";
-        btn.style.boxShadow = "none";
+        resetButtonUI('btn-mode-image');
         input.placeholder = "Tulis pesan...";
     }
 }
@@ -581,28 +1211,26 @@ function adjustInput(el) {
     }
 }
 
-async function downloadAIImage(imageUrl) {
+async function downloadAIImage(url) {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isVideo = url.includes("video/mp4");
+    const fileName = `AURA-${isVideo ? 'VIDEO' : 'ART'}-${Date.now()}.${isVideo ? 'mp4' : 'png'}`;
+    
     try {
-        const response = await fetch(imageUrl);
+        const response = await fetch(url);
         const blob = await response.blob();
-        const fileName = `AURA-ART-${Date.now()}.png`;
         const file = new File([blob], fileName, { type: blob.type });
 
         if (isIOS && navigator.share) {
             await navigator.share({ files: [file] });
         } else {
-            const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = window.URL.createObjectURL(blob);
             a.download = fileName;
-            document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
         }
-    } catch (e) { window.open(imageUrl, '_blank'); }
+    } catch (e) { window.open(url, '_blank'); }
 }
 
 // Listener Global untuk menyembunyikan tombol download saat klik di luar gambar
@@ -706,42 +1334,76 @@ document.addEventListener('click', function() {
 	    updateSliderLabels();
 	    lucide.createIcons();
 	    loadSavedChat();
-	}
+		
+		document.getElementById('selected-voice-text').innerText = currentVoice;
+}
+
 	
-	dropdownTrigger.onclick = (e) => {
-	    e.stopPropagation();
-	    const isHidden = dropdownMenu.classList.contains('hidden');
-	    if (isHidden) {
-	        dropdownMenu.classList.remove('hidden');
-	        document.getElementById('dropdown-icon').style.transform = 'rotate(180deg)';
-	    } else {
-	        dropdownMenu.classList.add('hidden');
-	        document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
-	    }
-	};
-	
-	dropdownOptions.forEach(opt => {
-	    opt.onclick = (e) => {
-	        e.stopPropagation();
-	        currentModel = opt.getAttribute('data-value');
-	        selectedModelText.innerText = opt.querySelector('span').innerText;
-	        
-	        dropdownMenu.classList.add('hidden');
-	        document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
-	        
-	        saveSettings();
-	    };
-	});
-	
-	document.addEventListener('click', (e) => {
-	    if (!dropdownMenu.classList.contains('hidden')) {
-	        if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target)) {
-	            dropdownMenu.classList.add('hidden');
-	            const icon = document.getElementById('dropdown-icon');
-	            if (icon) icon.style.transform = 'rotate(0deg)';
-	        }
-	    }
-	});
+	// TAMBAHKAN BLOK INI SEBAGAI GANTINYA
+const voiceTrigger = document.getElementById('voice-trigger');
+const voiceMenu = document.getElementById('voice-menu');
+const voiceOptions = document.querySelectorAll('.voice-option');
+
+// Fungsi terpusat untuk menutup semua menu
+function closeAllDropdowns() {
+    dropdownMenu.classList.add('hidden');
+    const modelIcon = document.getElementById('dropdown-icon');
+    if (modelIcon) modelIcon.style.transform = 'rotate(0deg)';
+    
+    voiceMenu.classList.add('hidden');
+    const voiceIcon = document.getElementById('voice-icon');
+    if (voiceIcon) voiceIcon.style.transform = 'rotate(0deg)';
+}
+
+// Logika Klik Dropdown Model AI
+dropdownTrigger.onclick = (e) => {
+    e.stopPropagation();
+    const isHidden = dropdownMenu.classList.contains('hidden');
+    closeAllDropdowns();
+    if (isHidden) {
+        dropdownMenu.classList.remove('hidden');
+        document.getElementById('dropdown-icon').style.transform = 'rotate(180deg)';
+    }
+};
+
+dropdownOptions.forEach(opt => {
+    opt.onclick = (e) => {
+        e.stopPropagation();
+        currentModel = opt.getAttribute('data-value');
+        selectedModelText.innerText = opt.querySelector('span').innerText;
+        closeAllDropdowns();
+        saveSettings();
+    };
+});
+
+// Logika Klik Dropdown Model Suara
+voiceTrigger.onclick = (e) => {
+    e.stopPropagation();
+    const isHidden = voiceMenu.classList.contains('hidden');
+    closeAllDropdowns();
+    if (isHidden) {
+        voiceMenu.classList.remove('hidden');
+        document.getElementById('voice-icon').style.transform = 'rotate(180deg)';
+    }
+};
+
+voiceOptions.forEach(opt => {
+    opt.onclick = (e) => {
+        e.stopPropagation();
+        currentVoice = opt.getAttribute('data-value');
+        document.getElementById('selected-voice-text').innerText = currentVoice;
+        closeAllDropdowns();
+        saveSettings();
+    };
+});
+
+// Listener Global: Tutup semua jika klik di luar elemen dropdown
+document.addEventListener('click', (e) => {
+    if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target) &&
+        !voiceTrigger.contains(e.target) && !voiceMenu.contains(e.target)) {
+        closeAllDropdowns();
+    }
+});
 	
 	function saveSettings() {
 	    systemPrompt = settingsPrompt.value;
@@ -761,6 +1423,7 @@ document.addEventListener('click', function() {
 	        'gemini-3-deep-think-preview': 'Gemini 3 Deep Think'
 	    };
 	    selectedModelText.innerText = modelLabels[currentModel] || 'Gemini 3 Flash';
+		localStorage.setItem('v_voice', currentVoice);
 	}
 
 	async function loadSavedChat() {
@@ -782,7 +1445,10 @@ document.addEventListener('click', function() {
 	                const ph = bubble.textElement.parentElement.querySelector(`[data-file-id="${fInfo.fileId}"]`);
 	                if (!ph) continue;
 	
-	                if (fInfo.isAI) {
+	                if (fInfo.isVideo) {
+    const container = ph.closest('.ai-image-container') || ph.parentElement;
+    renderVideoToBubble(container.id || (container.id = 'old_vid_' + Date.now()), fData.base64, fData.mime);
+} else if (fInfo.isAI) {
     const container = ph.closest('.ai-image-container') || ph.parentElement;
     const imageUrl = `data:${fData.mime};base64,${fData.base64}`;
     
@@ -898,15 +1564,16 @@ document.addEventListener('click', function() {
 	
 	    let filesHtml = '';
 	    if (files && files.length > 0) {
-	        const aiFile = files.find(f => f.isAI);
-	        if (aiFile) {
-	            filesHtml = `
-	                <div class="mt-2 w-full ai-image-container">
-	                    <div class="file-placeholder w-full h-48 bg-gray-200 rounded-xl animate-pulse flex items-center justify-center" data-file-id="${aiFile.fileId}">
-	                        <i data-lucide="image" class="w-8 h-8 text-gray-400"></i>
-	                    </div>
-	                </div>`;
-	        } else {
+	        const aiFile = files.find(f => f.isAI || f.isVideo); // Tambahkan f.isVideo
+
+if (aiFile) {
+    filesHtml = `
+        <div class="mt-2 w-full ai-image-container">
+            <div class="file-placeholder w-full h-48 bg-gray-200 rounded-xl animate-pulse flex items-center justify-center" data-file-id="${aiFile.fileId}">
+                <i data-lucide="${aiFile.isVideo ? 'video' : 'image'}" class="w-8 h-8 text-gray-400"></i>
+            </div>
+        </div>`;
+} else {
 	            filesHtml = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">';
 	            files.forEach(f => {
 	                const ext = f.name.split('.').pop().toLowerCase();
@@ -1129,6 +1796,45 @@ document.addEventListener('click', function() {
     el.appendChild(wrapper);
     scrollToBottom();
 }
+
+function renderVideoToBubble(targetId, b64, mime) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    
+    const container = el.closest('.ai-image-container') || el;
+    container.innerHTML = '';
+    
+    const videoUrl = `data:${mime};base64,${b64}`;
+    const wrapper = document.createElement('div');
+    // Gunakan class yang sama persis dengan image container
+    wrapper.className = "mt-2 w-full image-container"; 
+    wrapper.style.position = "relative";
+    wrapper.style.display = "inline-block";
+    
+    wrapper.onclick = function(e) {
+        e.stopPropagation();
+        this.classList.toggle('show-dl');
+    };
+
+    wrapper.innerHTML = `
+        <video src="${videoUrl}" controls playsinline class="w-full rounded-xl shadow-md border border-gray-100 block"></video>
+        <button class="download-btn" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); border: none; border-radius: 6px; padding: 4px; color: white; cursor: pointer; display: none; align-items: center; justify-content: center; z-index: 20;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 11a1 1 0 0 0 1 1h2.939a1 1 0 0 1 .75 1.811l-6.835 6.836a1.207 1.207 0 0 1-1.707 0L4.31 13.81a1 1 0 0 1 .75-1.811H8a1 1 0 0 0 1-1V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"/>
+                <path d="M9 4h6"/>
+            </svg>
+        </button>
+    `;
+    
+    const btn = wrapper.querySelector('.download-btn');
+    btn.onclick = (e) => {
+        e.stopPropagation();
+        downloadAIImage(videoUrl);
+    };
+    
+    container.appendChild(wrapper);
+    scrollToBottom();
+}
 	
 	async function handleImageGeneration(prompt, imgObj = null) {
 	    const isEdit = prompt.toLowerCase().startsWith('/edit');
@@ -1206,133 +1912,186 @@ document.addEventListener('click', function() {
 	}
 	
 	async function onSend(e) {
-	    if (e) e.preventDefault();
-	    const val = input.value.trim();
-	    if (!val && pendingFiles.length === 0) return;
-	
-	    if (isImageMode) {
-	        let prefix = (pendingFiles.length > 0) ? '/edit ' : '/gambar ';
-	        let promptWithCommand = prefix + val;
-	        
-	        createBubble('user', val || "Memproses gambar...", pendingFiles.map(f => ({ ...f })));
-	        
-	        let imgObj = null;
-	        if (pendingFiles.length > 0) {
-	            const firstImg = pendingFiles.find(f => f.mime.startsWith('image/'));
-	            if (firstImg) {
-	                imgObj = { inline_data: { mime_type: firstImg.mime, data: firstImg.base64 } };
-	            }
-	        }
-	
-	        input.value = '';
-	        adjustInput(input);
-	        pendingFiles = [];
-	        renderPreviews();
-	        sendBtn.disabled = true;
-	        
-	        await handleImageGeneration(promptWithCommand, imgObj);
-	        toggleImageMode();
-	        return;
-	    }
-	
-	    const filesForUI = [];
-	    const filesForStorage = [];
-	    const apiParts = [];
-	    let officeTextContext = "";
-	
-	    for (const f of pendingFiles) {
-	        const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-	        await saveToLocal(fileId, { mime: f.mime, base64: f.base64, name: f.name, size: f.size });
-	        filesForUI.push({ ...f });
-	        filesForStorage.push({ name: f.name, size: f.size, fileId: fileId });
-	        const ext = f.name.split('.').pop().toLowerCase();
-	        if (f.mime.startsWith('image/') || ext === 'pdf') {
-	            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
-	        } else {
-	            officeTextContext += await extractTextFromOffice(f);
-	        }
-	    }
-	
-	    createBubble('user', val, filesForUI);
-	    chatHistory.push({ 
-	        role: "user", 
-	        parts: [{ text: val || "Analisis lampiran ini." }], 
-	        _ui: { val, filesForStorage } 
-	    });
-	
-	    const currentTurnText = (val || "Analisis lampiran ini.") + (officeTextContext ? "\n\nREFERENSI KONTEKS:\n" + officeTextContext : "");
-	    input.value = '';
-	    adjustInput(input);
-	    pendingFiles = [];
-	    renderPreviews();
-	    sendBtn.disabled = true;
-	
-	    const aiBubble = createBubble('assistant', '', [], false, true);
-	    let resTxt = "";
-	    const endpoint = `${SUPABASE_URL}/functions/v1/ai-proxy-v2?model=${currentModel}&action=streamGenerateContent&version=v1beta`;
-	
-	    try {
-	        const cleanContents = chatHistory.map(h => ({ role: h.role, parts: h.parts }));
-	        cleanContents[cleanContents.length - 1].parts = [...apiParts, { text: currentTurnText }];
-	
-	        const response = await fetch(endpoint, {
-	            method: 'POST',
-	            headers: { 
-	                'Content-Type': 'application/json', 
-	                'apikey': SUPABASE_KEY, 
-	                'Authorization': `Bearer ${SUPABASE_KEY}` 
-	            },
-	            body: JSON.stringify({ 
-	                contents: cleanContents, 
-	                systemInstruction: { parts: [{ text: systemPrompt }] },
-	                generationConfig: { temperature: 1, maxOutputTokens: maxTokens, response_modalities: ["TEXT"] },
-	                tools: [{ google_search: {} }] 
-	            })
-	        });
-	
-	        if (!response.ok) throw new Error("Gagal merespons dari Proxy");
-	        const reader = response.body.getReader();
-	        const decoder = new TextDecoder();
-	        let buffer = "";
-	
-	        while (true) {
-	            const { value, done } = await reader.read();
-	            if (done) break;
-	            buffer += decoder.decode(value, { stream: true });
-	            let start = buffer.indexOf('{');
-	            while (start !== -1) {
-	                let depth = 0, end = -1;
-	                for (let i = start; i < buffer.length; i++) {
-	                    if (buffer[i] === '{') depth++;
-	                    else if (buffer[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
-	                }
-	                if (end !== -1) {
-	                    try {
-	                        const json = JSON.parse(buffer.substring(start, end + 1));
-	                        const partText = json.candidates?.[0]?.content?.parts?.[0]?.text;
-	                        if (partText) {
-	                            if (aiBubble.typingElement) { aiBubble.typingElement.remove(); aiBubble.typingElement = null; }
-	                            resTxt += partText;
-	                            aiBubble.textElement.innerHTML = marked.parse(resTxt);
-	                            aiBubble.textElement.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
-	                        }
-	                    } catch (e) {}
-	                    buffer = buffer.substring(end + 1);
-	                    start = buffer.indexOf('{');
-	                } else break;
-	            }
-	            scrollToBottom();
-	        }
-	        chatHistory.push({ role: "model", parts: [{ text: resTxt }] });
-	        localStorage.setItem('chat_history', JSON.stringify(chatHistory));
-	    } catch (err) {
-	        aiBubble.textElement.innerHTML = `<span class="text-red-500 font-bold">GALAT: ${err.message}</span>`;
-	        if (aiBubble.typingElement) aiBubble.typingElement.remove();
-	    } finally {
-	        sendBtn.disabled = false;
-	        if (window.lucide) lucide.createIcons();
-	    }
-	}
+    if (e) e.preventDefault();
+    const val = input.value.trim();
+    
+    // Jangan kirim jika input kosong dan tidak ada file
+    if (!val && pendingFiles.length === 0) return;
+
+    try {
+        // Matikan tombol agar tidak ada pengiriman ganda
+        sendBtn.disabled = true;
+
+        // 1. LOGIKA MODE VIDEO
+        if (isVideoMode) {
+            createBubble('user', val || "Memproses video...", pendingFiles.map(f => ({ ...f })));
+            
+            let imgObj = null;
+            if (pendingFiles.length > 0) {
+                // Cari gambar pertama sebagai referensi video
+                const firstImg = pendingFiles.find(f => f.mime && f.mime.startsWith('image/'));
+                if (firstImg) {
+                    imgObj = { inline_data: { mime_type: firstImg.mime, data: firstImg.base64 } };
+                }
+            }
+
+            input.value = '';
+            adjustInput(input);
+            pendingFiles = [];
+            renderPreviews();
+            
+            await handleVideoGeneration(val, imgObj);
+            toggleVideoMode();
+            return; // Berhenti di sini untuk mode video
+        }
+
+        // 2. LOGIKA MODE GAMBAR
+        if (isImageMode) {
+            let prefix = (pendingFiles.length > 0) ? '/edit ' : '/gambar ';
+            let promptWithCommand = prefix + val;
+            
+            createBubble('user', val || "Memproses gambar...", pendingFiles.map(f => ({ ...f })));
+            
+            let imgObj = null;
+            if (pendingFiles.length > 0) {
+                const firstImg = pendingFiles.find(f => f.mime && f.mime.startsWith('image/'));
+                if (firstImg) {
+                    imgObj = { inline_data: { mime_type: firstImg.mime, data: firstImg.base64 } };
+                }
+            }
+
+            input.value = '';
+            adjustInput(input);
+            pendingFiles = [];
+            renderPreviews();
+            
+            await handleImageGeneration(promptWithCommand, imgObj);
+            toggleImageMode();
+            return; // Berhenti di sini untuk mode gambar
+        }
+
+        // 3. LOGIKA CHAT TEKS / ANALISIS FILE BIASA
+        const filesForUI = [];
+        const filesForStorage = [];
+        const apiParts = [];
+        let officeTextContext = "";
+
+        // Proses lampiran file
+        for (const f of pendingFiles) {
+            const fileId = 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+            
+            // Simpan ke IndexedDB
+            await saveToLocal(fileId, { mime: f.mime, base64: f.base64, name: f.name, size: f.size });
+            
+            filesForUI.push({ ...f });
+            filesForStorage.push({ name: f.name, size: f.size, fileId: fileId });
+            
+            const ext = f.name.split('.').pop().toLowerCase();
+            
+            // Masukkan gambar/PDF ke API, ekstrak teks untuk Office
+            if ((f.mime && f.mime.startsWith('image/')) || ext === 'pdf') {
+                apiParts.push({ inline_data: { mime_type: f.mime || 'image/jpeg', data: f.base64 } });
+            } else {
+                officeTextContext += await extractTextFromOffice(f);
+            }
+        }
+
+        // Tampilkan bubble user
+        createBubble('user', val, filesForUI);
+        
+        // Simpan ke history chat
+        chatHistory.push({ 
+            role: "user", 
+            parts: [{ text: val || "Analisis lampiran ini." }], 
+            _ui: { val, filesForStorage } 
+        });
+
+        const currentTurnText = (val || "Analisis lampiran ini.") + (officeTextContext ? "\n\nKONTEKS DOKUMEN:\n" + officeTextContext : "");
+
+        // Reset Input UI
+        input.value = '';
+        adjustInput(input);
+        pendingFiles = [];
+        renderPreviews();
+
+        // Buat bubble AI (Typing Indicator)
+        const aiBubble = createBubble('assistant', '', [], false, true);
+        let resTxt = "";
+        
+        const endpoint = `${SUPABASE_URL}/functions/v1/ai-proxy-v2?model=${currentModel}&action=streamGenerateContent&version=v1beta`;
+        const cleanContents = chatHistory.map(h => ({ role: h.role, parts: h.parts }));
+        
+        // Tambahkan data file ke pesan terakhir user untuk API
+        cleanContents[cleanContents.length - 1].parts = [...apiParts, { text: currentTurnText }];
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'apikey': SUPABASE_KEY, 
+                'Authorization': `Bearer ${SUPABASE_KEY}` 
+            },
+            body: JSON.stringify({ 
+                contents: cleanContents, 
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { temperature: 1, maxOutputTokens: maxTokens, response_modalities: ["TEXT"] },
+                tools: [{ google_search: {} }] 
+            })
+        });
+
+        if (!response.ok) throw new Error("Gagal merespons dari Proxy");
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        // Proses streaming respons AI
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            
+            buffer += decoder.decode(value, { stream: true });
+            let start = buffer.indexOf('{');
+            
+            while (start !== -1) {
+                let depth = 0, end = -1;
+                for (let i = start; i < buffer.length; i++) {
+                    if (buffer[i] === '{') depth++;
+                    else if (buffer[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+                }
+                
+                if (end !== -1) {
+                    try {
+                        const json = JSON.parse(buffer.substring(start, end + 1));
+                        const partText = json.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (partText) {
+                            if (aiBubble.typingElement) { aiBubble.typingElement.remove(); aiBubble.typingElement = null; }
+                            resTxt += partText;
+                            aiBubble.textElement.innerHTML = marked.parse(resTxt);
+                            aiBubble.textElement.querySelectorAll('pre code').forEach(b => hljs.highlightElement(b));
+                        }
+                    } catch (e) { /* Chunk belum lengkap */ }
+                    buffer = buffer.substring(end + 1);
+                    start = buffer.indexOf('{');
+                } else break;
+            }
+            scrollToBottom();
+        }
+
+        // Simpan hasil akhir ke history
+        chatHistory.push({ role: "model", parts: [{ text: resTxt }] });
+        localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+
+    } catch (err) {
+        console.error("Error onSend:", err);
+        createBubble('assistant', `<span class="text-red-500 font-bold uppercase text-[10px]">GALAT SISTEM:</span>\n\n${err.message}`);
+    } finally {
+        // Pastikan tombol selalu menyala kembali agar tidak macet
+        sendBtn.disabled = false;
+        if (window.lucide) lucide.createIcons();
+        scrollToBottom();
+    }
+}
 	
 	async function processPendingFiles() {
 	    const filesForUI = [];
