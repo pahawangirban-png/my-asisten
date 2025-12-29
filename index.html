@@ -389,7 +389,7 @@
 
         <!-- Chat View -->
         <div id="chat-view" class="view-container">
-            <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 overflow-hidden">
+            <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 relative">
                 <div class="flex items-center h-full">
                     <img src="icon/icon.png" alt="Logo" class="h-14 w-auto object-contain block py-0">
 	                <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 4px; gap: 3px;">
@@ -656,6 +656,8 @@
 	const voiceTrigger = document.getElementById('voice-trigger');
 	const voiceMenu = document.getElementById('voice-menu');
 	const voiceOptions = document.querySelectorAll('.voice-option');
+	const headerMenuTrigger = document.getElementById('header-menu-trigger');
+	const headerDropdown = document.getElementById('header-dropdown');
 	
 	// State Variables
 	let currentModel = localStorage.getItem('ai_model') || 'gemini-3-flash-preview';
@@ -1738,6 +1740,7 @@
 	    overlay.classList.add('hidden');
 	    
 	    showView('chat');
+		closeHeaderDropdown();
 	}
 	
 	function syncVoiceToChat(role, text) {
@@ -2180,46 +2183,44 @@
 	    };
 	});
 	
-	// Global Click untuk tutup dropdown
-	document.addEventListener('click', (e) => {
-		if (!headerMenuTrigger.contains(e.target) && !headerDropdown.contains(e.target)) {
-        closeHeaderDropdown();
-    	}
-	    if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target) &&
-	        !voiceTrigger.contains(e.target) && !voiceMenu.contains(e.target)) {
-	        closeAllDropdowns();
-	    }
-	});
-	
-	// Tombol download saat klik di luar gambar
-	document.addEventListener('click', function() {
-	    document.querySelectorAll('.image-container').forEach(container => {
-	        container.classList.remove('show-dl');
-	    });
-	});
-	
-	// interupsi respon ai saat berbicara
-	document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => {
-	    if (e.target.closest('button')) return;
-	    if (isAISpeaking || activeVoiceSources.length > 0) {
-	        interruptVoice();
-	    }
-	}, { passive: true });
-	
-	
-	const headerMenuTrigger = document.getElementById('header-menu-trigger');
-	const headerDropdown = document.getElementById('header-dropdown');
-	
-	headerMenuTrigger.onclick = (e) => {
-	    e.stopPropagation();
-	    const isHidden = headerDropdown.classList.contains('hidden');
-	    closeAllDropdowns(); 
-	    if (isHidden) {
-	        headerDropdown.classList.remove('hidden');
-	    } else {
-	        headerDropdown.classList.add('hidden');
-	    }
-	};
+document.addEventListener('click', (e) => {
+    if (headerMenuTrigger && headerDropdown) {
+        if (!headerMenuTrigger.contains(e.target) && !headerDropdown.contains(e.target)) {
+            closeHeaderDropdown();
+        }
+    }
+    
+    if (dropdownTrigger && dropdownMenu && voiceTrigger && voiceMenu) {
+        if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target) &&
+            !voiceTrigger.contains(e.target) && !voiceMenu.contains(e.target)) {
+            closeAllDropdowns();
+        }
+    }
+});
+
+document.addEventListener('click', function() {
+    document.querySelectorAll('.image-container').forEach(container => {
+        container.classList.remove('show-dl');
+    });
+});
+
+document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button')) return;
+    if (isAISpeaking || activeVoiceSources.length > 0) {
+        interruptVoice();
+    }
+}, { passive: true });
+
+headerMenuTrigger.onclick = (e) => {
+    e.stopPropagation();
+    const isHidden = headerDropdown.classList.contains('hidden');
+    closeAllDropdowns(); 
+    if (isHidden) {
+        headerDropdown.classList.remove('hidden');
+    } else {
+        headerDropdown.classList.add('hidden');
+    }
+};
 	
 	// Input event
 	input.addEventListener('keydown', (e) => { 
