@@ -389,33 +389,46 @@
 
         <!-- Chat View -->
         <div id="chat-view" class="view-container">
-            <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 overflow-hidden">
+            <header class="h-16 px-4 flex justify-between items-center bg-white shrink-0 border-b border-gray-100 py-0 relative">
                 <div class="flex items-center h-full">
                     <img src="icon/icon.png" alt="Logo" class="h-14 w-auto object-contain block py-0">
-                    <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 4px; gap: 1px;">
-                        <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; background: linear-gradient(90deg, #2563eb 0%, #06b6d4 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AURA</span>
-                        <span style="font-size: 8.5px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;">ARTIFICIAL INTELLIGENCE</span>
-                    </div>
+	                <div style="display: flex; flex-direction: column; justify-content: center; margin-left: 4px; gap: 3px;">
+					    <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; background: linear-gradient(90deg, #2563eb 0%, #06b6d4 70%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">AURA</span>
+					    <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1;">ARTIFICIAL INTELLIGENCE</span>
+					</div>
                 </div>
 
-                <div class="flex items-center gap-1">
-                    <button onclick="clearChat()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-                        <i data-lucide="refresh-cw" stroke-width="2.5" class="w-5 h-5"></i>
-                    </button>
-                    <button onclick="showView('settings')" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-                        <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
-                    </button>
-                    <button onclick="handleLogout()" class="p-2.5 text-gray-500 active:scale-90 transition-transform">
-                        <i data-lucide="log-out" stroke-width="2.5" class="w-5 h-5"></i>
-                    </button>
-                </div>
+                <div class="flex items-center relative">
+				    <button id="header-menu-trigger" class="p-2.5 text-gray-500 active:scale-90 transition-transform outline-none">
+				        <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
+				    </button>
+				    
+				    <div id="header-dropdown" class="hidden absolute right-0 top-full mt-4 w-44 bg-slate-50 rounded-2xl shadow-xl border border-gray-100 p-1.5 z-[150] fade-in">
+				        <div class="flex flex-col">
+				            <div onclick="clearChat(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-2.5 px-4 rounded-xl hover:bg-gray-200/50 cursor-pointer transition-colors border-b border-gray-200/60">
+				                <span class="text-sm font-medium text-slate-600 tracking-wider">Reset</span>
+				                <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-500"></i>
+				            </div>
+				            
+				            <div onclick="showView('settings'); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-2.5 px-4 rounded-xl hover:bg-gray-200/50 cursor-pointer transition-colors border-b border-gray-200/60">
+				                <span class="text-sm font-medium text-slate-600 tracking-wider">Pengaturan</span>
+				                <i data-lucide="settings" class="w-4 h-4 text-slate-500"></i>
+				            </div>
+				            
+				            <div onclick="handleLogout(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-2.5 px-4 rounded-xl hover:bg-gray-200/50 cursor-pointer transition-colors">
+				                <span class="text-sm font-medium text-slate-600 tracking-wider">Logout</span>
+				                <i data-lucide="log-out" class="w-4 h-4 text-slate-500"></i>
+				            </div>
+				        </div>
+				    </div>
+				</div>
             </header>
 
             <main id="chat-scroller">
                 <div id="message-list" class="max-w-3xl mx-auto space-y-4 pb-2"></div>
             </main>
 
-            <footer style="background-color: #ffffff; padding: 6px 16px; padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 16px);">
+            <footer style="background-color: #ffffff; padding: 6px 16px; padding-bottom: calc(env(safe-area-inset-bottom, 10px) + 18px);">
                 <div style="max-width: 48rem; margin-left: auto; margin-right: auto;">
                     <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2"></div>
                     
@@ -480,12 +493,12 @@
                             <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
                             <div class="relative w-full" id="custom-dropdown">
                                 <button type="button" id="dropdown-trigger" 
-                                    class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+                                    class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
                                     <span id="selected-model-text">Gemini 3 Flash</span>
                                     <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
                                 </button>
 
-                                <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
+                                <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-gray-50 rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
                                     <div class="flex flex-col">
                                         <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
                                             <span class="text-sm font-medium text-gray-800">Gemini 3 Flash</span>
@@ -506,12 +519,12 @@
                             <label class="text-sm font-bold text-gray-800 ml-1 uppercase">Model Suara</label>
                             <div class="relative w-full" id="voice-dropdown">
                                 <button type="button" id="voice-trigger" 
-                                    class="w-full bg-white border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+                                    class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
                                     <span id="selected-voice-text">Kore</span>
                                     <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="voice-icon"></i>
                                 </button>
 
-                                <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[120] fade-in">
+                                <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-gray-50 rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[120] fade-in">
                                     <div class="flex flex-col max-h-48 overflow-y-auto custom-scroll">
                                         <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Kore">
                                             <span class="text-sm font-medium text-gray-800">Kore (Default)</span>
@@ -562,7 +575,7 @@
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">System Instruksi</label>
                             <textarea id="settings-prompt" rows="4" oninput="saveSettings()" 
-                                class="w-full bg-white border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" 
+                                class="w-full bg-gray-50 border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" 
                                 placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
                         </div>
                     </div>
@@ -740,6 +753,10 @@
 	            behavior: 'smooth' 
 	        }); 
 	    }, 50);
+	}
+	
+	function closeHeaderDropdown() {
+	    headerDropdown.classList.add('hidden');
 	}
 	
 	// ============================
@@ -1267,7 +1284,7 @@
 	    
 	    aiBubble.textElement.innerHTML = `
 	        <div class="flex items-center gap-2 py-1">
-	            <span id="status-text-${targetId}" class="text-sm font-medium text-gray-500 italic">Membuat video... (0s)</span>
+	            <span id="status-text-${targetId}" class="text-sm font-medium text-gray-500 italic">Membuat video (0s)</span>
 	            <div class="flex items-end mb-1">
 	                <span class="flex leading-none text-gray-400">
 	                    <span style="animation: blink 1.4s infinite both; animation-delay: 0s;">.</span>
@@ -2165,6 +2182,9 @@
 	
 	// Global Click untuk tutup dropdown
 	document.addEventListener('click', (e) => {
+		if (!headerMenuTrigger.contains(e.target) && !headerDropdown.contains(e.target)) {
+        closeHeaderDropdown();
+    	}
 	    if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target) &&
 	        !voiceTrigger.contains(e.target) && !voiceMenu.contains(e.target)) {
 	        closeAllDropdowns();
@@ -2178,13 +2198,28 @@
 	    });
 	});
 	
-	// Gunakan event 'pointerdown' agar respon lebih cepat daripada 'click'
+	// interupsi respon ai saat berbicara
 	document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => {
-	    if (e.target.closest('button')) return; // Jangan interupsi jika tekan tombol
+	    if (e.target.closest('button')) return;
 	    if (isAISpeaking || activeVoiceSources.length > 0) {
 	        interruptVoice();
 	    }
 	}, { passive: true });
+	
+	
+	const headerMenuTrigger = document.getElementById('header-menu-trigger');
+	const headerDropdown = document.getElementById('header-dropdown');
+	
+	headerMenuTrigger.onclick = (e) => {
+	    e.stopPropagation();
+	    const isHidden = headerDropdown.classList.contains('hidden');
+	    closeAllDropdowns(); 
+	    if (isHidden) {
+	        headerDropdown.classList.remove('hidden');
+	    } else {
+	        headerDropdown.classList.add('hidden');
+	    }
+	};
 	
 	// Input event
 	input.addEventListener('keydown', (e) => { 
