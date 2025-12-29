@@ -359,19 +359,9 @@
         <!-- Authentication View -->
         <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
             <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
-                <div class="text-center mb-10">
+                <div class="text-center mb-6">
 				    <div class="flex items-center justify-center mx-auto mb-0">
-				        <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
-				    </div>
-				    
-				    <div class="flex flex-col items-center justify-center">
-				        <span style="font-size: 22px; font-weight: 900; color: #9ca3af; text-transform: uppercase; letter-spacing: -1.2px; line-height: 1; margin-top: -8px;">
-				            AURA
-				        </span>
-				        
-				        <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; line-height: 1; margin-top: 10px;">
-				            ARTIFICIAL INTELLIGENCE
-				        </span>
+				        <img src="icon/icon.png" alt="Logo" class="h-24 w-auto object-contain block">
 				    </div>
 				</div>
 
@@ -2236,9 +2226,11 @@
 	        }
 	    }
 	    
-	    document.querySelectorAll('.image-container').forEach(container => {
-	        container.classList.remove('show-dl');
-	    });
+	    if (!e.target.closest('.image-container')) {
+	        document.querySelectorAll('.image-container').forEach(container => {
+	            container.classList.remove('show-dl');
+	        });
+	    }
 	});
 	
 	document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => {
