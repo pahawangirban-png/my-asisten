@@ -689,7 +689,7 @@
 	let facingMode = 'user';
 	let activeVoiceSources = [];
 	let voiceEnabled = false;
-	let voiceSessionId = 0; 
+	let voiceSessionId = 0;
 	
 	// ============================
 	// MARKDOWN RENDERER SETUP
@@ -2192,7 +2192,7 @@
 	    };
 	});
 	
-document.addEventListener('click', (e) => {
+document.addEventListener('pointerdown', (e) => {
     if (headerMenuTrigger && headerDropdown) {
         if (!headerMenuTrigger.contains(e.target) && !headerDropdown.contains(e.target)) {
             closeHeaderDropdown();
@@ -2205,9 +2205,7 @@ document.addEventListener('click', (e) => {
             closeAllDropdowns();
         }
     }
-});
-
-document.addEventListener('click', function() {
+    
     document.querySelectorAll('.image-container').forEach(container => {
         container.classList.remove('show-dl');
     });
@@ -2220,16 +2218,19 @@ document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => 
     }
 }, { passive: true });
 
-headerMenuTrigger.onclick = (e) => {
-    e.stopPropagation();
-    const isHidden = headerDropdown.classList.contains('hidden');
-    closeAllDropdowns(); 
-    if (isHidden) {
-        headerDropdown.classList.remove('hidden');
-    } else {
-        headerDropdown.classList.add('hidden');
-    }
-};
+if (headerMenuTrigger) {
+    headerMenuTrigger.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const isHidden = headerDropdown.classList.contains('hidden');
+        closeAllDropdowns(); 
+        if (isHidden) {
+            headerDropdown.classList.remove('hidden');
+        } else {
+            headerDropdown.classList.add('hidden');
+        }
+    });
+}
 	
 	// Input event
 	input.addEventListener('keydown', (e) => { 
