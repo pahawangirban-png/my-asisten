@@ -360,15 +360,20 @@
         <div id="auth-view" class="view-container bg-slate-50 items-center justify-center p-6">
             <div class="w-full max-w-sm bg-white rounded-3xl p-8 shadow-xl shadow-slate-200/50 border border-slate-100 fade-in">
                 <div class="text-center mb-10">
-                    <div class="flex items-center justify-center mx-auto mb-1">
-                        <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
-                    </div>
-                    <div class="flex justify-center">
-                        <span style="font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; line-height: 1;">
-                            ARTIFICIAL INTELLIGENCE
-                        </span>
-                    </div>
-                </div>
+				    <div class="flex items-center justify-center mx-auto mb-0">
+				        <img src="icon/icon.png" alt="Logo" class="h-20 w-auto object-contain block">
+				    </div>
+				    
+				    <div class="flex flex-col items-center justify-center">
+				        <span style="font-size: 22px; font-weight: 900; color: #9ca3af; text-transform: uppercase; letter-spacing: -1.2px; line-height: 1; margin-top: -8px;">
+				            AURA
+				        </span>
+				        
+				        <span style="font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 1.5px; line-height: 1; margin-top: 10px;">
+				            ARTIFICIAL INTELLIGENCE
+				        </span>
+				    </div>
+				</div>
 
                 <form id="auth-form" class="space-y-5">
                     <div class="relative flex items-center">
@@ -389,10 +394,16 @@
                             placeholder="Kata Sandi">
                     </div>
 
-                    <button type="submit" 
-                        class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none">
-                        MASUK
-                    </button>
+                    <button type="submit" id="auth-submit-btn" 
+					    class="w-full bg-slate-800 text-white text-sm font-bold py-4 rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center mt-2 tracking-widest uppercase border-none outline-none relative overflow-hidden">
+					    <span id="auth-btn-text">MASUK</span>
+					    <div id="auth-spinner" class="hidden">
+					        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+					            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+					            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+					        </svg>
+					    </div>
+					</button>
                 </form>
                 <p id="auth-error" class="text-red-500 text-[10px] text-center mt-6 hidden"></p>
             </div>
@@ -847,17 +858,34 @@
 	// ============================
 	// FUNGSI AUTHENTIKASI
 	// ============================
+	
 	document.getElementById('auth-form').onsubmit = async (e) => {
 	    e.preventDefault();
+	    const btn = document.getElementById('auth-submit-btn');
+	    const btnText = document.getElementById('auth-btn-text');
+	    const spinner = document.getElementById('auth-spinner');
+	    const authError = document.getElementById('auth-error');
+	    
 	    authError.classList.add('hidden');
+	    btn.disabled = true;
+	    btnText.classList.add('hidden');
+	    spinner.classList.remove('hidden');
+	    
 	    const email = document.getElementById('auth-email').value;
 	    const password = document.getElementById('auth-password').value;
+	
 	    try {
+	        await new Promise(resolve => setTimeout(resolve, 3000));
+	        
 	        const { error } = await _supabase.auth.signInWithPassword({ email, password });
 	        if (error) throw error;
 	    } catch (err) {
-	        authError.innerText = "Kredensial salah.";
+	        authError.innerText = "Kredensial salah atau terjadi gangguan.";
 	        authError.classList.remove('hidden');
+	        
+	        btn.disabled = false;
+	        btnText.classList.remove('hidden');
+	        spinner.classList.add('hidden');
 	    }
 	};
 	
@@ -1185,7 +1213,7 @@
 	
 	    if (isImageMode) {
 	        setActiveStyle(btn);
-	        input.placeholder = "Deskripsikan gambar yang mau dibuat atau di edit...";
+	        input.placeholder = "Deskripsikan gambar...";
 	    } else {
 	        resetButtonUI('btn-mode-image');
 	        input.placeholder = "Tulis pesan...";
@@ -1283,7 +1311,7 @@
 	
 	    if (isVideoMode) {
 	        setActiveStyle(btn);
-	        input.placeholder = "Deskripsikan video yang mau dibuat...";
+	        input.placeholder = "Deskripsikan video...";
 	    } else {
 	        resetButtonUI('btn-mode-video');
 	        input.placeholder = "Tulis pesan...";
@@ -1445,63 +1473,63 @@
 	}
 	
 	async function initVoiceSession() {
-    voiceNextTime = 0;
-    voiceSessionId++;
-    voiceInterrupted = false;
-    isAISpeaking = false;
-    activeVoiceSources = [];
-
-    const historyContext = chatHistory.map(h => `${h.role === 'model' ? 'Aura' : 'User'}: ${h.parts[0].text}`).slice(-6).join('\n');
-    const fullPrompt = `${systemPrompt}\n\n${PERMANENT_PROMPT}\n\nKonteks Percakapan:\n${historyContext}`;
-
-    try {
-        voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
-        
-        voiceWs.onopen = () => {
-            startVoiceTimer();
-            voiceWs.send(JSON.stringify({
-                type: 'setup',
-                config: {
-                    responseModalities: ['AUDIO'],
-                    speechConfig: { 
-                        voiceConfig: { 
-                            prebuiltVoiceConfig: { voiceName: currentVoice } 
-                        } 
-                    },
-                    systemInstruction: fullPrompt,
-                    tools: [{ googleSearch: {} }]
-                }
-            }));
-        };
-
-        voiceWs.onmessage = (e) => {
-            if (!voiceWs || voiceInterrupted) return; 
-            const res = JSON.parse(e.data);
-            
-            if (res.type === 'gemini_msg') {
-                const modelTurn = res.data.serverContent?.modelTurn;
-                if (modelTurn && modelTurn.parts) {
-                    modelTurn.parts.forEach(p => {
-                        if (p.inlineData) {
-                            isAISpeaking = true;
-                            playVoiceAudio(p.inlineData.data, voiceSessionId);
-                        }
-                        if (p.text) {
-                            syncVoiceToChat('assistant', p.text);
-                        }
-                    });
-                }
-            }
-        };
-            
-        await initVoiceAudio();
-        startVoiceVisualizer();
-        
-    } catch (err) {
-        console.error("Gagal memulai sesi suara:", err);
-        closeVoiceMode();
-    }
-}
+	    voiceNextTime = 0;
+	    voiceSessionId++;
+	    voiceInterrupted = false;
+	    isAISpeaking = false;
+	    activeVoiceSources = [];
+	
+	    const historyContext = chatHistory.map(h => `${h.role === 'model' ? 'Aura' : 'User'}: ${h.parts[0].text}`).slice(-6).join('\n');
+	    const fullPrompt = `${systemPrompt}\n\n${PERMANENT_PROMPT}\n\nKonteks Percakapan:\n${historyContext}`;
+	
+	    try {
+	        voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
+	        
+	        voiceWs.onopen = () => {
+	            startVoiceTimer();
+	            voiceWs.send(JSON.stringify({
+	                type: 'setup',
+	                config: {
+	                    responseModalities: ['AUDIO'],
+	                    speechConfig: { 
+	                        voiceConfig: { 
+	                            prebuiltVoiceConfig: { voiceName: currentVoice } 
+	                        } 
+	                    },
+	                    systemInstruction: fullPrompt,
+	                    tools: [{ googleSearch: {} }]
+	                }
+	            }));
+	        };
+	
+	        voiceWs.onmessage = (e) => {
+	            if (!voiceWs || voiceInterrupted) return; 
+	            const res = JSON.parse(e.data);
+	            
+	            if (res.type === 'gemini_msg') {
+	                const modelTurn = res.data.serverContent?.modelTurn;
+	                if (modelTurn && modelTurn.parts) {
+	                    modelTurn.parts.forEach(p => {
+	                        if (p.inlineData) {
+	                            isAISpeaking = true;
+	                            playVoiceAudio(p.inlineData.data, voiceSessionId);
+	                        }
+	                        if (p.text) {
+	                            syncVoiceToChat('assistant', p.text);
+	                        }
+	                    });
+	                }
+	            }
+	        };
+	            
+	        await initVoiceAudio();
+	        startVoiceVisualizer();
+	        
+	    } catch (err) {
+	        console.error("Gagal memulai sesi suara:", err);
+	        closeVoiceMode();
+	    }
+	}
 	
 	async function initVoiceAudio() {
 		voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
@@ -2194,49 +2222,46 @@
 	    };
 	});
 	
-document.addEventListener('pointerdown', (e) => {
-    if (headerMenuTrigger && headerDropdown) {
-        if (!headerMenuTrigger.contains(e.target) && !headerDropdown.contains(e.target)) {
-            closeHeaderDropdown();
-        }
-    }
-    
-    if (dropdownTrigger && dropdownMenu && voiceTrigger && voiceMenu) {
-        if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target) &&
-            !voiceTrigger.contains(e.target) && !voiceMenu.contains(e.target)) {
-            closeAllDropdowns();
-        }
-    }
-    
-    document.querySelectorAll('.image-container').forEach(container => {
-        container.classList.remove('show-dl');
-    });
-});
-
-document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => {
-    if (e.target.closest('button')) return;
-    if (isAISpeaking || activeVoiceSources.length > 0) {
-        interruptVoice();
-    }
-}, { passive: true });
-
-if (headerMenuTrigger) {
-    // Gunakan 'click' alih-alih 'pointerdown' untuk stabilitas UI
-    headerMenuTrigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Jangan gunakan preventDefault di sini agar event bubble tetap normal
-        const isHidden = headerDropdown.classList.contains('hidden');
-        
-        // Tutup dropdown lain (model AI & Voice)
-        closeAllDropdowns(); 
-        
-        if (isHidden) {
-            headerDropdown.classList.remove('hidden');
-        } else {
-            headerDropdown.classList.add('hidden');
-        }
-    });
-}
+	document.addEventListener('pointerdown', (e) => {
+	    if (headerMenuTrigger && headerDropdown) {
+	        if (!headerMenuTrigger.contains(e.target) && !headerDropdown.contains(e.target)) {
+	            closeHeaderDropdown();
+	        }
+	    }
+	    
+	    if (dropdownTrigger && dropdownMenu && voiceTrigger && voiceMenu) {
+	        if (!dropdownTrigger.contains(e.target) && !dropdownMenu.contains(e.target) &&
+	            !voiceTrigger.contains(e.target) && !voiceMenu.contains(e.target)) {
+	            closeAllDropdowns();
+	        }
+	    }
+	    
+	    document.querySelectorAll('.image-container').forEach(container => {
+	        container.classList.remove('show-dl');
+	    });
+	});
+	
+	document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => {
+	    if (e.target.closest('button')) return;
+	    if (isAISpeaking || activeVoiceSources.length > 0) {
+	        interruptVoice();
+	    }
+	}, { passive: true });
+	
+	if (headerMenuTrigger) {
+	    headerMenuTrigger.addEventListener('click', (e) => {
+	        e.stopPropagation();
+	        const isHidden = headerDropdown.classList.contains('hidden');
+	        
+	        closeAllDropdowns(); 
+	        
+	        if (isHidden) {
+	            headerDropdown.classList.remove('hidden');
+	        } else {
+	            headerDropdown.classList.add('hidden');
+	        }
+	    });
+	}
 	
 	// Input event
 	input.addEventListener('keydown', (e) => { 
