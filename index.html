@@ -73,12 +73,14 @@
 
         /* Header */
         header {
-            flex: 0 0 auto;
-            background: white;
-            border-bottom: 1px solid #f1f5f9;
-            padding-top: env(safe-area-inset-top, 0px);
-            z-index: 100;
-        }
+    flex: 0 0 auto;
+    background: white;
+    border-bottom: 1px solid #f1f5f9;
+    padding-top: env(safe-area-inset-top, 0px);
+    z-index: 100;
+    overflow: visible !important;
+    position: relative;
+}
 
         /* Main Content */
         main {
@@ -2219,11 +2221,15 @@ document.getElementById('voice-overlay').addEventListener('pointerdown', (e) => 
 }, { passive: true });
 
 if (headerMenuTrigger) {
-    headerMenuTrigger.addEventListener('pointerdown', (e) => {
+    // Gunakan 'click' alih-alih 'pointerdown' untuk stabilitas UI
+    headerMenuTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
-        e.preventDefault();
+        // Jangan gunakan preventDefault di sini agar event bubble tetap normal
         const isHidden = headerDropdown.classList.contains('hidden');
+        
+        // Tutup dropdown lain (model AI & Voice)
         closeAllDropdowns(); 
+        
         if (isHidden) {
             headerDropdown.classList.remove('hidden');
         } else {
