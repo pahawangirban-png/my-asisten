@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>ASISTEN AI - GEMINI 3</title>
-    
+
+	<link rel="manifest" href="manifest.json">
+	
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2384,6 +2386,15 @@
 	
 	initUI();
 	checkSession();
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('PWA Service Worker Registered'))
+        .catch((err) => console.log('PWA Registration Failed', err));
+    });
+  }
 </script>
 </body>
 </html>
