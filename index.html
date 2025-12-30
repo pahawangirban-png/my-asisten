@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>ASISTEN AI - GEMINI 3</title>
-
-	<link rel="manifest" href="manifest.json">
-	
+    
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,6 +13,7 @@
     <meta name="apple-mobile-web-app-title" content="ASISTEN AI">
     <link rel="apple-touch-icon" href="icon/icon-512.png">
     <link rel="icon" type="image/png" href="icon/icon-512.png">
+	<link rel="manifest" href="manifest.json">
 
     <!-- External Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -630,6 +629,15 @@
             </footer>
         </div>
     </div>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('Service Worker Registered'))
+        .catch((err) => console.log('Service Worker Failed', err));
+    });
+  }
+</script>
 <script>
 	// ============================
 	// KONFIGURASI & VARIABEL GLOBAL
@@ -2158,10 +2166,10 @@
 	    }
 	}
 		
-	async function streamText(element, text, speed = 10) {
+	async function streamText(element, text, speed = 30) {
 	    const delay = ms => new Promise(res => setTimeout(res, ms));
 	    let cursor = 0;
-	    const step = 10; 
+	    const step = 20; 
 	    const scroller = document.getElementById('chat-scroller');
 	
 	    let finalRenderedText = "";
@@ -2386,15 +2394,6 @@
 	
 	initUI();
 	checkSession();
-</script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then((reg) => console.log('PWA Service Worker Registered'))
-        .catch((err) => console.log('PWA Registration Failed', err));
-    });
-  }
 </script>
 </body>
 </html>
