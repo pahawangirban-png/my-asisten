@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>ASISTEN AI - GEMINI 3</title>
+    <title>AURA</title>
     
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-title" content="ASISTEN AI">
+    <meta name="apple-mobile-web-app-title" content="AURA">
     <link rel="apple-touch-icon" href="icon/icon-512.png">
     <link rel="icon" type="image/png" href="icon/icon-512.png">
 	<link rel="manifest" href="manifest.json">
@@ -23,6 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 
     <!-- External Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -46,6 +47,10 @@
             text-size-adjust: none;
             overscroll-behavior: none;
             touch-action: pan-x pan-y;
+			-webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
         }
 
         * {
@@ -135,10 +140,20 @@
 
         .text-body-container > *:first-child {
             margin-top: 0 !important;
+			word-break: break-word !important;
+			-webkit-user-select: text;
+		    -moz-user-select: text;
+		    -ms-user-select: text;
+		    user-select: text;
         }
 
         .text-body-container > *:last-child {
             margin-bottom: 0 !important;
+			word-break: break-word !important;
+			-webkit-user-select: text;
+		    -moz-user-select: text;
+		    -ms-user-select: text;
+		    user-select: text;
         }
 
         .msg-content .grid {
@@ -350,6 +365,7 @@
         button i { 
             pointer-events: none; 
         }
+		
     </style>
 </head>
 <body>
@@ -413,24 +429,37 @@
 				        <i data-lucide="settings-2" stroke-width="2.5" class="w-5 h-5"></i>
 				    </button>
 				    
-				    <div id="header-dropdown" class="hidden absolute right-0 top-full mt-4 w-44 bg-slate-50 rounded-2xl shadow-xl border border-gray-100 p-1.5 z-[150] fade-in">
-				        <div class="flex flex-col">
-				            <div onclick="clearChat(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-2.5 px-4 rounded-xl hover:bg-gray-200/50 cursor-pointer transition-colors border-b border-gray-200/60">
-				                <span class="text-sm font-medium text-slate-600 tracking-wider">Reset</span>
-				                <i data-lucide="refresh-cw" class="w-4 h-4 text-slate-500"></i>
-				            </div>
-				            
-				            <div onclick="showView('settings'); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-2.5 px-4 rounded-xl hover:bg-gray-200/50 cursor-pointer transition-colors border-b border-gray-200/60">
-				                <span class="text-sm font-medium text-slate-600 tracking-wider">Pengaturan</span>
-				                <i data-lucide="settings" class="w-4 h-4 text-slate-500"></i>
-				            </div>
-				            
-				            <div onclick="handleLogout(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-2.5 px-4 rounded-xl hover:bg-gray-200/50 cursor-pointer transition-colors">
-				                <span class="text-sm font-medium text-slate-600 tracking-wider">Logout</span>
-				                <i data-lucide="log-out" class="w-4 h-4 text-slate-500"></i>
-				            </div>
-				        </div>
-				    </div>
+				   <div id="header-dropdown" class="hidden absolute right-0 top-full mt-4 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 p-1.5 z-[150] fade-in">
+					    <div class="flex flex-col">
+					        <div onclick="createNewChat(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-3 px-4 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 text-slate-600">
+					            <span class="text-xs font-bold tracking-wider uppercase">Percakapan Baru</span>
+					            <div class="w-5 h-5 flex items-center justify-center text-slate-500">
+					                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full">
+					                    <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/><path d="M8 12h8"/><path d="M12 8v8"/>
+					                </svg>
+					            </div>
+					        </div>
+					        
+					        <div onclick="openHistory(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-3 px-4 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 text-slate-600">
+							    <span class="text-xs font-bold tracking-wider uppercase">Histori</span>
+							    <i data-lucide="history" class="w-5 h-5 text-slate-500"></i>
+							</div>
+					
+					        <div onclick="showView('settings'); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-3 px-4 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 text-slate-600">
+					            <span class="text-xs font-bold tracking-wider uppercase">Pengaturan</span>
+					            <div class="w-5 h-5 flex items-center justify-center text-slate-500">
+					                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full">
+					                    <path d="M11 10.27 7 3.34"/><path d="m11 13.73-4 6.93"/><path d="M12 22v-2"/><path d="M12 2v2"/><path d="M14 12h8"/><path d="m17 20.66-1-1.73"/><path d="m17 3.34-1 1.73"/><path d="M2 12h2"/><path d="m20.66 17-1.73-1"/><path d="m20.66 7-1.73 1"/><path d="m3.34 17 1.73-1"/><path d="m3.34 7 1.73 1"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="8"/>
+					                </svg>
+					            </div>
+					        </div>
+					        
+					        <div onclick="handleLogout(); closeHeaderDropdown()" class="flex items-center justify-end gap-3 py-3 px-4 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors text-red-500">
+					            <span class="text-xs font-bold tracking-wider uppercase">Logout</span>
+					            <i data-lucide="log-out" class="w-5 h-5"></i>
+					        </div>
+					    </div>
+					</div>
 				</div>
             </header>
 
@@ -444,13 +473,13 @@
                     
                     <div id="capsule-container" style="background-color: #f3f4f6; border-radius: 14px; padding: 4px; transition: all 0.2s ease; border: 1px solid transparent;">
                         <div id="input-row-1" style="display: flex; align-items: center; gap: 4px; margin-bottom: 2px;">
-                            <button onclick="document.getElementById('file-input').click()" 
-                                style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background: none; border: none; cursor: pointer; flex-shrink: 0;">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-                                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                            </button>
+                            <button onclick="if(localStorage.getItem('enable_upload') !== 'false') document.getElementById('file-input').click()" 
+							    style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: #9ca3af; background: none; border: none; cursor: pointer; flex-shrink: 0;">
+							    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+							        <line x1="12" y1="5" x2="12" y2="19"></line>
+							        <line x1="5" y1="12" x2="19" y2="12"></line>
+							    </svg>
+							</button>
                             <input type="file" id="file-input" multiple accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx,.js,.css,.java,.html,.xml,.py,.sql,.ts,.cpp,.h,.hpp,.lua,.swift" class="hidden" onchange="handleFileSelect(event)">
                             
                             <textarea id="chat-input" rows="1" placeholder="Tulis pesan..." oninput="adjustInput(this)"
@@ -489,109 +518,143 @@
 
         <!-- Settings View -->
         <div id="settings-view" class="view-container bg-white">
-            <header class="h-16 px-6 flex justify-between items-center bg-white shrink-0 border-b border-gray-100">
-                <button onclick="saveSettings(); showView('chat')" class="p-2.5 -ml-3 text-gray-500 active:scale-90 transition-transform">
-                    <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
-                </button>
-            </header>
-
-            <main id="settings-scroller" class="flex-1 overflow-y-auto bg-white p-4">
-                <div class="max-w-3xl mx-auto w-full">
-                    <div class="w-full bg-gray-100 rounded-2xl px-8 py-7 space-y-6 fade-in">
-                        <!-- AI Model Selection -->
-                        <div class="space-y-2 pb-4 border-b border-gray-200">
-                            <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
-                            <div class="relative w-full" id="custom-dropdown">
-                                <button type="button" id="dropdown-trigger" 
-                                    class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
-                                    <span id="selected-model-text">Gemini 3 Flash</span>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
-                                </button>
-
-                                <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-gray-50 rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
-                                    <div class="flex flex-col">
-                                        <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-flash-preview">
-                                            <span class="text-sm font-medium text-gray-800">Gemini 3 Flash</span>
-                                        </div>
-                                        <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60 last:border-none" data-value="gemini-3-pro-preview">
-                                            <span class="text-sm font-medium text-gray-800">Gemini 3 Pro</span>
-                                        </div>
-                                        <div class="dropdown-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
-                                            <span class="text-sm font-medium text-gray-800">Gemini 3 Deep Think</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Voice Model Selection -->
-                        <div class="space-y-2 pb-4 border-b border-gray-200">
-                            <label class="text-sm font-bold text-gray-800 ml-1 uppercase">Model Suara</label>
-                            <div class="relative w-full" id="voice-dropdown">
-                                <button type="button" id="voice-trigger" 
-                                    class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
-                                    <span id="selected-voice-text">Kore</span>
-                                    <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="voice-icon"></i>
-                                </button>
-
-                                <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-gray-50 rounded-3xl shadow-xl border border-gray-100 p-1.5 z-[120] fade-in">
-                                    <div class="flex flex-col max-h-48 overflow-y-auto custom-scroll">
-                                        <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Kore">
-                                            <span class="text-sm font-medium text-gray-800">Kore (Default)</span>
-                                        </div>
-                                        <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Aoede">
-                                            <span class="text-sm font-medium text-gray-800">Aoede</span>
-                                        </div>
-                                        <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Zephyr">
-                                            <span class="text-sm font-medium text-gray-800">Zephyr</span>
-                                        </div>
-                                        <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100/60" data-value="Leda">
-                                            <span class="text-sm font-medium text-gray-800">Leda</span>
-                                        </div>
-                                        <div class="voice-option py-2 px-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="Fenrir">
-                                            <span class="text-sm font-medium text-gray-800">Fenrir</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Thinking Level -->
-                        <div class="space-y-2 pb-4 border-b border-gray-200">
-                            <div class="flex justify-between items-center ml-1">
-                                <label class="text-sm font-bold text-gray-800 uppercase">Tingkat Pemikiran</label>
-                                <span id="label-thinking" class="hidden">MEDIUM</span>
-                            </div>
-                            <input type="range" id="settings-thinking" min="1" max="3" step="1" oninput="updateSliderLabels(); saveSettings()" 
-                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                            <div class="flex justify-between text-[10px] text-gray-400 px-1 font-bold uppercase">
-                                <span>LOW</span>
-                                <span>MEDIUM</span>
-                                <span>HIGH</span>
-                            </div>
-                        </div>
-
-                        <!-- Token Limit -->
-                        <div class="space-y-2 pb-4 border-b border-gray-200">
-                            <div class="flex justify-between items-center ml-1">
-                                <label class="text-sm font-bold text-gray-800 uppercase">Batas Token</label>
-                                <span id="label-tokens" class="text-sm font-bold text-indigo-600">65536</span>
-                            </div>
-                            <input type="range" id="settings-tokens" min="1024" max="65536" step="1024" oninput="updateSliderLabels(); saveSettings()" 
-                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                        </div>
-
-                        <!-- System Instructions -->
-                        <div class="space-y-2">
-                            <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">System Instruksi</label>
-                            <textarea id="settings-prompt" rows="4" oninput="saveSettings()" 
-                                class="w-full bg-gray-50 border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" 
-                                placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
+		    <header class="h-16 px-6 relative flex items-center bg-white shrink-0 border-b border-gray-100">
+		        <button onclick="saveSettings(); showView('chat')" class="relative z-10 p-2.5 -ml-3 text-gray-500 active:scale-90 transition-transform">
+		            <i data-lucide="chevron-left" stroke-width="2.5" class="w-5 h-5"></i>
+		        </button>
+		        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+		            <span class="text-[14px] font-bold tracking-[0.2em] text-slate-800 uppercase">PENGATURAN AI</span>
+		        </div>
+		    </header>
+		
+		    <main id="settings-scroller" class="flex-1 overflow-y-auto bg-white p-4">
+		        <div class="max-w-2xl mx-auto w-full">
+		            <div class="w-full bg-white rounded-3xl px-8 py-6 space-y-4 border border-gray-100 shadow-sm fade-in">
+		                <div class="space-y-2 pb-3 border-b border-gray-100">
+		                    <label class="text-sm font-bold text-gray-800 ml-1">MODEL AI</label>
+		                    <div class="relative w-full" id="custom-dropdown">
+		                        <button type="button" id="dropdown-trigger" 
+		                            class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+		                            <span id="selected-model-text">Gemini 3 Flash</span>
+		                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="dropdown-icon"></i>
+		                        </button>
+		
+		                        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-1.5 z-[110] fade-in">
+		                            <div class="flex flex-col">
+		                                <div class="dropdown-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50 last:border-none" data-value="gemini-3-flash-preview">
+		                                    <span class="text-sm font-medium text-gray-800">Gemini 3 Flash</span>
+		                                </div>
+		                                <div class="dropdown-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50 last:border-none" data-value="gemini-3-pro-preview">
+		                                    <span class="text-sm font-medium text-gray-800">Gemini 3 Pro</span>
+		                                </div>
+		                                <div class="dropdown-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="gemini-3-deep-think-preview">
+		                                    <span class="text-sm font-medium text-gray-800">Gemini 3 Deep Think</span>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		
+		                <div class="space-y-2 pb-3 border-b border-gray-100">
+		                    <label class="text-sm font-bold text-gray-800 ml-1 uppercase">Model Suara</label>
+		                    <div class="relative w-full" id="voice-dropdown">
+		                        <button type="button" id="voice-trigger" 
+		                            class="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm outline-none transition-all font-bold text-gray-700 shadow-sm flex items-center justify-between">
+		                            <span id="selected-voice-text">Kore</span>
+		                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-500 transition-transform duration-200" id="voice-icon"></i>
+		                        </button>
+		
+		                        <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-1.5 z-[120] fade-in">
+		                            <div class="flex flex-col max-h-48 overflow-y-auto custom-scroll">
+		                                <div class="voice-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50" data-value="Kore">
+		                                    <span class="text-sm font-medium text-gray-800">Kore (Default)</span>
+		                                </div>
+		                                <div class="voice-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50" data-value="Aoede">
+		                                    <span class="text-sm font-medium text-gray-800">Aoede</span>
+		                                </div>
+		                                <div class="voice-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50" data-value="Zephyr">
+		                                    <span class="text-sm font-medium text-gray-800">Zephyr</span>
+		                                </div>
+		                                <div class="voice-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-50" data-value="Leda">
+		                                    <span class="text-sm font-medium text-gray-800">Leda</span>
+		                                </div>
+		                                <div class="voice-option py-2 px-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors" data-value="Fenrir">
+		                                    <span class="text-sm font-medium text-gray-800">Fenrir</span>
+		                                </div>
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		
+		                <div class="space-y-2 pb-3 border-b border-gray-100">
+		                    <div class="flex justify-between items-center ml-1">
+		                        <label class="text-sm font-bold text-gray-800 uppercase">Tingkat Pemikiran</label>
+		                        <span id="label-thinking" class="hidden">MEDIUM</span>
+		                    </div>
+		                    <input type="range" id="settings-thinking" min="1" max="3" step="1" oninput="updateSliderLabels(); saveSettings()" 
+		                        class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+		                    <div class="flex justify-between text-[10px] text-gray-400 px-1 font-bold uppercase">
+		                        <span>LOW</span>
+		                        <span>MEDIUM</span>
+		                        <span>HIGH</span>
+		                    </div>
+		                </div>
+		
+		                <div class="space-y-2 pb-3 border-b border-gray-100">
+		                    <div class="flex justify-between items-center ml-1">
+		                        <label class="text-sm font-bold text-gray-800 uppercase">Batas Token</label>
+		                        <span id="label-tokens" class="text-sm font-bold text-gray-400">65536</span>
+		                    </div>
+		                    <input type="range" id="settings-tokens" min="1024" max="65536" step="1024" oninput="updateSliderLabels(); saveSettings()" 
+		                        class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+		                </div>
+		
+		                <div class="space-y-2">
+		                    <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">System Instruksi</label>
+		                    <textarea id="settings-prompt" rows="4" oninput="saveSettings()" 
+		                        class="w-full bg-gray-50 border-none rounded-2xl px-4 py-4 text-sm font-medium outline-none focus:ring-0 focus:outline-none transition-all leading-tight shadow-sm text-gray-700" 
+		                        placeholder="Contoh: Jadilah asisten yang sangat teknis..." onblur="window.scrollTo(0,0)"></textarea>
+		                </div>
+						<div class="space-y-2 mt-6">
+					    <label class="text-sm font-bold text-gray-800 ml-1 uppercase tracking-wider">Fitur AI</label>
+					    <div class="w-full bg-gray-50 rounded-3xl px-8 py-6 space-y-4 shadow-sm fade-in border-none">
+					        
+					        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+					            <span class="text-sm font-medium text-gray-700">Mode Gambar</span>
+					            <label class="relative inline-flex items-center cursor-pointer">
+					                <input type="checkbox" id="switch-image" class="sr-only peer" onchange="saveSettings()">
+					                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+					            </label>
+					        </div>
+					
+					        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+					            <span class="text-sm font-medium text-gray-700">Mode Video</span>
+					            <label class="relative inline-flex items-center cursor-pointer">
+					                <input type="checkbox" id="switch-video" class="sr-only peer" onchange="saveSettings()">
+					                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+					            </label>
+					        </div>
+					
+					        <div class="flex items-center justify-between py-2 border-b border-gray-100">
+					            <span class="text-sm font-medium text-gray-700">Mode Suara</span>
+					            <label class="relative inline-flex items-center cursor-pointer">
+					                <input type="checkbox" id="switch-voice" class="sr-only peer" onchange="saveSettings()">
+					                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+					            </label>
+					        </div>
+					
+					        <div class="flex items-center justify-between py-2">
+					            <span class="text-sm font-medium text-gray-700">Mode Upload</span>
+					            <label class="relative inline-flex items-center cursor-pointer">
+					                <input type="checkbox" id="switch-upload" class="sr-only peer" onchange="saveSettings()">
+					                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+					            </label>
+					        </div>
+					    </div>
+					</div>
+		        </div>
+		    </main>
+		</div>
 
         <!-- Voice Overlay -->
         <div id="voice-overlay" class="fixed inset-0 bg-white z-[200] hidden flex-col transition-all duration-500" style="display: none;">
@@ -629,6 +692,28 @@
             </footer>
         </div>
     </div>
+	<div id="history-modal" class="fixed inset-0 z-[300] hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeHistory()"></div>
+    
+    <div class="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[70vh] fade-in border border-slate-100">
+        
+        <div class="h-[70px] flex-none flex items-center justify-center px-5">
+            <div class="inline-block border-b-[1px] border-slate-200 pb-1">
+                <h3 class="text-sm font-extrabold tracking-widest text-slate-800 uppercase m-0">History Percakapan</h3>
+            </div>
+        </div>
+
+        <div id="history-list-container" class="flex-1 overflow-y-auto px-5 py-2 flex flex-col gap-2">
+        </div>
+
+        <div class="h-[80px] flex-none flex items-center justify-center px-5 pb-2">
+            <button onclick="closeHistory()" class="w-full bg-gray-700 text-white rounded-2xl p-3 text-sm font-extrabold tracking-[0.2em] uppercase active:scale-95 transition-all outline-none border-none cursor-pointer shadow-sm">
+                Tutup
+            </button>
+        </div>
+
+    </div>
+</div>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -651,7 +736,23 @@
 	
 	const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 	
-	const PERMANENT_PROMPT = "";
+	const GAS_URL = "https://script.google.com/macros/s/AKfycbyy11l11E0bkI6Vznog-4YjnhVQtlARwaK0GRz4mebLT1xV8q_IOT-JRSVDHfZYdVH5/exec";
+	const SPT_URL = "https://script.google.com/macros/s/AKfycbyGznxTi3KMB3a-N7-v_V7HubI5esZegBDzjtuUy6C03pT0x4rKZLiehf5_2jksvR0/exec";
+	
+	const PERMANENT_PROMPT = `
+	- PowerPoint: [PPT] materi [/PPT].
+	- SPT: [WORD] {
+	  "pegawai_tugas": "1. Nama (Jabatan Tim) 2. Nama (Jabatan Tim)",
+	  "pejabat_penandatangan": "...",
+	  "jenis_pengawasan": "...",
+	  "opd_tujuan": "...",
+	  "wilayah_tugas": "...",
+	  "tgl_mulai": "...",
+	  "tgl_selesai": "..."
+	} [/WORD].
+	- Catatan: Jabatan Tim seperti Penanggung Jawab, Pengendali Teknis, Ketua Tim, atau Anggota.
+	- Jangan membuat dokumem jika data yang dibutuhkan belum lengkap!!!.
+	`;
 	
 	// DOM Elements
 	const authView = document.getElementById('auth-view');
@@ -704,6 +805,113 @@
 	// Stop Respon
 	let isGenerating = false;
 	let originalSendBtnContent = null;
+	
+	let currentChatId = localStorage.getItem('current_chat_id') || 'chat_' + Date.now();
+	let allChats = JSON.parse(localStorage.getItem('all_chats')) || {};
+	
+	function createNewChat() {
+	    currentChatId = 'chat_' + Date.now();
+	    localStorage.setItem('current_chat_id', currentChatId);
+	    chatHistory = [];
+	    localStorage.removeItem('chat_history');
+	    messageList.innerHTML = '';
+	    pendingFiles = [];
+	    renderPreviews();
+	    input.value = '';
+	    adjustInput(input);
+	}
+	
+	function openHistory() {
+	    const chatIds = Object.keys(allChats);
+	    if (chatIds.length === 0) return;
+	
+	    const modal = document.getElementById('history-modal');
+	    const container = document.getElementById('history-list-container');
+	    container.innerHTML = '';
+	
+	    const sortedIds = chatIds.sort((a, b) => allChats[b].timestamp - allChats[a].timestamp);
+	
+	    sortedIds.forEach(id => {
+	        const chat = allChats[id];
+	        const card = document.createElement('div');
+	        
+	        const isActive = (id === currentChatId);
+	        
+	        const fontWeight = isActive ? 'font-extrabold' : 'font-bold';
+	        const textColor = isActive ? 'text-black' : 'text-slate-400';
+	        
+	        card.className = "w-full bg-gray-50 rounded-[8px] p-2.5 flex items-center justify-between cursor-pointer flex-shrink-0 border-none shadow-sm";
+	        card.onclick = () => loadChat(id);
+	        
+	        card.innerHTML = `
+	            <span class="text-sm ${fontWeight} ${textColor} truncate mr-3 flex-1 text-left">
+	                ${chat.title || 'Percakapan Baru'}
+	            </span>
+	            <button onclick="event.stopPropagation(); deleteChat('${id}')" class="bg-transparent border-none p-1 text-slate-300 hover:text-red-500 transition-colors cursor-pointer flex items-center justify-center shrink-0">
+	                <i data-lucide="trash-2" class="w-4 h-4"></i>
+	            </button>
+	        `;
+	        container.appendChild(card);
+	    });
+	
+	    modal.classList.remove('hidden');
+	    modal.classList.add('active');
+	    modal.style.display = 'flex';
+	    lucide.createIcons();
+	}
+	
+	function closeHistory() {
+	    const modal = document.getElementById('history-modal');
+	    modal.style.display = 'none';
+	    modal.classList.add('hidden');
+	    modal.classList.remove('active');
+	}
+	
+	function loadChat(id) {
+	    currentChatId = id;
+	    localStorage.setItem('current_chat_id', id);
+	    chatHistory = allChats[id].history || [];
+	    messageList.innerHTML = '';
+	    loadSavedChat();
+	    closeHistory();
+	}
+	
+	function deleteChat(id) {
+	    if (confirm('Hapus percakapan ini?')) {
+	        delete allChats[id];
+	        localStorage.setItem('all_chats', JSON.stringify(allChats));
+	        
+	        if (currentChatId === id) {
+	            createNewChat();
+	        }
+	        
+	        const remainingChats = Object.keys(allChats).length;
+	        if (remainingChats === 0) {
+	            closeHistory();
+	        } else {
+	            openHistory();
+	        }
+	    }
+	}
+	
+	function saveCurrentChatToHistory() {
+	    if (chatHistory.length > 0) {
+	        const firstMsg = chatHistory.find(m => m.role === 'user');
+	        let title = 'Percakapan Baru';
+	        
+	        if (firstMsg && firstMsg.parts && firstMsg.parts[0].text) {
+	            title = firstMsg.parts[0].text.substring(0, 35) + (firstMsg.parts[0].text.length > 35 ? '...' : '');
+	        }
+	        
+	        allChats[currentChatId] = {
+	            title: title,
+	            timestamp: Date.now(),
+	            history: chatHistory
+	        };
+	        
+	        localStorage.setItem('all_chats', JSON.stringify(allChats));
+	    }
+	}
 	
 	// ============================
 	// MARKDOWN RENDERER SETUP
@@ -905,6 +1113,11 @@
 	// ============================
 	
 	function saveSettings() {
+		localStorage.setItem('enable_image', document.getElementById('switch-image').checked);
+	    localStorage.setItem('enable_video', document.getElementById('switch-video').checked);
+	    localStorage.setItem('enable_voice', document.getElementById('switch-voice').checked);
+		localStorage.setItem('enable_upload', document.getElementById('switch-upload').checked);
+    
 	    systemPrompt = settingsPrompt.value;
 	    
 	    const thinkingMap = { "1": "LOW", "2": "MEDIUM", "3": "HIGH" };
@@ -923,27 +1136,7 @@
 	    };
 	    selectedModelText.innerText = modelLabels[currentModel] || 'Gemini 3 Flash';
 	    localStorage.setItem('v_voice', currentVoice);
-	}
-	
-	function initUI() {
-	    const modelLabels = {
-	        'gemini-3-flash-preview': 'Gemini 3 Flash',
-	        'gemini-3-pro-preview': 'Gemini 3 Pro',
-	        'gemini-3-deep-think-preview': 'Gemini 3 Deep Think'
-	    };
-	    
-	    selectedModelText.innerText = modelLabels[currentModel] || 'Gemini 3 Flash';
-	    settingsPrompt.value = systemPrompt;
-	    
-	    const thinkingRevMap = { "LOW": "1", "MEDIUM": "2", "HIGH": "3" };
-	    settingsThinking.value = thinkingRevMap[currentThinking] || "2";
-	    settingsTokens.value = maxTokens;
-	    
-	    updateSliderLabels();
-	    lucide.createIcons();
-	    loadSavedChat();
-	    
-	    document.getElementById('selected-voice-text').innerText = currentVoice;
+		updateMainButtonsUI();
 	}
 	
 	// ============================
@@ -961,25 +1154,25 @@
 	    let filesHtml = '';
 	    if (files && files.length > 0) {
 	        const aiFile = files.find(f => f.isAI || f.isVideo);
-	        
 	        if (aiFile) {
 	            filesHtml = `
-	                <div class="mt-2 w-full ai-image-container">
+	                <div class="mt-3 w-full ai-image-container">
 	                    <div class="file-placeholder w-full h-48 bg-gray-200 rounded-xl animate-pulse flex items-center justify-center" data-file-id="${aiFile.fileId}">
 	                        <i data-lucide="${aiFile.isVideo ? 'video' : 'image'}" class="w-8 h-8 text-gray-400"></i>
 	                    </div>
 	                </div>`;
 	        } else {
-	            filesHtml = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">';
+	            filesHtml = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 file-grid-container">';
 	            files.forEach(f => {
 	                const ext = f.name.split('.').pop().toLowerCase();
 	                let visual = isPlaceholder 
 	                    ? `<div class="file-placeholder w-10 h-10 flex items-center justify-center bg-gray-200 rounded-lg" data-file-id="${f.fileId || ''}"></div>`
 	                    : (f.mime && f.mime.startsWith('image/')) 
-	                        ? `<img src="data:${f.mime};base64,${f.base64}" class="w-10 h-10 object-cover rounded-lg shadow-sm">` 
+	                        ? `<img src="data:${f.mime};base64,${f.base64}" class="w-10 h-10 object-cover rounded-lg">` 
 	                        : getFileIcon(ext);
+	                
 	                filesHtml += `
-	                    <div class="bg-gray-200 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none">
+	                    <div onclick="downloadFile('${f.fileId}')" class="cursor-pointer active:scale-95 transition-all bg-gray-200 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none">
 	                        <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
 	                        <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
 	                            <div class="text-[13px] font-bold text-gray-700 truncate leading-none mb-1">${f.name}</div>
@@ -992,17 +1185,16 @@
 	    }
 	
 	    div.innerHTML = `
-        <div class="w-full bg-gray-100 rounded-2xl px-5 pt-3 pb-5 text-slate-800">
-            <div class="flex justify-between items-center pb-1 border-b border-gray-200">
-                <span class="text-[11px] font-bold uppercase tracking-widest">${roleLabel}</span>
-                <span class="text-[11px] font-medium text-gray-400">${timeStr}</span>
-            </div>
-            <div class="prose prose-sm max-w-none msg-content text-base leading-relaxed font-medium mt-1 space-y-1">
-                ${filesHtml}
-                <div class="text-body-container">${content ? marked.parse(content.replace(/\[\[.*?\]\]/g, '')) : ''}</div>
-                
-	               ${isAI && showTyping ? `
-	                <div class="typing-indicator flex items-center gap-1.5 py-1 text-gray-500">
+	        <div class="w-full bg-gray-100 rounded-2xl px-5 pt-3 pb-5 text-slate-800">
+	            <div class="flex justify-between items-center pb-1 border-b border-gray-200">
+	                <span class="text-[11px] font-bold uppercase tracking-widest">${roleLabel}</span>
+	                <span class="text-[11px] font-medium text-gray-400">${timeStr}</span>
+	            </div>
+	            <div class="prose prose-sm max-w-none msg-content text-base leading-relaxed font-medium mt-1">
+	                <div class="text-body-container">${content ? marked.parse(content.replace(/\[\[.*?\]\]/g, '')) : ''}</div>
+	                <div class="files-wrapper-area">${filesHtml}</div>
+	                ${isAI && showTyping ? `
+	                <div class="typing-indicator flex items-center gap-1.5 py-1 text-gray-500 mt-2">
 	                    <span class="text-sm font-medium italic">Thinking</span>
 	                    <span class="flex leading-none mb-0.5 ml-0.5">
 	                        <span style="animation: blink 1.4s infinite both; animation-delay: 0s;">.</span>
@@ -1013,11 +1205,14 @@
 	            </div>
 	        </div>
 	    `;
-		messageList.appendChild(div);
-	    const bodyContainer = div.querySelector('.text-body-container');
+	    messageList.appendChild(div);
 	    lucide.createIcons();
 	    scrollToBottom();
-	    return { textElement: bodyContainer, typingElement: div.querySelector('.typing-indicator') };
+	    return { 
+	        textElement: div.querySelector('.text-body-container'), 
+	        filesElement: div.querySelector('.files-wrapper-area'),
+	        typingElement: div.querySelector('.typing-indicator') 
+	    };
 	}
 	
 	async function clearChat() {
@@ -1228,6 +1423,7 @@
 	}
 	
 	function toggleImageMode() {
+		if (localStorage.getItem('enable_image') === 'false') return;
 	    if (!isImageMode && isVideoMode) {
 	        isVideoMode = false;
 	        resetButtonUI('btn-mode-video');
@@ -1329,6 +1525,7 @@
 	// ============================
 	
 	function toggleVideoMode() {
+		if (localStorage.getItem('enable_video') === 'false') return;
 	    if (!isVideoMode && isImageMode) {
 	        isImageMode = false;
 	        resetButtonUI('btn-mode-image');
@@ -1465,6 +1662,7 @@
 	// ============================
 	
 	function openVoiceMode() {
+		if (localStorage.getItem('enable_voice') === 'false') return;
 		const overlay = document.getElementById('voice-overlay');
 		const visualBox = document.getElementById('voice-visual-box');
 		
@@ -1561,53 +1759,103 @@
 	}
 	
 	async function initVoiceAudio() {
-		voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-		voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
-		
-		aiAnalyser = voiceOutCtx.createAnalyser();
-		aiAnalyser.fftSize = 1024;
-		
-		voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		const source = voiceInCtx.createMediaStreamSource(voiceStream);
-		
-		voiceAnalyser = voiceInCtx.createAnalyser();
-		voiceAnalyser.fftSize = 1024;
-		voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
-		source.connect(voiceAnalyser);
+	    voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+	    voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+	    
+	    aiAnalyser = voiceOutCtx.createAnalyser();
+	    aiAnalyser.fftSize = 1024;
+	    
+	    voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+	    const source = voiceInCtx.createMediaStreamSource(voiceStream);
+	    
+	    voiceAnalyser = voiceInCtx.createAnalyser();
+	    voiceAnalyser.fftSize = 1024;
+	    voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
+	    source.connect(voiceAnalyser);
 	
-		await voiceInCtx.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
-			class P extends AudioWorkletProcessor {
-				process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; }
-			}; registerProcessor('p', P);`));
+	    await voiceInCtx.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
+	        class P extends AudioWorkletProcessor {
+	            process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; }
+	        }; registerProcessor('p', P);`));
 	
-		const node = new AudioWorkletNode(voiceInCtx, 'p');
-		node.port.onmessage = (e) => {
-			if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
-				let sum = 0;
-				for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
-				let energy = sum / e.data.length;
-
-				if (energy > 0.01 && voiceInterrupted) {
-					voiceInterrupted = false;
-					voiceSessionId++; 
-				}
-
-				if (!isAISpeaking && !voiceInterrupted) {
-					const int16 = new Int16Array(e.data.length);
-					for (let i = 0; i < e.data.length; i++) {
-						int16[i] = Math.max(-1, Math.min(1, e.data[i])) * 0x7FFF;
-					}
-					voiceWs.send(JSON.stringify({
-						type: 'audio',
-						data: {
-							data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))),
-							mimeType: 'audio/pcm;rate=16000'
-						}
-					}));
-				}
-			}
-		};
-		source.connect(node);
+	    const node = new AudioWorkletNode(voiceInCtx, 'p');
+	    node.port.onmessage = (e) => {
+	        if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
+	            let sum = 0;
+	            for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
+	            let energy = sum / e.data.length;
+	
+	            if (energy > 0.01 && voiceInterrupted) {
+	                voiceInterrupted = false;
+	                voiceSessionId++; 
+	            }
+	
+	            if (!isAISpeaking && !voiceInterrupted) {
+	                const int16 = new Int16Array(e.data.length);
+	                for (let i = 0; i < e.data.length; i++) {
+	                    int16[i] = Math.max(-1, Math.min(1, e.data[i])) * 0x7FFF;
+	                }
+	                voiceWs.send(JSON.stringify({
+	                    type: 'audio',
+	                    data: {
+	                        data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))),
+	                        mimeType: 'audio/pcm;rate=16000'
+	                    }
+	                }));
+	            }
+	        }
+	    };
+	    source.connect(node);
+	}
+	
+	function playVoiceAudio(base64, sid) {
+	    if (voiceInterrupted || sid !== voiceSessionId) return;
+	
+	    const binary = atob(base64);
+	    const bytes = new Uint8Array(binary.length);
+	    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+	    const int16 = new Int16Array(bytes.buffer);
+	    const buf = voiceOutCtx.createBuffer(1, int16.length, 24000);
+	    const data = buf.getChannelData(0);
+	    for (let i = 0; i < int16.length; i++) data[i] = int16[i] / 32768.0;
+	    
+	    const source = voiceOutCtx.createBufferSource();
+	    source.buffer = buf;
+	    source.connect(aiAnalyser);
+	    source.connect(voiceOutCtx.destination);
+	    
+	    const now = voiceOutCtx.currentTime;
+	    if (voiceNextTime < now) voiceNextTime = now;
+	    
+	    source.start(voiceNextTime);
+	    voiceNextTime += buf.duration;
+	    activeVoiceSources.push(source);
+	
+	    source.onended = () => { 
+	        activeVoiceSources = activeVoiceSources.filter(s => s !== source);
+	        if (voiceOutCtx.currentTime >= voiceNextTime - 0.1) isAISpeaking = false;
+	    };
+	}
+	
+	function interruptVoice() {
+	    voiceInterrupted = true;
+	    isAISpeaking = false;
+	    voiceFirstChunk = true;
+	    voiceSessionId++;
+	
+	    activeVoiceSources.forEach(source => {
+	        try {
+	            source.onended = null;
+	            source.stop(0);
+	            source.disconnect();
+	        } catch (e) {}
+	    });
+	    activeVoiceSources = [];
+	
+	    if (voiceOutCtx) voiceNextTime = voiceOutCtx.currentTime;
+	    if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
+	        voiceWs.send(JSON.stringify({ type: 'cancel' }));
+	    }
 	}
 	
 	function resizeVoiceCanvas() {
@@ -1672,55 +1920,6 @@
 			const secs = (seconds % 60).toString().padStart(2, '0');
 			timerEl.innerText = `${hrs}:${mins}:${secs}`;
 		}, 1000);
-	}
-	
-	function interruptVoice() {
-		voiceInterrupted = true; 
-		isAISpeaking = false;
-		voiceSessionId++; 
-
-		activeVoiceSources.forEach(source => {
-			try {
-				source.onended = null;
-				source.stop(0); 
-				source.disconnect();
-			} catch (e) {}
-		});
-		activeVoiceSources = [];
-
-		if (voiceOutCtx) voiceNextTime = voiceOutCtx.currentTime;
-		if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
-			voiceWs.send(JSON.stringify({ type: 'cancel' }));
-		}
-	}
-
-	function playVoiceAudio(base64, sid) {
-		if (voiceInterrupted || sid !== voiceSessionId) return; 
-
-		const binary = atob(base64);
-		const bytes = new Uint8Array(binary.length);
-		for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-		const int16 = new Int16Array(bytes.buffer);
-		const buf = voiceOutCtx.createBuffer(1, int16.length, 24000);
-		const data = buf.getChannelData(0);
-		for (let i = 0; i < int16.length; i++) data[i] = int16[i] / 32768.0;
-		
-		const source = voiceOutCtx.createBufferSource();
-		source.buffer = buf;
-		source.connect(aiAnalyser);
-		source.connect(voiceOutCtx.destination);
-		
-		const now = voiceOutCtx.currentTime;
-		if (voiceNextTime < now) voiceNextTime = now;
-		
-		source.start(voiceNextTime);
-		voiceNextTime += buf.duration;
-		activeVoiceSources.push(source);
-
-		source.onended = () => { 
-			activeVoiceSources = activeVoiceSources.filter(s => s !== source);
-			if (activeVoiceSources.length === 0) isAISpeaking = false;
-		};
 	}
 	
 	async function switchCamera() {
@@ -2010,17 +2209,67 @@
 	// FUNGSI UTAMA ON SEND  //
 	// ===================== //
 	
+	function initUI() {
+	    const modelLabels = {
+	        'gemini-3-flash-preview': 'Gemini 3 Flash',
+	        'gemini-3-pro-preview': 'Gemini 3 Pro',
+	        'gemini-3-deep-think-preview': 'Gemini 3 Deep Think'
+	    };
+	    
+	    selectedModelText.innerText = modelLabels[currentModel] || 'Gemini 3 Flash';
+	    settingsPrompt.value = systemPrompt;
+	    
+	    const thinkingRevMap = { "LOW": "1", "MEDIUM": "2", "HIGH": "3" };
+	    settingsThinking.value = thinkingRevMap[currentThinking] || "2";
+	    settingsTokens.value = maxTokens;
+	    
+	    updateSliderLabels();
+	    
+	    if (allChats[currentChatId]) {
+	        chatHistory = allChats[currentChatId].history || [];
+	    } else {
+	        chatHistory = [];
+	    }
+	    
+	    loadSavedChat();
+	    lucide.createIcons();
+	    document.getElementById('selected-voice-text').innerText = currentVoice;
+		document.getElementById('switch-image').checked = localStorage.getItem('enable_image') !== 'false';
+	    document.getElementById('switch-video').checked = localStorage.getItem('enable_video') !== 'false';
+	    document.getElementById('switch-voice').checked = localStorage.getItem('enable_voice') !== 'false';
+		document.getElementById('switch-upload').checked = localStorage.getItem('enable_upload') !== 'false';
+	    
+	    updateMainButtonsUI();
+		
+	}
+	
+	function updateMainButtonsUI() {
+	    const imgE = localStorage.getItem('enable_image') !== 'false';
+	    const vidE = localStorage.getItem('enable_video') !== 'false';
+	    const voiE = localStorage.getItem('enable_voice') !== 'false';
+	    const uplE = localStorage.getItem('enable_upload') !== 'false';
+	
+	    document.getElementById('btn-mode-image').style.opacity = imgE ? '1' : '0.3';
+	    document.getElementById('btn-mode-video').style.opacity = vidE ? '1' : '0.3';
+	    document.getElementById('btn-mode-voice').style.opacity = voiE ? '1' : '0.3';
+	    
+	    const btnUpload = document.querySelector('button[onclick*="file-input"]');
+	    if (btnUpload) btnUpload.style.opacity = uplE ? '1' : '0.3';
+	}
+	
+	async function deleteCurrentChat() {
+	    if (confirm('Hapus percakapan ini secara permanen?')) {
+	        delete allChats[currentChatId];
+	        localStorage.setItem('all_chats', JSON.stringify(allChats));
+	        await clearLocalDB();
+	        createNewChat();
+	    }
+	}
+	
 	async function onSend(e) {
 	    if (e) e.preventDefault();
-	    
-	    if (!originalSendBtnContent) {
-	        originalSendBtnContent = sendBtn.innerHTML;
-	    }
-	
-	    if (isGenerating) {
-	        isGenerating = false; 
-	        return; 
-	    }
+	    if (!originalSendBtnContent) originalSendBtnContent = sendBtn.innerHTML;
+	    if (isGenerating) { isGenerating = false; return; }
 	
 	    const val = input.value.trim();
 	    if (!val && pendingFiles.length === 0) return;
@@ -2046,7 +2295,7 @@
 	        setButtonState('loading');
 	
 	        if (isVideoMode) {
-	            if (!val) throw new Error("Anda belum menuliskan deskripsi video.");
+	            if (!val) throw new Error("Deskripsi video kosong.");
 	            createBubble('user', val, pendingFiles.map(f => ({ ...f })));
 	            let imgObj = null;
 	            if (pendingFiles.length > 0) {
@@ -2054,40 +2303,23 @@
 	                if (firstImg) imgObj = { inline_data: { mime_type: firstImg.mime, data: firstImg.base64 } };
 	            }
 	            input.value = ''; adjustInput(input); pendingFiles = []; renderPreviews();
-	            
 	            await handleVideoGeneration(val, imgObj);
-	            
-	            toggleVideoMode();
-	            setButtonState('idle');
-	            return;
+	            toggleVideoMode(); setButtonState('idle'); return;
 	        }
 	
 	        if (isImageMode) {
-	            const editRegex = /^\/?(edit|ganti|ubah|perbaiki|modifikasi|remix)\b/i;
-	            const isIntentToEdit = editRegex.test(val);
-	            if (pendingFiles.length === 0 && isIntentToEdit) throw new Error("Belum ada gambar untuk diedit.");
-	            if (pendingFiles.length === 0 && !val) throw new Error("Belum ada deskripsi gambar.");
-	
-	            let prefix = (pendingFiles.length > 0) ? '/edit ' : '/gambar ';
-	            let promptWithCommand = prefix + val;
 	            createBubble('user', val || "Memproses gambar...", pendingFiles.map(f => ({ ...f })));
-	            
 	            let imgObj = null;
 	            if (pendingFiles.length > 0) {
 	                const firstImg = pendingFiles.find(f => f.mime && f.mime.startsWith('image/'));
 	                if (firstImg) imgObj = { inline_data: { mime_type: firstImg.mime, data: firstImg.base64 } };
 	            }
 	            input.value = ''; adjustInput(input); pendingFiles = []; renderPreviews();
-	            
-	            await handleImageGeneration(promptWithCommand, imgObj);
-	            
-	            toggleImageMode();
-	            setButtonState('idle');
-	            return;
+	            await handleImageGeneration((pendingFiles.length > 0 ? '/edit ' : '/gambar ') + val, imgObj);
+	            toggleImageMode(); setButtonState('idle'); return;
 	        }
 	
 	        const { filesForUI, filesForStorage, apiParts, officeTextContext } = await processPendingFiles();
-	        
 	        createBubble('user', val, filesForUI);
 	        
 	        chatHistory.push({ 
@@ -2095,13 +2327,13 @@
 	            parts: [{ text: val || "Analisis lampiran ini." }], 
 	            _ui: { val, filesForStorage } 
 	        });
+	        
+	        saveCurrentChatToHistory();
 	
 	        const currentTurnText = (val || "Analisis lampiran ini.") + (officeTextContext ? "\n\nKONTEKS DOKUMEN:\n" + officeTextContext : "");
-	
 	        input.value = ''; adjustInput(input); pendingFiles = []; renderPreviews();
 	
 	        const aiBubble = createBubble('assistant', '', [], false, true);
-	        
 	        const endpoint = `${SUPABASE_URL}/functions/v1/ai-proxy-v2?model=${currentModel}&action=generateContent&version=v1beta`;
 	        const cleanContents = chatHistory.map(h => ({ role: h.role, parts: h.parts }));
 	        cleanContents[cleanContents.length - 1].parts = [...apiParts, { text: currentTurnText }];
@@ -2117,59 +2349,118 @@
 	            })
 	        });
 	
-	        if (!response.ok) {
-	            const errText = await response.text();
-	            throw new Error(`Server Error (${response.status}): ${errText.substring(0, 50)}...`);
+	        const data = await response.json();
+	        const parts = data.candidates?.[0]?.content?.parts || [];
+	        if (aiBubble.typingElement) { aiBubble.typingElement.remove(); aiBubble.typingElement = null; }
+	
+	        let fullAIResponse = "";
+	        parts.forEach(p => { if(p.text) fullAIResponse += p.text; });
+	
+	        let displayChatText = fullAIResponse;
+	        let pptMaterial = null;
+	        let wordMaterial = null;
+	
+	        const pptRegex = /\[PPT\]([\s\S]*?)\[\/PPT\]/;
+	        const wordRegex = /\[WORD\]([\s\S]*?)\[\/WORD\]/;
+	        
+	        const pptMatch = fullAIResponse.match(pptRegex);
+	        const wordMatch = fullAIResponse.match(wordRegex);
+	
+	        if (pptMatch) {
+	            pptMaterial = pptMatch[1].trim();
+	            displayChatText = displayChatText.replace(pptRegex, "").trim();
+	        }
+	        
+	        if (wordMatch) {
+	            wordMaterial = wordMatch[1].trim();
+	            displayChatText = displayChatText.replace(wordRegex, "").trim();
 	        }
 	
-	        const data = await response.json();
-	        let partText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-	        
-	        if (!partText) {
-	            const parts = data.candidates?.[0]?.content?.parts || [];
-	            const textPart = parts.find(p => p.text);
-	            if (textPart) partText = textPart.text;
+	        if (!displayChatText) {
+	            if (pptMaterial) displayChatText = "Baik, saya sedang menyusun file PowerPoint untuk Anda...";
+	            if (wordMaterial) displayChatText = "Baik, saya sedang memproses dokumen SPT Anda...";
 	        }
 	
 	        let finalSavedText = "";
+	        let aiFilesForStorage = []; 
 	
-	        if (partText) {
-	            if (aiBubble.typingElement) { aiBubble.typingElement.remove(); aiBubble.typingElement = null; }
-	
+	        if (displayChatText || pptMaterial || wordMaterial) {
 	            setButtonState('streaming');
-	
-	            finalSavedText = await streamText(aiBubble.textElement, partText);
 	            
-	        } else {
-	             if (aiBubble.typingElement) aiBubble.typingElement.remove();
-	             const finishReason = data.candidates?.[0]?.finishReason;
-	             let errorMsg = finishReason === 'SAFETY' ? "Konten diblokir filter keamanan." : "Tidak ada respon teks.";
-	             aiBubble.textElement.innerHTML = `<span class="text-orange-500 italic text-sm">${errorMsg}</span>`;
-	             finalSavedText = errorMsg;
-	        }
+	            if (displayChatText) finalSavedText = await streamText(aiBubble.textElement, displayChatText);
 	
-	        if (finalSavedText) {
-	            chatHistory.push({ role: "model", parts: [{ text: finalSavedText }] });
-	            localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+	            if (pptMaterial) {
+	                const statusDiv = document.createElement('div');
+	                statusDiv.className = "typing-indicator flex items-center gap-1.5 py-2 text-gray-500";
+	                statusDiv.innerHTML = `<span class="text-sm font-bold italic">Membuat PowerPoint...</span>`;
+	                aiBubble.textElement.appendChild(statusDiv);
+	                scrollToBottom();
+	
+	                const pptFileData = await handlePowerPoint(pptMaterial);
+	                statusDiv.remove();
+	
+	                if (pptFileData) {
+	                    aiFilesForStorage.push(pptFileData);
+	                    renderFileCard(aiBubble.filesElement, pptFileData, "icon/ppt-file-icon.svg");
+	                }
+	            }
+	
+	            if (wordMaterial) {
+	                const statusDiv = document.createElement('div');
+	                statusDiv.className = "typing-indicator flex items-center gap-1.5 py-2 text-gray-500";
+	                statusDiv.innerHTML = `<span class="text-sm font-bold italic">Membuat Dokumen SPT...</span>`;
+	                aiBubble.textElement.appendChild(statusDiv);
+	                scrollToBottom();
+	
+	                const docFileData = await handleWordDocument(wordMaterial);
+	                statusDiv.remove();
+	
+	                if (docFileData) {
+	                    aiFilesForStorage.push(docFileData);
+	                    renderFileCard(aiBubble.filesElement, docFileData, "icon/docx-file-icon.svg");
+	                }
+	            }
+	        }
+
+	        if (finalSavedText || aiFilesForStorage.length > 0) {
+	            chatHistory.push({ 
+	                role: "model", 
+	                parts: [{ text: finalSavedText }],
+	                _ui: { val: displayChatText, filesForStorage: aiFilesForStorage } 
+	            });
+	            saveCurrentChatToHistory();
 	        }
 	
 	    } catch (err) {
-	        console.error("Error onSend:", err);
-	        const typingIndicators = messageList.querySelectorAll('.typing-indicator');
-	        typingIndicators.forEach(el => el.remove());
-	        const errorMessage = err.message || "Terjadi kesalahan koneksi";
-	        createBubble('assistant', `<span class="text-red-500 font-medium">${errorMessage}</span>`);
-	    } finally {
-	        setButtonState('idle');
-	        if (window.lucide) lucide.createIcons();
-	        scrollToBottom();
+	        createBubble('assistant', `<span class="text-red-500">${err.message}</span>`);
+	    } finally { setButtonState('idle'); scrollToBottom(); }
+	}
+
+	function renderFileCard(container, fileData, iconPath) {
+	    let grid = container.querySelector('.file-grid-container');
+	    if (!grid) {
+	        container.innerHTML = '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 file-grid-container"></div>';
+	        grid = container.querySelector('.file-grid-container');
 	    }
+	    const card = document.createElement('div');
+	    card.onclick = () => downloadFile(fileData.fileId);
+	    card.className = "cursor-pointer active:scale-95 transition-all bg-gray-200 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none shadow-sm";
+	    card.innerHTML = `
+	        <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">
+	            <img src="${iconPath}" class="w-7 h-7 object-contain">
+	        </div>
+	        <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
+	            <div class="text-[13px] font-bold text-gray-700 truncate leading-none mb-1">${fileData.name}</div>
+	            <div class="text-[11px] text-gray-400 font-medium leading-none">${fileData.size}</div>
+	        </div>`;
+	    grid.appendChild(card);
+	    scrollToBottom();
 	}
 		
-	async function streamText(element, text, speed = 30) {
+	async function streamText(element, text, speed = 5) {
 	    const delay = ms => new Promise(res => setTimeout(res, ms));
 	    let cursor = 0;
-	    const step = 20; 
+	    const step = 2; 
 	    const scroller = document.getElementById('chat-scroller');
 	
 	    let finalRenderedText = "";
@@ -2205,6 +2496,80 @@
 	    }
 	
 	    return text; 
+	}
+
+	async function handlePowerPoint(rawText) {
+	    try {
+	        const response = await fetch(GAS_URL, {
+	            method: 'POST',
+	            body: rawText,
+	            headers: { 'Content-Type': 'text/plain' }
+	        });
+	        const b64 = await response.text();
+	        if (!b64 || b64.startsWith("Error")) throw new Error("Gagal");
+	        const fileId = 'ai_pptx_' + Date.now();
+	        const fileName = `AURA_Presentation_${Date.now()}.pptx`;
+	        const fileSize = formatBytes((b64.length * 3) / 4);
+	        await saveToLocal(fileId, { 
+	            mime: "application/vnd.openxmlformats-officedocument.presentationml.presentation", 
+	            base64: b64, name: fileName, size: fileSize 
+	        });
+	        return { name: fileName, size: fileSize, fileId: fileId, isAI: false };
+	    } catch (e) {
+	        return null;
+	    }
+	}
+	
+	async function handleWordDocument(rawText) {
+    try {
+        const response = await fetch(SPT_URL, {
+            method: 'POST',
+            body: rawText,
+            headers: { 'Content-Type': 'text/plain' }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorText || response.statusText}`);
+        }
+
+        const b64 = await response.text();
+        if (b64.startsWith("Error")) throw new Error(b64);
+        
+        const fileId = 'ai_spt_' + Date.now();
+        const fileName = `SPT_${Date.now()}.docx`;
+        const fileSize = formatBytes((b64.length * 3) / 4);
+        
+        await saveToLocal(fileId, { 
+            mime: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
+            base64: b64, name: fileName, size: fileSize 
+        });
+        
+        return { name: fileName, size: fileSize, fileId: fileId, isAI: false };
+    } catch (e) {
+        console.error("Detail Error SPT:", e.message);
+        return null;
+    }
+}
+		
+	async function downloadFile(fileId) {
+	    if (!fileId) return;
+	    const fData = await getFromLocal(fileId);
+	    if (!fData) return;
+	    try {
+	        const blob = await (await fetch(`data:${fData.mime};base64,${fData.base64}`)).blob();
+	        const file = new File([blob], fData.name, { type: fData.mime });
+	        if (navigator.share) {
+	            await navigator.share({ files: [file], title: fData.name });
+	        } else {
+	            const url = window.URL.createObjectURL(blob);
+	            const a = document.createElement('a');
+	            a.href = url;
+	            a.download = fData.name;
+	            a.click();
+	            window.URL.revokeObjectURL(url);
+	        }
+	    } catch (e) {}
 	}
 	
 	// ============================
